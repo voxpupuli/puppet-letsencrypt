@@ -11,6 +11,6 @@ class letsencrypt::params {
   $repo                = 'git://github.com/letsencrypt/letsencrypt.git'
   $version             = 'v0.1.0'
   $config              = {
-    'server' => 'https://acme-v01.api.letsencrypt.org/directory'
+    'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
 }

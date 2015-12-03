@@ -45,7 +45,7 @@ class letsencrypt (
         section => '',
         setting => $setting,
         value   => $value,
-        require => File['/etc/letsencrypt']
+        require => File['/etc/letsencrypt'],
       }
     }
   }

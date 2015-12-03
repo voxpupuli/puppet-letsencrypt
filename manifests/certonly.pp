@@ -29,6 +29,6 @@ define letsencrypt::certonly (
     command => $command,
     path    => $::path,
     creates => $live_path,
-    require => Class['letsencrypt']
+    require => Class['letsencrypt'],
   }
 }
