@@ -32,4 +32,10 @@ describe 'letsencrypt::certonly' do
     let(:params) {{ plugin: 'bad' }}
     it { is_expected.to raise_error Puppet::Error }
   end
+
+  context 'when specifying additional arguments' do
+    let(:title) { 'foo.example.com' }
+    let(:params) {{ additional_args: ['--foo bar', '--baz quux'] }}
+    it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command '/opt/letsencrypt/letsencrypt-auto certonly --standalone -d foo.example.com --foo bar --baz quux' }
+  end
 end

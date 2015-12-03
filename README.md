@@ -32,6 +32,18 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
+If you need to pass a command line flag to the `letsencrypt-auto` command that
+is not supported natively by this module, you can use the `additional_args`
+parameter to pass those arguments:
+
+```puppet
+letsencrypt::certonly { 'foo':
+  domains         => ['foo.example.com', 'bar.example.com'],
+  plugin          => 'apache',
+  additional_args => ['--foo bar', '--baz quuz']
+}
+```
+
 ## Development
 
 1. Fork it

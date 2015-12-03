@@ -11,14 +11,18 @@
 #   The authenticator plugin to use when requesting the certificate.
 # [*letsencrypt_path*]
 #   The path to the letsencrypt installation.
+# [*additional_args*]
+#   An array of additional command line arguments to pass to the
+#   `letsencrypt-auto` command.
 #
 define letsencrypt::certonly (
   Array[String]                           $domains          = [$title],
   Enum['apache', 'standalone', 'webroot'] $plugin           = 'standalone',
   String                                  $letsencrypt_path = $letsencrypt::path,
+  Optional[Array[String]]                 $additional_args  = undef,
 ) {
 
-  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly --<%= @plugin %> -d <%= @domains.join(" -d ")%>')
+  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly --<%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
   exec { "letsencrypt certonly ${title}":
