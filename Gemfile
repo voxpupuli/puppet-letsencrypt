@@ -8,6 +8,7 @@ group :test do
   gem 'puppet-syntax'
   gem 'puppetlabs_spec_helper'
   gem 'metadata-json-lint'
+  gem 'puppet-strings', git: 'git://github.com/puppetlabs/puppetlabs-strings.git'
 end
 
 group :development do

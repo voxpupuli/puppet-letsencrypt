@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/puppetlabs/puppetlabs-strings.git
+  revision: eaddebbdc97e916cf12331c1ab98bb70fff86d7c
+  specs:
+    puppet-strings (0.3.1)
+      puppet (>= 3.7.0)
+      yard (~> 0.8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -372,6 +380,7 @@ DEPENDENCIES
   puppet (~> 4.3.0)
   puppet-blacksmith
   puppet-lint
+  puppet-strings!
   puppet-syntax
   puppetlabs_spec_helper
   rake
