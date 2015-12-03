@@ -37,7 +37,7 @@ class letsencrypt (
   }
 
   exec { 'initialize letsencrypt':
-    command     => "${path}/letsencrypt-auto --agree-tos",
+    command     => "${path}/letsencrypt-auto --agree-tos -h",
     refreshonly => true,
   }
 }

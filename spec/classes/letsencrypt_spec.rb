@@ -12,7 +12,7 @@ describe 'letsencrypt' do
           revision: 'v0.1.0'
         })
 
-        is_expected.to contain_exec('initialize letsencrypt').with_command(%r{/opt/letsencrypt/letsencrypt-auto --agree-tos})
+        is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto --agree-tos -h')
         is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
         is_expected.to contain_package('python')
         is_expected.to contain_package('git')
@@ -23,7 +23,7 @@ describe 'letsencrypt' do
       let(:params) {{ path: '/usr/lib/letsencrypt' }}
 
       it { is_expected.to contain_vcsrepo('/usr/lib/letsencrypt') }
-      it { is_expected.to contain_exec('initialize letsencrypt').with_command(%r{/usr/lib/letsencrypt/letsencrypt-auto --agree-tos}) }
+      it { is_expected.to contain_exec('initialize letsencrypt').with_command('/usr/lib/letsencrypt/letsencrypt-auto --agree-tos -h') }
     end
 
     describe 'with custom repo' do
