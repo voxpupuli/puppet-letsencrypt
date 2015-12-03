@@ -1,3 +1,17 @@
+# == Defined Type: letsencrypt::certonly
+#
+#   This type can be used to request a certificate using the `certonly`
+#   installer.
+#
+# === Parameters:
+#
+# [*domains*]
+#   Namevar. An array of domains to include in the CSR.
+# [*plugin*]
+#   The authenticator plugin to use when requesting the certificate.
+# [*letsencrypt_path*]
+#   The path to the letsencrypt installation.
+#
 define letsencrypt::certonly (
   Array[String]                           $domains          = [$title],
   Enum['apache', 'standalone', 'webroot'] $plugin           = 'standalone',
