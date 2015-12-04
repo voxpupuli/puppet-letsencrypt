@@ -21,6 +21,7 @@ group :test do
   gem 'puppet-lint-undef_in_function-check'
   gem 'puppet-lint-unquoted_string-check'
   gem 'puppet-lint-variable_contains_upcase'
+  gem 'rubocop'
 end
 
 group :development do
