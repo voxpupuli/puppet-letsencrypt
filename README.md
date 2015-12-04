@@ -12,7 +12,7 @@ Debian-based operating systems.
 To install the Letsencrypt client with the default configuration settings:
 
 ```puppet
-include letsencrypt
+include ::letsencrypt
 ```
 
 To request a certificate for `foo.example.com` using the `certonly` installer
@@ -28,7 +28,7 @@ To request a certificate for `foo.example.com` and `bar.example.com` with the
 ```puppet
 letsencrypt::certonly { 'foo':
   domains => ['foo.example.com', 'bar.example.com'],
-  plugin  => 'apache'
+  plugin  => 'apache',
 }
 ```
 
@@ -40,7 +40,7 @@ parameter to pass those arguments:
 letsencrypt::certonly { 'foo':
   domains         => ['foo.example.com', 'bar.example.com'],
   plugin          => 'apache',
-  additional_args => ['--foo bar', '--baz quuz']
+  additional_args => ['--foo bar', '--baz quuz'],
 }
 ```
 
