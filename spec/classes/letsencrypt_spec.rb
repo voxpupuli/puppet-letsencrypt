@@ -60,7 +60,7 @@ describe 'letsencrypt' do
     end
   end
 
-  context 'on supported operating systems' do
+  context 'on not supported operating systems' do
     let(:facts) { { osfamily: 'RedHat' } }
     it 'should fail' do
       is_expected.to raise_error Puppet::Error, /supports Debian-based operating systems/
