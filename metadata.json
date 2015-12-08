@@ -1,6 +1,6 @@
 {
   "name": "danzilio-letsencrypt",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "David Danzilio",
   "summary": "A module to install the Letsencrypt client and request certs.",
   "license": "Apache-2.0",
