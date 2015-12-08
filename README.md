@@ -5,14 +5,41 @@ This module installs the Letsencrypt client from source and allows you to reques
 ## Support
 
 This module requires Puppet >= 4.0. and is currently only written to work on
-Debian-based operating systems.
+Debian and RedHat based operating systems.
 
 ## Usage
 
-To install the Letsencrypt client with the default configuration settings:
+To install the Let's Encrypt client with the default configuration settings you
+must provide your email address to register with the Let's Encrypt servers:
 
 ```puppet
-include ::letsencrypt
+class { ::letsencrypt:
+  email => 'foo@example.com',
+}
+```
+
+This will install the Let's Encrypt client and its dependencies, agree to the
+Terms of Service, initialize the client, and install a configuration file for
+the client.
+
+Alternatively, you can specify your email address in the $config hash:
+
+```puppet
+class { ::letsencrypt:
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v01.api.letsencrypt.org/directory',
+  }
+}
+```
+
+If you don't wish to provide your email address, you can set the
+`unsafe_registration` parameter to `true` (this is not recommended):
+
+```puppet
+class { ::letsencrypt:
+  unsafe_registration => true,
+}
 ```
 
 To request a certificate for `foo.example.com` using the `certonly` installer

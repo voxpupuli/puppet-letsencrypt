@@ -4,6 +4,9 @@
 #
 # === Parameters:
 #
+# [*email*]
+#   The email address to use to register with Let's Encrypt. This takes
+#   precedence over an 'email' setting defined in $config.
 # [*path*]
 #   The path to the letsencrypt installation.
 # [*repo*]
@@ -19,8 +22,13 @@
 #   file.
 # [*manage_dependencies*]
 #   A feature flag to toggle the management of the letsencrypt dependencies.
+# [*agree_tos*]
+#   A flag to agree to the Let's Encrypt Terms of Service.
+# [*unsafe_registration*]
+#   A flag to allow using the 'register-unsafely-without-email' flag.
 #
 class letsencrypt (
+  Optional[String]   $email               = undef,
   String             $path                = $letsencrypt::params::path,
   String             $repo                = $letsencrypt::params::repo,
   String             $version             = $letsencrypt::params::version,
@@ -28,6 +36,8 @@ class letsencrypt (
   Hash[String, Any]  $config              = $letsencrypt::params::config,
   Boolean            $manage_config       = $letsencrypt::params::manage_config,
   Boolean            $manage_dependencies = $letsencrypt::params::manage_dependencies,
+  Boolean            $agree_tos           = $letsencrypt::params::agree_tos,
+  Boolean            $unsafe_registration = $letsencrypt::params::unsafe_registration,
 ) inherits letsencrypt::params {
 
   if $manage_dependencies {
@@ -37,17 +47,8 @@ class letsencrypt (
   }
 
   if $manage_config {
-    file { '/etc/letsencrypt': ensure => directory }
-    $config.each |$setting, $value| {
-      ini_setting { "${config_file} ${setting} ${value}":
-        ensure  => present,
-        path    => $config_file,
-        section => '',
-        setting => $setting,
-        value   => $value,
-        require => File['/etc/letsencrypt'],
-      }
-    }
+    contain letsencrypt::config
+    Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
   vcsrepo { $path:
@@ -59,7 +60,7 @@ class letsencrypt (
   }
 
   exec { 'initialize letsencrypt':
-    command     => "${path}/letsencrypt-auto --agree-tos -h",
+    command     => "${path}/letsencrypt-auto -h",
     refreshonly => true,
   }
 }

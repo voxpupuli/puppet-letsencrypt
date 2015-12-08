@@ -1,6 +1,6 @@
 {
   "name": "danzilio-letsencrypt",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "David Danzilio",
   "summary": "A module to install the Letsencrypt client and request certs.",
   "license": "Apache-2.0",
@@ -11,6 +11,18 @@
     "letsencrypt"
   ],
   "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
