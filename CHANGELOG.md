@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased][unreleased]
 
+## [0.3.1] - 2015-12-08
+### Added
+- Pushing an updated CHANGELOG (forgot to do this with 0.3.0)
+
+## [0.3.0] - 2015-12-08
+### Added
+- Added `email`, `agree_tos`, and `unsafe_registration` parameters.
+- Added support for RedHat (no real changes here: verified that the module works, updated `metadata.json` and removed the artificial constraint).
+- Made the configuration more opinionated by requiring valid registration settings and requiring the user to agree to the Terms of Service.
+
+### Changed
+- The `email` parameter or an `email` key in `$config` is now required. This may break existing functionality where users were not specifying an email address.
+- Broke the configuration out into a `config` class.
+
 ## [0.2.0] - 2015-12-03
 ### Added
 - Added `additional_args` parameter to `letsencrypt::certonly`
@@ -10,6 +24,8 @@ All notable changes to this project will be documented in this file. This projec
 ## [0.1.0] - 2015-12-03
 Initial Release
 
-[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/danzilio/puppet-letsencrypt/tree/v0.1.0
