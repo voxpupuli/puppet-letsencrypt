@@ -32,7 +32,7 @@ class letsencrypt (
 
   if $manage_dependencies {
     $dependencies = ['python', 'git']
-    package { $dependencies: }
+    ensure_packages($dependencies)
     Package[$dependencies] -> Vcsrepo[$path]
   }
 
