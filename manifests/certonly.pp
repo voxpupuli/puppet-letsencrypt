@@ -22,7 +22,7 @@ define letsencrypt::certonly (
   Optional[Array[String]]                 $additional_args  = undef,
 ) {
 
-  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly --<%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly -a <%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
   exec { "letsencrypt certonly ${title}":
