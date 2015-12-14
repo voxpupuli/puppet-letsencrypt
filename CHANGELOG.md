@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased][unreleased]
 
+## [0.3.2] - 2015-12-14
+### Changed
+- Using the `-a` parameter to define the plugin instead of `--<plugin_name>`.
+- Dependencies are now defined with `ensure_packages` instead of the `package` resource.
+
 ## [0.3.1] - 2015-12-08
 ### Added
 - Pushing an updated CHANGELOG (forgot to do this with 0.3.0)
@@ -25,6 +30,7 @@ All notable changes to this project will be documented in this file. This projec
 Initial Release
 
 [unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...HEAD
+[0.3.2]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.1.0...v0.2.0
