@@ -15,4 +15,5 @@ class letsencrypt::params {
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
+  $manage_cron         = false
 }

@@ -14,12 +14,16 @@
 # [*additional_args*]
 #   An array of additional command line arguments to pass to the
 #   `letsencrypt-auto` command.
+# [*manage_cron*]
+#   Boolean indicating whether or not to schedule cron job for renewal, 
+#   runs daily but only renews if near expiration e.g within 10 days. 
 #
 define letsencrypt::certonly (
   Array[String]                           $domains          = [$title],
   Enum['apache', 'standalone', 'webroot'] $plugin           = 'standalone',
   String                                  $letsencrypt_path = $letsencrypt::path,
   Optional[Array[String]]                 $additional_args  = undef,
+  Boolean                                 $manage_cron      = $letsencrypt::manage_cron,
 ) {
 
   $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly -a <%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
@@ -30,5 +34,15 @@ define letsencrypt::certonly (
     path    => $::path,
     creates => $live_path,
     require => Class['letsencrypt'],
+  }
+  
+  if ($manage_cron) {
+    $renewcommand = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly -a <%= @plugin %> --keep-until-expiring -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+    cron { "letsencrypt renew cron ${title}":
+      command => $renewcommand,
+      user    => root,
+      hour    => 2,
+      minute  => 0,      
+    }
   }
 }
