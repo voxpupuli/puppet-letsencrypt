@@ -38,11 +38,13 @@ define letsencrypt::certonly (
   
   if ($manage_cron) {
     $renewcommand = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly -a <%= @plugin %> --keep-until-expiring -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+    $cron_hour = fqdn_rand (24, $title) # 0 - 23, seed is title plus fqdn
+    $cron_minute = fqdn_rand( 60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "letsencrypt renew cron ${title}":
       command => $renewcommand,
       user    => root,
-      hour    => 2,
-      minute  => 0,      
+      hour    => $cron_hour,
+      minute  => $cron_minute,      
     }
   }
 }
