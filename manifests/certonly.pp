@@ -26,7 +26,7 @@ define letsencrypt::certonly (
   Boolean                                 $manage_cron      = false,
 ) {
 
-  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly -a <%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto --agree-tos certonly -a <%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
   exec { "letsencrypt certonly ${title}":
@@ -37,7 +37,7 @@ define letsencrypt::certonly (
   }
   
   if $manage_cron {
-    $renewcommand = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto certonly -a <%= @plugin %> --keep-until-expiring -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+    $renewcommand = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto --agree-tos certonly -a <%= @plugin %> --keep-until-expiring -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "letsencrypt renew cron ${title}":
