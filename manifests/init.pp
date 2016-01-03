@@ -38,7 +38,6 @@ class letsencrypt (
   Boolean            $manage_dependencies = $letsencrypt::params::manage_dependencies,
   Boolean            $agree_tos           = $letsencrypt::params::agree_tos,
   Boolean            $unsafe_registration = $letsencrypt::params::unsafe_registration,
-  Boolean            $manage_cron         = $letsencrypt::params::manage_cron,
 ) inherits letsencrypt::params {
 
   if $manage_dependencies {
