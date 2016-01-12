@@ -9,24 +9,36 @@
 #   Namevar. An array of domains to include in the CSR.
 # [*plugin*]
 #   The authenticator plugin to use when requesting the certificate.
+# [*webroot_paths*]
+#   An array of webroot paths for the domains in `domains`.
+#   Required if using `plugin => 'webroot'`. If `domains` and
+#   `webroot_paths` are not the same length, `webroot_paths`
+#   will cycle to make up the difference.
 # [*letsencrypt_path*]
 #   The path to the letsencrypt installation.
 # [*additional_args*]
 #   An array of additional command line arguments to pass to the
 #   `letsencrypt-auto` command.
 # [*manage_cron*]
-#   Boolean indicating whether or not to schedule cron job for renewal, 
-#   runs daily but only renews if near expiration e.g within 10 days. 
+#   Boolean indicating whether or not to schedule cron job for renewal.
+#   Runs daily but only renews if near expiration, e.g. within 10 days. 
 #
 define letsencrypt::certonly (
   Array[String]                           $domains          = [$title],
   Enum['apache', 'standalone', 'webroot'] $plugin           = 'standalone',
+  Optional[Array[String]]                 $webroot_paths    = undef,
   String                                  $letsencrypt_path = $letsencrypt::path,
   Optional[Array[String]]                 $additional_args  = undef,
   Boolean                                 $manage_cron      = false,
 ) {
 
-  $command = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto --agree-tos certonly -a <%= @plugin %> -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+  $command_start = "${letsencrypt_path}/letsencrypt-auto --agree-tos certonly -a ${plugin} "
+  $command_domains = $plugin ? {
+    'webroot' => inline_template('<%= @domains.zip(@webroot_paths.cycle).map { |domain| "--webroot-path #{domain[1]} -d #{domain[0]}"}.join(" ") %>'),
+    default   => inline_template('-d <%= @domains.join(" -d ")%>'),
+  }
+  $command_end = inline_template('<% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+  $command = "${command_start}${command_domains}${command_end}"
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
   exec { "letsencrypt certonly ${title}":
@@ -37,7 +49,7 @@ define letsencrypt::certonly (
   }
   
   if $manage_cron {
-    $renewcommand = inline_template('<%= @letsencrypt_path %>/letsencrypt-auto --agree-tos certonly -a <%= @plugin %> --keep-until-expiring -d <%= @domains.join(" -d ")%><% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
+    $renewcommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "letsencrypt renew cron ${title}":

@@ -23,6 +23,29 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command '/usr/lib/letsencrypt/letsencrypt-auto --agree-tos certonly -a standalone -d foo.example.com' }
       end
 
+      context 'with webroot plugin' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'webroot',
+                         webroot_paths: ['/var/www/foo'] } }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command '/opt/letsencrypt/letsencrypt-auto --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com' }
+      end
+
+      context 'with webroot plugin and multiple domains' do
+        let(:title) { 'foo' }
+        let(:params) { { domains: ['foo.example.com', 'bar.example.com'],
+                         plugin: 'webroot',
+                         webroot_paths: ['/var/www/foo', '/var/www/bar'] } }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command '/opt/letsencrypt/letsencrypt-auto --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/bar -d bar.example.com' }
+      end
+
+      context 'with webroot plugin, one webroot, and multiple domains' do
+        let(:title) { 'foo' }
+        let(:params) { { domains: ['foo.example.com', 'bar.example.com'],
+                         plugin: 'webroot',
+                         webroot_paths: ['/var/www/foo'] } }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command '/opt/letsencrypt/letsencrypt-auto --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/foo -d bar.example.com' }
+      end
+
       context 'with custom plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'apache' } }
