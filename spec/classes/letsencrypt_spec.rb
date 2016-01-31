@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe 'letsencrypt' do
-  ['Debian', 'RedHat'].each do |osfamily|
+  {'Debian' => '9.0', 'RedHat' => '7.2'}.each do |osfamily, osversion|
     context "on #{osfamily} based operating systems" do
-      let(:facts) { { osfamily: osfamily } }
+      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, path: '/usr/bin' } }
 
       context 'when specifying an email address with the email parameter' do
         let(:params) { additional_params.merge(default_params) }
@@ -14,34 +14,34 @@ describe 'letsencrypt' do
           it { is_expected.to compile }
 
           it 'should contain the correct resources' do
-            is_expected.to contain_vcsrepo('/opt/letsencrypt').with({
-              source: 'git://github.com/letsencrypt/letsencrypt.git',
-              revision: 'v0.1.0'
-            })
+            is_expected.to contain_class('letsencrypt::install').with({
+              manage_install: true,
+              manage_dependencies: true,
+              repo: 'git://github.com/letsencrypt/letsencrypt.git',
+              version: 'v0.1.0'
+            }).that_notifies('Exec[initialize letsencrypt]')
 
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
-            is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto -h')
+            is_expected.to contain_exec('initialize letsencrypt')
             is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
-            is_expected.to contain_package('python')
-            is_expected.to contain_package('git')
           end
         end
 
         describe 'with custom path' do
-          let(:additional_params) { { path: '/usr/lib/letsencrypt' } }
-          it { is_expected.to contain_vcsrepo('/usr/lib/letsencrypt') }
+          let(:additional_params) { { path: '/usr/lib/letsencrypt', install_method: 'vcs' } }
+          it { is_expected.to contain_class('letsencrypt::install').with_path('/usr/lib/letsencrypt') }
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/usr/lib/letsencrypt/letsencrypt-auto -h') }
         end
 
         describe 'with custom repo' do
           let(:additional_params) { { repo: 'git://foo.com/letsencrypt.git' } }
-          it { is_expected.to contain_vcsrepo('/opt/letsencrypt').with_source('git://foo.com/letsencrypt.git') }
+          it { is_expected.to contain_class('letsencrypt::install').with_repo('git://foo.com/letsencrypt.git') }
         end
 
         describe 'with custom version' do
           let(:additional_params) { { version: 'foo' } }
-          it { is_expected.to contain_vcsrepo('/opt/letsencrypt').with_revision('foo') }
+          it { is_expected.to contain_class('letsencrypt::install').with_path('/opt/letsencrypt').with_version('foo') }
         end
 
         describe 'with custom config file' do
@@ -59,12 +59,21 @@ describe 'letsencrypt' do
           it { is_expected.not_to contain_class('letsencrypt::config') }
         end
 
-        describe 'with manage_dependencies set to false' do
-          let(:additional_params) { { manage_dependencies: false } }
-          it 'should not contain the dependencies' do
-            is_expected.not_to contain_package('git')
-            is_expected.not_to contain_package('python')
-          end
+        describe 'with manage_install set to false' do
+          let(:additional_params) { { manage_install: false } }
+          it { is_expected.not_to contain_class('letsencrypt::install') }
+        end
+
+        describe 'with install_method => package' do
+          let(:additional_params) { { install_method: 'package' } }
+          it { is_expected.to contain_class('letsencrypt::install').with_install_method('package') }
+          it { is_expected.to contain_exec('initialize letsencrypt').with_command('letsencrypt -h') }
+        end
+
+        describe 'with install_method => vcs' do
+          let(:additional_params) { { install_method: 'vcs' } }
+          it { is_expected.to contain_class('letsencrypt::install').with_install_method('vcs') }
+          it { is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto -h') }
         end
 
         context 'when not agreeing to the TOS' do
@@ -97,6 +106,71 @@ describe 'letsencrypt' do
     let(:facts) { { osfamily: 'Darwin' } }
     it 'should fail' do
       is_expected.to raise_error Puppet::Error, /The letsencrypt module does not support Darwin/
+    end
+  end
+
+  context 'on EL7 operating system' do
+    let(:facts) { { osfamily: 'RedHat', operatingsystemrelease: '7.2', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+      end
+    end
+  end
+
+  context 'on Debian 8 operating system' do
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '8.0', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+      end
+    end
+  end
+
+  context 'on Debian 9 operating system' do
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '9.0', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+      end
+    end
+  end
+
+  context 'on Ubuntu 14.04 operating system' do
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '14.04', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+      end
+    end
+  end
+
+  context 'on Ubuntu 16.04 operating system' do
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '16.04', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+      end
     end
   end
 end
