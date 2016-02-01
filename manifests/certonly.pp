@@ -14,8 +14,8 @@
 #   Required if using `plugin => 'webroot'`. If `domains` and
 #   `webroot_paths` are not the same length, `webroot_paths`
 #   will cycle to make up the difference.
-# [*letsencrypt_path*]
-#   The path to the letsencrypt installation.
+# [*letsencrypt_command*]
+#   Command to run letsencrypt
 # [*additional_args*]
 #   An array of additional command line arguments to pass to the
 #   `letsencrypt-auto` command.
@@ -24,15 +24,15 @@
 #   Runs daily but only renews if near expiration, e.g. within 10 days. 
 #
 define letsencrypt::certonly (
-  Array[String]                           $domains          = [$title],
-  Enum['apache', 'standalone', 'webroot'] $plugin           = 'standalone',
-  Optional[Array[String]]                 $webroot_paths    = undef,
-  String                                  $letsencrypt_path = $letsencrypt::path,
-  Optional[Array[String]]                 $additional_args  = undef,
-  Boolean                                 $manage_cron      = false,
+  Array[String]                           $domains             = [$title],
+  Enum['apache', 'standalone', 'webroot'] $plugin              = 'standalone',
+  Optional[Array[String]]                 $webroot_paths       = undef,
+  String                                  $letsencrypt_command = $letsencrypt::command,
+  Optional[Array[String]]                 $additional_args     = undef,
+  Boolean                                 $manage_cron         = false,
 ) {
 
-  $command_start = "${letsencrypt_path}/letsencrypt-auto --agree-tos certonly -a ${plugin} "
+  $command_start = "${letsencrypt_command} --agree-tos certonly -a ${plugin} "
   $command_domains = $plugin ? {
     'webroot' => inline_template('<%= @domains.zip(@webroot_paths.cycle).map { |domain| "--webroot-path #{domain[1]} -d #{domain[0]}"}.join(" ") %>'),
     default   => inline_template('-d <%= @domains.join(" -d ")%>'),

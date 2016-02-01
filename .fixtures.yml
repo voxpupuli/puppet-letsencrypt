@@ -1,5 +1,8 @@
 fixtures:
   repositories:
+    epel:
+      repo: 'https://github.com/stahnma/puppet-module-epel.git'
+      ref: '1.2.2'
     inifile:
       repo: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
       ref: '1.4.2'
