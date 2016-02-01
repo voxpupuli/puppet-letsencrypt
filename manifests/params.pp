@@ -9,6 +9,7 @@ class letsencrypt::params {
   $manage_config       = true
   $manage_install      = true
   $manage_dependencies = true
+  $configure_epel      = false
   $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/letsencrypt'
   $repo                = 'git://github.com/letsencrypt/letsencrypt.git'

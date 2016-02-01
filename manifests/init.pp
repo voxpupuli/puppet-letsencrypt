@@ -25,6 +25,9 @@
 #   installation.
 # [*manage_dependencies*]
 #   A feature flag to toggle the management of the letsencrypt dependencies.
+# [*configure_epel*]
+#   A feature flag to include the 'epel' class and depend on it for package
+#   installation.
 # [*install_method*]
 #   Method to install the letsencrypt client, either package or vcs.
 # [*agree_tos*]
@@ -42,6 +45,7 @@ class letsencrypt (
   Boolean                $manage_config       = $letsencrypt::params::manage_config,
   Boolean                $manage_install      = $letsencrypt::params::manage_install,
   Boolean                $manage_dependencies = $letsencrypt::params::manage_dependencies,
+  Boolean                $configure_epel      = $letsencrypt::params::configure_epel,
   Enum['package', 'vcs'] $install_method      = $letsencrypt::install_method,
   Boolean                $agree_tos           = $letsencrypt::params::agree_tos,
   Boolean                $unsafe_registration = $letsencrypt::params::unsafe_registration,

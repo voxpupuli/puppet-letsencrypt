@@ -15,6 +15,7 @@ describe 'letsencrypt' do
 
           it 'should contain the correct resources' do
             is_expected.to contain_class('letsencrypt::install').with({
+              configure_epel: false,
               manage_install: true,
               manage_dependencies: true,
               repo: 'git://github.com/letsencrypt/letsencrypt.git',

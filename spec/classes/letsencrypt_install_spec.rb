@@ -4,6 +4,7 @@ describe 'letsencrypt::install' do
   let(:params) { default_params.merge(additional_params) }
   let(:default_params) do
     {
+      configure_epel: false,
       manage_install: true,
       manage_dependencies: true,
       path: '/opt/letsencrypt',
@@ -24,6 +25,17 @@ describe 'letsencrypt::install' do
       is_expected.not_to contain_package('git')
 
       is_expected.to contain_package('letsencrypt').with_ensure('installed')
+    end
+
+    describe 'with configure_epel => true' do
+      let(:additional_params) { { install_method: 'package', configure_epel: true } }
+
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('epel')
+        is_expected.to contain_package('letsencrypt').that_requires('Class[epel]')
+      end
     end
   end
 
