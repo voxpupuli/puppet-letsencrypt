@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased][unreleased]
 
+## [0.4.0] - 2016-01-31
+### Added
+- Ability to renew automatically via cron with `manage_cron` parameter.
+- Ability to manage multiple webroots with `webroot_paths` parameter.
+
+### Change
+- Added `--agree-tos` to the `letsencrypt` commands.
+- Use `ensure_packages` instead of a `package` resource for the dependencies.
+
 ## [0.3.2] - 2015-12-14
 ### Changed
 - Using the `-a` parameter to define the plugin instead of `--<plugin_name>`.
@@ -29,7 +38,8 @@ All notable changes to this project will be documented in this file. This projec
 ## [0.1.0] - 2015-12-03
 Initial Release
 
-[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...HEAD
+[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.2...v0.4.0
 [0.3.2]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.2.0...v0.3.0
