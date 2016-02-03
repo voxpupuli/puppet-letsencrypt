@@ -2,13 +2,15 @@ source 'https://rubygems.org'
 
 group :test do
   gem 'rake'
-  gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.3.0'
+  gem 'puppet', ENV['PUPPET_VERSION'] || ['>= 3.4', '< 5']
   gem 'puppet-lint'
   gem 'rspec-puppet'
   gem 'puppet-syntax'
   gem 'puppetlabs_spec_helper'
   gem 'metadata-json-lint'
-  gem 'puppet-strings', git: 'git://github.com/puppetlabs/puppetlabs-strings.git'
+  unless ENV['PUPPET_VERSION'] == '~> 3.4.0'
+    gem 'puppet-strings', git: 'git://github.com/puppetlabs/puppetlabs-strings.git'
+  end
   gem 'puppet-lint-absolute_classname-check'
   gem 'puppet-lint-alias-check'
   gem 'puppet-lint-empty_string-check'

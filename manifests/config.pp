@@ -40,15 +40,7 @@ class letsencrypt::config (
     }
   }
 
-  $_config.each |$setting, $value| {
-    ini_setting { "${config_file} ${setting} ${value}":
-      ensure  => present,
-      path    => $config_file,
-      section => '',
-      setting => $setting,
-      value   => $value,
-      require => File['/etc/letsencrypt'],
-    }
-  }
+  $_config_joined = join_keys_to_values($_config, '=')
+  letsencrypt::config::ini { $_config_joined: }
 
 }
