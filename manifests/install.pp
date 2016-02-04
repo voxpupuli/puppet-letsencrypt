@@ -22,14 +22,17 @@
 #   The Git ref (tag, sha, branch) to check out when installing the client.
 #
 class letsencrypt::install (
-  Boolean                $manage_install      = $letsencrypt::manage_install,
-  Boolean                $manage_dependencies = $letsencrypt::manage_dependencies,
-  Boolean                $configure_epel      = $letsencrypt::configure_epel,
-  Enum['package', 'vcs'] $install_method      = $letsencrypt::install_method,
-  String                 $path                = $letsencrypt::path,
-  String                 $repo                = $letsencrypt::repo,
-  String                 $version             = $letsencrypt::version,
+  $manage_install      = $letsencrypt::manage_install,
+  $manage_dependencies = $letsencrypt::manage_dependencies,
+  $configure_epel      = $letsencrypt::configure_epel,
+  $install_method      = $letsencrypt::install_method,
+  $path                = $letsencrypt::path,
+  $repo                = $letsencrypt::repo,
+  $version             = $letsencrypt::version,
 ) {
+  validate_bool($manage_install, $manage_dependencies, $configure_epel)
+  validate_re($install_method, ['^package$', '^vcs$'])
+  validate_string($path, $repo, $version)
 
   if $install_method == 'vcs' {
     if $manage_dependencies {

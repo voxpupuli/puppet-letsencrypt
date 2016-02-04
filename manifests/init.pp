@@ -36,20 +36,27 @@
 #   A flag to allow using the 'register-unsafely-without-email' flag.
 #
 class letsencrypt (
-  Optional[String]       $email               = undef,
-  String                 $path                = $letsencrypt::params::path,
-  String                 $repo                = $letsencrypt::params::repo,
-  String                 $version             = $letsencrypt::params::version,
-  String                 $config_file         = $letsencrypt::params::config_file,
-  Hash[String, Any]      $config              = $letsencrypt::params::config,
-  Boolean                $manage_config       = $letsencrypt::params::manage_config,
-  Boolean                $manage_install      = $letsencrypt::params::manage_install,
-  Boolean                $manage_dependencies = $letsencrypt::params::manage_dependencies,
-  Boolean                $configure_epel      = $letsencrypt::params::configure_epel,
-  Enum['package', 'vcs'] $install_method      = $letsencrypt::install_method,
-  Boolean                $agree_tos           = $letsencrypt::params::agree_tos,
-  Boolean                $unsafe_registration = $letsencrypt::params::unsafe_registration,
+  $email               = undef,
+  $path                = $letsencrypt::params::path,
+  $repo                = $letsencrypt::params::repo,
+  $version             = $letsencrypt::params::version,
+  $config_file         = $letsencrypt::params::config_file,
+  $config              = $letsencrypt::params::config,
+  $manage_config       = $letsencrypt::params::manage_config,
+  $manage_install      = $letsencrypt::params::manage_install,
+  $manage_dependencies = $letsencrypt::params::manage_dependencies,
+  $configure_epel      = $letsencrypt::params::configure_epel,
+  $install_method      = $letsencrypt::params::install_method,
+  $agree_tos           = $letsencrypt::params::agree_tos,
+  $unsafe_registration = $letsencrypt::params::unsafe_registration,
 ) inherits letsencrypt::params {
+  validate_string($path, $repo, $version, $config_file)
+  if $email {
+    validate_string($email)
+  }
+  validate_bool($manage_config, $manage_install, $manage_dependencies, $configure_epel, $agree_tos, $unsafe_registration)
+  validate_hash($config)
+  validate_re($install_method, ['^package$', '^vcs$'])
 
   if $manage_install {
     contain letsencrypt::install

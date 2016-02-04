@@ -24,13 +24,23 @@
 #   Runs daily but only renews if near expiration, e.g. within 10 days. 
 #
 define letsencrypt::certonly (
-  Array[String]                           $domains             = [$title],
-  Enum['apache', 'standalone', 'webroot'] $plugin              = 'standalone',
-  Optional[Array[String]]                 $webroot_paths       = undef,
-  String                                  $letsencrypt_command = $letsencrypt::command,
-  Optional[Array[String]]                 $additional_args     = undef,
-  Boolean                                 $manage_cron         = false,
+  $domains             = [$title],
+  $plugin              = 'standalone',
+  $webroot_paths       = undef,
+  $letsencrypt_command = $letsencrypt::command,
+  $additional_args     = undef,
+  $manage_cron         = false,
 ) {
+  validate_array($domains)
+  validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
+  if $webroot_paths {
+    validate_array($webroot_paths)
+  }
+  validate_string(letsencrypt_path)
+  if $additional_args {
+    validate_array($additional_args)
+  }
+  validate_bool($manage_cron)
 
   $command_start = "${letsencrypt_command} --agree-tos certonly -a ${plugin} "
   $command_domains = $plugin ? {
