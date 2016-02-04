@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+## Added
+- Backwards compatibility with Puppet >= 3.4
+- Ability to select the `letsencrypt` install method using the `install_method` parameter. Current supported options are `package` and `vcs`.
+- The `manage_install` parameter now lets the user select whether they want to manage the installation of `letsencrypt` with this module.
+- The `configure_epel` parameter now lets the user manage the EPEL repository on EL systems.
+
+## Breaking
+- Removed the `letsencrypt_path` parameter in `letsencrypt::certonly` in favor of `letsencrypt_command` in order to support the `package` based installation method.
 
 ## [0.4.0] - 2016-01-31
 ### Added
