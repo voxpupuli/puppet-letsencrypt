@@ -124,7 +124,7 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
       end
     end
   end
