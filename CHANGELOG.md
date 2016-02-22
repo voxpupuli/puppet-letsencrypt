@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## [1.0.0] - 2016-02-22
 ## Added
 - Backwards compatibility with Puppet >= 3.4
 - Ability to select the `letsencrypt` install method using the `install_method` parameter. Current supported options are `package` and `vcs`.
@@ -47,7 +49,8 @@ All notable changes to this project will be documented in this file. This projec
 ## [0.1.0] - 2015-12-03
 Initial Release
 
-[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.2...v0.4.0
 [0.3.2]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.0...v0.3.1
