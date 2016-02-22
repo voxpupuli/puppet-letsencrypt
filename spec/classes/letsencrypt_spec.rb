@@ -19,7 +19,7 @@ describe 'letsencrypt' do
               manage_install: true,
               manage_dependencies: true,
               repo: 'git://github.com/letsencrypt/letsencrypt.git',
-              version: 'v0.1.0'
+              version: 'v0.4.0'
             }).that_notifies('Exec[initialize letsencrypt]')
 
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')

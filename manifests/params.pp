@@ -9,7 +9,7 @@ class letsencrypt::params {
   $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/letsencrypt'
   $repo                = 'git://github.com/letsencrypt/letsencrypt.git'
-  $version             = 'v0.1.0'
+  $version             = 'v0.4.0'
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
