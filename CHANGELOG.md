@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Breaking
 - Removed the `letsencrypt_path` parameter in `letsencrypt::certonly` in favor of `letsencrypt_command` in order to support the `package` based installation method.
-- The default installation method has changed for Debian `>= 9` and Ubuntu `>= 16.04`
+- The default installation method has changed for Debian `>= 9` and Ubuntu `>= 16.04` from `vcs` to `package`.
 
 ## [0.4.0] - 2016-01-31
 ### Added
