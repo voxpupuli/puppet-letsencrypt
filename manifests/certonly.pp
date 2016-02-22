@@ -21,7 +21,7 @@
 #   `letsencrypt-auto` command.
 # [*manage_cron*]
 #   Boolean indicating whether or not to schedule cron job for renewal.
-#   Runs daily but only renews if near expiration, e.g. within 10 days. 
+#   Runs daily but only renews if near expiration, e.g. within 10 days.
 #
 define letsencrypt::certonly (
   $domains             = [$title],
@@ -57,7 +57,7 @@ define letsencrypt::certonly (
     creates => $live_path,
     require => Class['letsencrypt'],
   }
-  
+
   if $manage_cron {
     $renewcommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn

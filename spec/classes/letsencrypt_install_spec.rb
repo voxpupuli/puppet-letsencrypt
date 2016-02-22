@@ -5,6 +5,7 @@ describe 'letsencrypt::install' do
   let(:default_params) do
     {
       configure_epel: false,
+      package_ensure: 'installed',
       manage_install: true,
       manage_dependencies: true,
       path: '/opt/letsencrypt',
@@ -36,6 +37,13 @@ describe 'letsencrypt::install' do
         is_expected.to contain_class('epel')
         is_expected.to contain_package('letsencrypt').that_requires('Class[epel]')
       end
+    end
+
+    describe 'with package_ensure => 0.3.0-1.el7' do
+      let(:additional_params) { { install_method: 'package', package_ensure: '0.3.0-1.el7' } }
+
+      it { is_expected.to compile }
+      it { is_expected.to contain_package('letsencrypt').with_ensure('0.3.0-1.el7') }
     end
   end
 
