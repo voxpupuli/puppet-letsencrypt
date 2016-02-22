@@ -6,10 +6,11 @@ All notable changes to this project will be documented in this file. This projec
 - Backwards compatibility with Puppet >= 3.4
 - Ability to select the `letsencrypt` install method using the `install_method` parameter. Current supported options are `package` and `vcs`.
 - The `manage_install` parameter now lets the user select whether they want to manage the installation of `letsencrypt` with this module.
-- The `configure_epel` parameter now lets the user manage the EPEL repository on EL systems.
+- The `configure_epel` parameter now lets the user manage the EPEL repository on EL systems. The EPEL module must be installed for this to work.
 
 ## Breaking
 - Removed the `letsencrypt_path` parameter in `letsencrypt::certonly` in favor of `letsencrypt_command` in order to support the `package` based installation method.
+- The default installation method has changed for Debian `>= 9` and Ubuntu `>= 16.04`
 
 ## [0.4.0] - 2016-01-31
 ### Added

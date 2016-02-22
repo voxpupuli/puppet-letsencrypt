@@ -17,8 +17,6 @@ class letsencrypt::params {
     $install_method = 'package'
   } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
     $install_method = 'package'
-  } elsif $::osfamily == 'RedHat' {
-    $install_method = 'package'
   } else {
     $install_method = 'vcs'
   }
