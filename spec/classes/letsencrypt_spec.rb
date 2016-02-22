@@ -15,7 +15,7 @@ describe 'letsencrypt' do
 
           it 'should contain the correct resources' do
             is_expected.to contain_class('letsencrypt::install').with({
-              configure_epel: false,
+              configure_epel: true,
               manage_install: true,
               manage_dependencies: true,
               repo: 'git://github.com/letsencrypt/letsencrypt.git',
@@ -43,6 +43,11 @@ describe 'letsencrypt' do
         describe 'with custom version' do
           let(:additional_params) { { version: 'foo' } }
           it { is_expected.to contain_class('letsencrypt::install').with_path('/opt/letsencrypt').with_version('foo') }
+        end
+
+        describe 'with custom package_ensure' do
+          let(:additional_params) { { package_ensure: '0.3.0-1.el7' } }
+          it { is_expected.to contain_class('letsencrypt::install').with_package_ensure('0.3.0-1.el7') }
         end
 
         describe 'with custom config file' do
@@ -124,7 +129,8 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+        is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
       end
     end
   end

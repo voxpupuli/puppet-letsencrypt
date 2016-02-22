@@ -4,7 +4,8 @@ class letsencrypt::params {
   $manage_config       = true
   $manage_install      = true
   $manage_dependencies = true
-  $configure_epel      = false
+  $configure_epel      = true
+  $package_ensure      = 'installed'
   $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/letsencrypt'
   $repo                = 'git://github.com/letsencrypt/letsencrypt.git'
@@ -16,6 +17,8 @@ class letsencrypt::params {
   if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '9') >= 0 {
     $install_method = 'package'
   } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
+    $install_method = 'package'
+  } elsif $::osfamily == 'RedHat' {
     $install_method = 'package'
   } else {
     $install_method = 'vcs'

@@ -12,7 +12,11 @@
 # [*repo*]
 #   A Git URL to install the Let's encrypt client from.
 # [*version*]
-#   The Git ref (tag, sha, branch) to check out when installing the client.
+#   The Git ref (tag, sha, branch) to check out when installing the client with
+#   the `vcs` method.
+# [*package_ensure*]
+#   The value passed to `ensure` when installing the client with the `package`
+#   method.
 # [*config_file*]
 #   The path to the configuration file for the letsencrypt cli.
 # [*config*]
@@ -40,6 +44,7 @@ class letsencrypt (
   $path                = $letsencrypt::params::path,
   $repo                = $letsencrypt::params::repo,
   $version             = $letsencrypt::params::version,
+  $package_ensure      = $letsencrypt::params::package_ensure,
   $config_file         = $letsencrypt::params::config_file,
   $config              = $letsencrypt::params::config,
   $manage_config       = $letsencrypt::params::manage_config,

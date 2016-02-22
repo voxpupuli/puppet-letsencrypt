@@ -19,13 +19,18 @@
 # [*repo*]
 #   A Git URL to install the Let's encrypt client from.
 # [*version*]
-#   The Git ref (tag, sha, branch) to check out when installing the client.
+#   The Git ref (tag, sha, branch) to check out when installing the client with
+#   the `vcs` method.
+# [*package_ensure*]
+#   The value passed to `ensure` when installing the client with the `package`
+#   method.
 #
 class letsencrypt::install (
   $manage_install      = $letsencrypt::manage_install,
   $manage_dependencies = $letsencrypt::manage_dependencies,
   $configure_epel      = $letsencrypt::configure_epel,
   $install_method      = $letsencrypt::install_method,
+  $package_ensure      = $letsencrypt::package_ensure,
   $path                = $letsencrypt::path,
   $repo                = $letsencrypt::repo,
   $version             = $letsencrypt::version,
@@ -49,7 +54,7 @@ class letsencrypt::install (
     }
   } else {
     package { 'letsencrypt':
-      ensure => installed,
+      ensure => $package_ensure,
     }
 
     if $configure_epel {
