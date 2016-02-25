@@ -42,6 +42,7 @@
 class letsencrypt (
   $email               = undef,
   $path                = $letsencrypt::params::path,
+  $venv_path           = $letsencrypt::params::venv_path,
   $repo                = $letsencrypt::params::repo,
   $version             = $letsencrypt::params::version,
   $package_ensure      = $letsencrypt::params::package_ensure,
@@ -81,6 +82,7 @@ class letsencrypt (
   exec { 'initialize letsencrypt':
     command     => "${command} -h",
     path        => $::path,
+    environment => ["VENV_PATH=${venv_path}"],
     refreshonly => true,
   }
 }

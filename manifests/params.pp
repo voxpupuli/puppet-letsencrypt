@@ -8,6 +8,7 @@ class letsencrypt::params {
   $package_ensure      = 'installed'
   $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/letsencrypt'
+  $venv_path           = '/opt/letsencrypt/.venv' # virtualenv path for vcs-installed letsencrypt
   $repo                = 'git://github.com/letsencrypt/letsencrypt.git'
   $version             = 'v0.4.0'
   $config              = {
