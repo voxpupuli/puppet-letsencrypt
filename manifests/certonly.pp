@@ -51,11 +51,13 @@ define letsencrypt::certonly (
   $command = "${command_start}${command_domains}${command_end}"
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
+  $venv_path_var = "VENV_PATH=${letsencrypt::venv_path}"
   exec { "letsencrypt certonly ${title}":
-    command => $command,
-    path    => $::path,
-    creates => $live_path,
-    require => Class['letsencrypt'],
+    command     => $command,
+    path        => $::path,
+    environment => [$venv_path_var],
+    creates     => $live_path,
+    require     => Class['letsencrypt'],
   }
 
   if $manage_cron {
@@ -63,10 +65,11 @@ define letsencrypt::certonly (
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "letsencrypt renew cron ${title}":
-      command => $renewcommand,
-      user    => root,
-      hour    => $cron_hour,
-      minute  => $cron_minute,
+      command     => $renewcommand,
+      environment => $venv_path_var,
+      user        => root,
+      hour        => $cron_hour,
+      minute      => $cron_minute,
     }
   }
 }
