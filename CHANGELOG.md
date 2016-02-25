@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+- Ability to run commands after a successful cronjob-based renewal with the `cron_success_command` parameter.
 
 ## [1.0.0] - 2016-02-22
 ## Added
