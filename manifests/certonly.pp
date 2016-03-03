@@ -24,12 +24,13 @@
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
 #
 define letsencrypt::certonly (
-  $domains             = [$title],
-  $plugin              = 'standalone',
-  $webroot_paths       = undef,
-  $letsencrypt_command = $letsencrypt::command,
-  $additional_args     = undef,
-  $manage_cron         = false,
+  $domains              = [$title],
+  $plugin               = 'standalone',
+  $webroot_paths        = undef,
+  $letsencrypt_command  = $letsencrypt::command,
+  $additional_args      = undef,
+  $manage_cron          = false,
+  $cron_success_command = undef,
 ) {
   validate_array($domains)
   validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
@@ -51,22 +52,30 @@ define letsencrypt::certonly (
   $command = "${command_start}${command_domains}${command_end}"
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
+  $venv_path_var = "VENV_PATH=${letsencrypt::venv_path}"
   exec { "letsencrypt certonly ${title}":
-    command => $command,
-    path    => $::path,
-    creates => $live_path,
-    require => Class['letsencrypt'],
+    command     => $command,
+    path        => $::path,
+    environment => [$venv_path_var],
+    creates     => $live_path,
+    require     => Class['letsencrypt'],
   }
 
   if $manage_cron {
     $renewcommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
+    if $cron_success_command {
+      $cron_cmd = "${renewcommand} && (${cron_success_command})"
+    } else {
+      $cron_cmd = $renewcommand
+    }
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "letsencrypt renew cron ${title}":
-      command => $renewcommand,
-      user    => root,
-      hour    => $cron_hour,
-      minute  => $cron_minute,
+      command     => $cron_cmd,
+      environment => $venv_path_var,
+      user        => root,
+      hour        => $cron_hour,
+      minute      => $cron_minute,
     }
   }
 }
