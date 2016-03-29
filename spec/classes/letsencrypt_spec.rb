@@ -24,6 +24,7 @@ describe 'letsencrypt' do
 
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+	    is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini rsa-key-size 4096')
             is_expected.to contain_exec('initialize letsencrypt')
             is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
           end
