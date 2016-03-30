@@ -18,7 +18,7 @@ describe 'letsencrypt' do
               configure_epel: true,
               manage_install: true,
               manage_dependencies: true,
-              repo: 'git://github.com/letsencrypt/letsencrypt.git',
+              repo: 'https://github.com/letsencrypt/letsencrypt.git',
               version: 'v0.4.2'
             }).that_notifies('Exec[initialize letsencrypt]')
 

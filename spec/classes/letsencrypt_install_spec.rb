@@ -9,7 +9,7 @@ describe 'letsencrypt::install' do
       manage_install: true,
       manage_dependencies: true,
       path: '/opt/letsencrypt',
-      repo: 'git://github.com/letsencrypt/letsencrypt.git',
+      repo: 'https://github.com/letsencrypt/letsencrypt.git',
       version: 'v0.4.2',
     }
   end
@@ -54,7 +54,7 @@ describe 'letsencrypt::install' do
 
     it 'should contain the correct resources' do
       is_expected.to contain_vcsrepo('/opt/letsencrypt').with({
-        source: 'git://github.com/letsencrypt/letsencrypt.git',
+        source: 'https://github.com/letsencrypt/letsencrypt.git',
         revision: 'v0.4.2'
       })
       is_expected.to contain_package('python')
