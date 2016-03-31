@@ -29,6 +29,7 @@ describe 'letsencrypt::install' do
     end
 
     describe 'with configure_epel => true' do
+      let(:facts) { { operatingsystemrelease: '7.0.1406', operatingsystemmajrelease: '7' } }
       let(:additional_params) { { install_method: 'package', configure_epel: true } }
 
       it { is_expected.to compile }
