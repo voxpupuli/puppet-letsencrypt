@@ -109,7 +109,7 @@ describe 'letsencrypt' do
   end
 
   context 'on unknown operating systems' do
-    let(:facts) { { osfamily: 'Darwin', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Darwin', operatingsystem: 'Darwin', operatingsystemrelease: '14.5.0', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -122,7 +122,7 @@ describe 'letsencrypt' do
   end
 
   context 'on EL7 operating system' do
-    let(:facts) { { osfamily: 'RedHat', operatingsystemrelease: '7.2', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '7.2', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
