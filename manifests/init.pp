@@ -71,6 +71,11 @@ class letsencrypt (
 
   $command = $install_method ? {
     'package' => 'letsencrypt',
+    'vcs'     => "${venv_path}/bin/letsencrypt",
+  }
+
+  $command_init = $install_method ? {
+    'package' => 'letsencrypt',
     'vcs'     => "${path}/letsencrypt-auto",
   }
 
@@ -79,8 +84,9 @@ class letsencrypt (
     Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
+  # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
-    command     => "${command} -h",
+    command     => "${command_init} -h",
     path        => $::path,
     environment => ["VENV_PATH=${venv_path}"],
     refreshonly => true,
