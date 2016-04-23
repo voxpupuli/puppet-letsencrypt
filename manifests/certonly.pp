@@ -43,6 +43,7 @@ define letsencrypt::certonly (
   if $additional_args {
     validate_array($additional_args)
   }
+  validate_array($environment)
   validate_bool($manage_cron)
 
   $command_start = "${letsencrypt_command} --agree-tos certonly -a ${plugin} "

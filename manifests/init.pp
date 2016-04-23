@@ -63,6 +63,7 @@ class letsencrypt (
   if $email {
     validate_string($email)
   }
+  validate_array($environment)
   validate_bool($manage_config, $manage_install, $manage_dependencies, $configure_epel, $agree_tos, $unsafe_registration)
   validate_hash($config)
   validate_re($install_method, ['^package$', '^vcs$'])
