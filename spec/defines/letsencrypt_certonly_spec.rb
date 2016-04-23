@@ -70,6 +70,19 @@ describe 'letsencrypt::certonly' do
         let(:params) { { additional_args: ['--foo bar', '--baz quux'] } }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command 'letsencrypt --agree-tos certonly -a standalone -d foo.example.com --foo bar --baz quux' }
       end
+
+      describe 'when specifying custom environment variables' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_environment([ "VENV_PATH=/opt/letsencrypt/.venv", 'FOO=bar', 'FIZZ=buzz' ]) }
+      end
+
+      context 'with custom environment variables and manage cron' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ], manage_cron: true } }
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_environment([ "VENV_PATH=/opt/letsencrypt/.venv", 'FOO=bar', 'FIZZ=buzz' ]) }
+      end
     end
   end
 end
