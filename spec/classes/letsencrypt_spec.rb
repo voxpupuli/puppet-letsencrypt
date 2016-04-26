@@ -35,6 +35,11 @@ describe 'letsencrypt' do
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/usr/lib/letsencrypt/letsencrypt-auto -h') }
         end
 
+        describe 'with custom environment variables' do
+          let(:additional_params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
+          it { is_expected.to contain_exec('initialize letsencrypt').with_environment([ 'VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz' ]) }
+        end
+
         describe 'with custom repo' do
           let(:additional_params) { { repo: 'git://foo.com/letsencrypt.git' } }
           it { is_expected.to contain_class('letsencrypt::install').with_repo('git://foo.com/letsencrypt.git') }
