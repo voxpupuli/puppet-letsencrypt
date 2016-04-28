@@ -24,6 +24,9 @@
 # [*manage_cron*]
 #   Boolean indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
+# [*cron_success_command*]
+#   String representation of a command that should be run if the renewal command
+#   succeeds.
 #
 define letsencrypt::certonly (
   $domains              = [$title],
