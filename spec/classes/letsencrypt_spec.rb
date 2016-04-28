@@ -13,9 +13,15 @@ describe 'letsencrypt' do
         describe 'with defaults' do
           it { is_expected.to compile }
 
+          if osfamily == 'RedHat'
+            epel = true
+          else
+            epel = false
+          end
+
           it 'should contain the correct resources' do
             is_expected.to contain_class('letsencrypt::install').with({
-              configure_epel: true,
+              configure_epel: epel,
               manage_install: true,
               manage_dependencies: true,
               repo: 'https://github.com/letsencrypt/letsencrypt.git',
@@ -148,8 +154,9 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+        is_expected.not_to contain_class('epel').that_comes_before('Package[letsencrypt]')
+        is_expected.not_to contain_class('letsencrypt::install').with(install_method: 'package')
       end
     end
   end
