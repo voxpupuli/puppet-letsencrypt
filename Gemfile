@@ -9,7 +9,7 @@ group :test do
   gem 'puppetlabs_spec_helper'
   gem 'metadata-json-lint'
   unless ENV['PUPPET_VERSION'] == '~> 3.4.0'
-    gem 'puppet-strings', git: 'git://github.com/puppetlabs/puppetlabs-strings.git'
+    gem 'puppet-strings'
   end
   gem 'puppet-lint-absolute_classname-check'
   gem 'puppet-lint-alias-check'
