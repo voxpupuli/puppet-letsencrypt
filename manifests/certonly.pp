@@ -24,15 +24,19 @@
 # [*manage_cron*]
 #   Boolean indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
+# [*cron_success_command*]
+#   String representation of a command that should be run if the renewal command
+#   succeeds.
 #
 define letsencrypt::certonly (
-  $domains             = [$title],
-  $plugin              = 'standalone',
-  $webroot_paths       = undef,
-  $letsencrypt_command = $letsencrypt::command,
-  $additional_args     = undef,
-  $environment         = [],
-  $manage_cron         = false,
+  $domains              = [$title],
+  $plugin               = 'standalone',
+  $webroot_paths        = undef,
+  $letsencrypt_command  = $letsencrypt::command,
+  $additional_args      = undef,
+  $environment          = [],
+  $manage_cron          = false,
+  $cron_success_command = undef,
 ) {
   validate_array($domains)
   validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
@@ -66,10 +70,15 @@ define letsencrypt::certonly (
 
   if $manage_cron {
     $renewcommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
+    if $cron_success_command {
+      $cron_cmd = "${renewcommand} && (${cron_success_command})"
+    } else {
+      $cron_cmd = $renewcommand
+    }
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "letsencrypt renew cron ${title}":
-      command     => $renewcommand,
+      command     => $cron_cmd,
       environment => concat([ $venv_path_var ], $environment),
       user        => root,
       hour        => $cron_hour,
