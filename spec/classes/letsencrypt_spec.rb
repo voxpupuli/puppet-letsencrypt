@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'letsencrypt' do
   {'Debian' => '9.0', 'RedHat' => '7.2'}.each do |osfamily, osversion|
     context "on #{osfamily} based operating systems" do
-      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, path: '/usr/bin' } }
+      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin' } }
 
       context 'when specifying an email address with the email parameter' do
         let(:params) { additional_params.merge(default_params) }
@@ -114,7 +114,7 @@ describe 'letsencrypt' do
   end
 
   context 'on unknown operating systems' do
-    let(:facts) { { osfamily: 'Darwin', operatingsystem: 'Darwin', operatingsystemrelease: '14.5.0', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Darwin', operatingsystem: 'Darwin', operatingsystemrelease: '14.5.0', operatingsystemmajrelease: '14', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -127,7 +127,21 @@ describe 'letsencrypt' do
   end
 
   context 'on EL7 operating system' do
-    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '7.2', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '7.2', operatingsystemmajrelease: '7', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+      end
+    end
+  end
+
+  context 'on EL6 operating system' do
+    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '6.7', operatingsystemmajrelease: '6', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -141,7 +155,7 @@ describe 'letsencrypt' do
   end
 
   context 'on Debian 8 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '8.0', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '8.0', operatingsystemmajrelease: '8.0', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -154,7 +168,7 @@ describe 'letsencrypt' do
   end
 
   context 'on Debian 9 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '9.0', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '9.0', operatingsystemmajrelease: '9.0', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -167,7 +181,7 @@ describe 'letsencrypt' do
   end
 
   context 'on Ubuntu 14.04 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '14.04', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '14.04', operatingsystemmajrelease: '14.04', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -180,7 +194,7 @@ describe 'letsencrypt' do
   end
 
   context 'on Ubuntu 16.04 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '16.04', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '16.04', operatingsystemmajrelease: '16.04', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
