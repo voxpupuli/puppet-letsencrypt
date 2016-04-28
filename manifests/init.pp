@@ -9,6 +9,8 @@
 #   precedence over an 'email' setting defined in $config.
 # [*path*]
 #   The path to the letsencrypt installation.
+# [*environment*]
+#   An optional array of environment variables (in addition to VENV_PATH)
 # [*repo*]
 #   A Git URL to install the Let's encrypt client from.
 # [*version*]
@@ -43,6 +45,7 @@ class letsencrypt (
   $email               = undef,
   $path                = $letsencrypt::params::path,
   $venv_path           = $letsencrypt::params::venv_path,
+  $environment         = [],
   $repo                = $letsencrypt::params::repo,
   $version             = $letsencrypt::params::version,
   $package_ensure      = $letsencrypt::params::package_ensure,
@@ -60,6 +63,7 @@ class letsencrypt (
   if $email {
     validate_string($email)
   }
+  validate_array($environment)
   validate_bool($manage_config, $manage_install, $manage_dependencies, $configure_epel, $agree_tos, $unsafe_registration)
   validate_hash($config)
   validate_re($install_method, ['^package$', '^vcs$'])
@@ -71,6 +75,11 @@ class letsencrypt (
 
   $command = $install_method ? {
     'package' => 'letsencrypt',
+    'vcs'     => "${venv_path}/bin/letsencrypt",
+  }
+
+  $command_init = $install_method ? {
+    'package' => 'letsencrypt',
     'vcs'     => "${path}/letsencrypt-auto",
   }
 
@@ -79,10 +88,11 @@ class letsencrypt (
     Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
+  # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
-    command     => "${command} -h",
+    command     => "${command_init} -h",
     path        => $::path,
-    environment => ["VENV_PATH=${venv_path}"],
+    environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
     refreshonly => true,
   }
 }

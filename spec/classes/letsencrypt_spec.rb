@@ -18,8 +18,8 @@ describe 'letsencrypt' do
               configure_epel: true,
               manage_install: true,
               manage_dependencies: true,
-              repo: 'git://github.com/letsencrypt/letsencrypt.git',
-              version: 'v0.4.0'
+              repo: 'https://github.com/letsencrypt/letsencrypt.git',
+              version: 'v0.4.2'
             }).that_notifies('Exec[initialize letsencrypt]')
 
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
@@ -33,6 +33,11 @@ describe 'letsencrypt' do
           let(:additional_params) { { path: '/usr/lib/letsencrypt', install_method: 'vcs' } }
           it { is_expected.to contain_class('letsencrypt::install').with_path('/usr/lib/letsencrypt') }
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/usr/lib/letsencrypt/letsencrypt-auto -h') }
+        end
+
+        describe 'with custom environment variables' do
+          let(:additional_params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
+          it { is_expected.to contain_exec('initialize letsencrypt').with_environment([ 'VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz' ]) }
         end
 
         describe 'with custom repo' do
@@ -109,7 +114,7 @@ describe 'letsencrypt' do
   end
 
   context 'on unknown operating systems' do
-    let(:facts) { { osfamily: 'Darwin', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'Darwin', operatingsystem: 'Darwin', operatingsystemrelease: '14.5.0', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
@@ -122,7 +127,7 @@ describe 'letsencrypt' do
   end
 
   context 'on EL7 operating system' do
-    let(:facts) { { osfamily: 'RedHat', operatingsystemrelease: '7.2', path: '/usr/bin' } }
+    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '7.2', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
 
     describe 'with defaults' do
