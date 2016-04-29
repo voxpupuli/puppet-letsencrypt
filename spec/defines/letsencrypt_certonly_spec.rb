@@ -1,7 +1,7 @@
 describe 'letsencrypt::certonly' do
   {'Debian' => '9.0', 'Ubuntu' => '16.04', 'RedHat' => '7.2'}.each do |osfamily, osversion|
     context "on #{osfamily} based operating systems" do
-      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, path: '/usr/bin' } }
+      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin' } }
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com' }" }
 
       context 'with a single domain' do
