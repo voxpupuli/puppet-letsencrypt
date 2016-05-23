@@ -24,12 +24,16 @@
 # [*package_ensure*]
 #   The value passed to `ensure` when installing the client with the `package`
 #   method.
+# [*package_name*]
+#   Name of package to use when installing the client with the `package`
+#   method. 
 #
 class letsencrypt::install (
   $manage_install      = $letsencrypt::manage_install,
   $manage_dependencies = $letsencrypt::manage_dependencies,
   $configure_epel      = $letsencrypt::configure_epel,
   $install_method      = $letsencrypt::install_method,
+  $package_name        = $letsencrypt::package_name,
   $package_ensure      = $letsencrypt::package_ensure,
   $path                = $letsencrypt::path,
   $repo                = $letsencrypt::repo,
@@ -37,7 +41,7 @@ class letsencrypt::install (
 ) {
   validate_bool($manage_install, $manage_dependencies, $configure_epel)
   validate_re($install_method, ['^package$', '^vcs$'])
-  validate_string($path, $repo, $version)
+  validate_string($path, $repo, $version, $package_name)
 
   if $install_method == 'vcs' {
     if $manage_dependencies {
@@ -53,13 +57,13 @@ class letsencrypt::install (
       revision => $version,
     }
   } else {
-    package { 'letsencrypt':
+    package { $package_name:
       ensure => $package_ensure,
     }
 
     if $configure_epel {
       include ::epel
-      Class['epel'] -> Package['letsencrypt']
+      Class['epel'] -> Package[$package_name]
     }
   }
 }

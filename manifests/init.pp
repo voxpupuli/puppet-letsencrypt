@@ -19,6 +19,12 @@
 # [*package_ensure*]
 #   The value passed to `ensure` when installing the client with the `package`
 #   method.
+# [*package_name*]
+#   Name of package and command to use when installing the client with the
+#   `package` method.
+# [*package_command*]
+#   Path or name for letsencrypt executable when installing the client with
+#   the `package` method. 
 # [*config_file*]
 #   The path to the configuration file for the letsencrypt cli.
 # [*config*]
@@ -48,7 +54,9 @@ class letsencrypt (
   $environment         = [],
   $repo                = $letsencrypt::params::repo,
   $version             = $letsencrypt::params::version,
+  $package_name        = $letsencrypt::params::package_name,
   $package_ensure      = $letsencrypt::params::package_ensure,
+  $package_command     = $letsencrypt::params::package_command,
   $config_file         = $letsencrypt::params::config_file,
   $config              = $letsencrypt::params::config,
   $manage_config       = $letsencrypt::params::manage_config,
@@ -59,7 +67,7 @@ class letsencrypt (
   $agree_tos           = $letsencrypt::params::agree_tos,
   $unsafe_registration = $letsencrypt::params::unsafe_registration,
 ) inherits letsencrypt::params {
-  validate_string($path, $repo, $version, $config_file)
+  validate_string($path, $repo, $version, $config_file, $package_name, $package_command)
   if $email {
     validate_string($email)
   }
@@ -74,12 +82,12 @@ class letsencrypt (
   }
 
   $command = $install_method ? {
-    'package' => 'letsencrypt',
+    'package' => $package_command,
     'vcs'     => "${venv_path}/bin/letsencrypt",
   }
 
   $command_init = $install_method ? {
-    'package' => 'letsencrypt',
+    'package' => $package_command,
     'vcs'     => "${path}/letsencrypt-auto",
   }
 

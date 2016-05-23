@@ -212,4 +212,19 @@ describe 'letsencrypt' do
       end
     end
   end
+  
+  context 'on Gentoo operating system' do
+    let(:facts) { { osfamily: 'Gentoo', operatingsystem: 'Gentoo', operatingsystemrelease: '4.4.6-r2', operatingsystemmajrelease: '4', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'should contain the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')
+        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+      end
+    end
+  end
+  
 end

@@ -11,6 +11,7 @@ describe 'letsencrypt::install' do
       path: '/opt/letsencrypt',
       repo: 'https://github.com/letsencrypt/letsencrypt.git',
       version: 'v0.4.2',
+      package_name: 'letsencrypt',
     }
   end
   let(:additional_params) { { } }
