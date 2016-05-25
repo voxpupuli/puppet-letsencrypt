@@ -20,6 +20,8 @@ class letsencrypt::params {
     $install_method = 'package'
   } elsif $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0 {
     $install_method = 'package'
+  } elsif $::osfamily == 'Gentoo' {
+    $install_method = 'package'
   } else {
     $install_method = 'vcs'
   }
@@ -28,5 +30,13 @@ class letsencrypt::params {
     $configure_epel = true
   } else {
     $configure_epel = false
+  }
+  
+  if $::osfamily == 'Gentoo' {
+    $package_name = 'app-crypt/certbot'
+    $package_command = 'certbot'
+  } else {
+    $package_name = 'letsencrypt'
+    $package_command = 'letsencrypt'
   }
 }
