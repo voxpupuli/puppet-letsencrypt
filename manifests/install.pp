@@ -57,13 +57,14 @@ class letsencrypt::install (
       revision => $version,
     }
   } else {
-    package { $package_name:
+    package { 'letsencrypt':
       ensure => $package_ensure,
+      name   => $package_name,
     }
 
     if $configure_epel {
       include ::epel
-      Class['epel'] -> Package[$package_name]
+      Class['epel'] -> Package['letsencrypt']
     }
   }
 }
