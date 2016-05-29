@@ -13,7 +13,7 @@ On EL (Red Hat, CentOS etc.) systems, the EPEL repository needs to be enabled
 for the Let's Encrypt client package.
 
 The module can integrate with [stahnma/epel](https://forge.puppetlabs.com/stahnma/epel)
-to set up the repo by setting the `configure_epel` parameter to `true` and
+to set up the repo by setting the `configure_epel` parameter to `true` (the default for RedHat) and
 installing the module.
 
 ## Usage
@@ -35,6 +35,8 @@ class { ::letsencrypt:
   email          => 'foo@example.com',
 }
 ```
+
+(If you manage epel some other way, disable it with `configure_epel => false`.)
 
 This will install the Let's Encrypt client and its dependencies, agree to the
 Terms of Service, initialize the client, and install a configuration file for
