@@ -52,6 +52,9 @@ class { ::letsencrypt:
   }
 }
 ```
+During testing, you probably want to direct to the staging server instead with
+`server => 'https://acme-staging.api.letsencrypt.org/directory'`
+
 
 If you don't wish to provide your email address, you can set the
 `unsafe_registration` parameter to `true` (this is not recommended):
