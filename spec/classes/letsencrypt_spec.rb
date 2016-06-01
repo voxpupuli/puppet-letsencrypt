@@ -82,7 +82,7 @@ describe 'letsencrypt' do
         end
 
         describe 'with install_method => package' do
-          let(:additional_params) { { install_method: 'package' } }
+          let(:additional_params) { { install_method: 'package', package_command: 'letsencrypt' } }
           it { is_expected.to contain_class('letsencrypt::install').with_install_method('package') }
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('letsencrypt -h') }
         end
@@ -142,6 +142,8 @@ describe 'letsencrypt' do
       it 'should contain the correct resources' do
         is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
         is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+        is_expected.to contain_package('letsencrypt').with(name: 'certbot')
       end
     end
   end

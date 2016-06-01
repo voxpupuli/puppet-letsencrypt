@@ -16,27 +16,29 @@ class letsencrypt::params {
 
   if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '9') >= 0 {
     $install_method = 'package'
+    $package_name = 'letsencrypt'
+    $package_command = 'letsencrypt'
   } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
     $install_method = 'package'
+    $package_name = 'letsencrypt'
+    $package_command = 'letsencrypt'
   } elsif $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0 {
     $install_method = 'package'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
   } elsif $::osfamily == 'Gentoo' {
     $install_method = 'package'
+    $package_name = 'app-crypt/certbot'
+    $package_command = 'certbot'
   } else {
     $install_method = 'vcs'
+    $package_name = 'letsencrypt'
+    $package_command = 'letsencrypt'
   }
 
   if $::osfamily == 'RedHat' {
     $configure_epel = true
   } else {
     $configure_epel = false
-  }
-  
-  if $::osfamily == 'Gentoo' {
-    $package_name = 'app-crypt/certbot'
-    $package_command = 'certbot'
-  } else {
-    $package_name = 'letsencrypt'
-    $package_command = 'letsencrypt'
   }
 }
