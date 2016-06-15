@@ -82,6 +82,19 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
+To request a certificate using the `webroot` plugin, the paths to the webroots
+for all domains must be given through `webroot_paths`. If `domains` and
+`webroot_paths` are not the same length, `webroot_paths` will cycle to make up
+the difference.
+
+```puppet
+letsencrypt::certonly { 'foo':
+  domains       => ['foo.example.com', 'bar.example.com'],
+  plugin        => 'webroot',
+  webroot_paths => ['/var/www/foo', '/var/www/bar'],
+}
+```
+
 If you need to pass a command line flag to the `letsencrypt-auto` command that
 is not supported natively by this module, you can use the `additional_args`
 parameter to pass those arguments:

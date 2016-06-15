@@ -42,6 +42,8 @@ define letsencrypt::certonly (
   validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
   if $webroot_paths {
     validate_array($webroot_paths)
+  } elsif $plugin == 'webroot' {
+    fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
   }
   validate_string($letsencrypt_command)
   if $additional_args {

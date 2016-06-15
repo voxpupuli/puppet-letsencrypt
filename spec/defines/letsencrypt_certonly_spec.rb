@@ -46,6 +46,12 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/foo -d bar.example.com' }
       end
 
+      context 'with webroot plugin and no webroot_paths' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'webroot' } }
+        it { is_expected.to raise_error Puppet::Error, /'webroot_paths' parameter must be specified/ }
+      end
+
       context 'with custom plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'apache' } }
