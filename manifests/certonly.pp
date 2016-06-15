@@ -43,7 +43,7 @@ define letsencrypt::certonly (
   if $webroot_paths {
     validate_array($webroot_paths)
   }
-  validate_string(letsencrypt_path)
+  validate_string($letsencrypt_command)
   if $additional_args {
     validate_array($additional_args)
   }
