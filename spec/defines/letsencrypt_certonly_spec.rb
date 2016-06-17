@@ -43,7 +43,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { domains: ['foo.example.com', 'bar.example.com'],
                          plugin: 'webroot',
                          webroot_paths: ['/var/www/foo'] } }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/foo -d bar.example.com' }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com -d bar.example.com' }
       end
 
       context 'with webroot plugin and no webroot_paths' do

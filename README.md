@@ -84,8 +84,8 @@ letsencrypt::certonly { 'foo':
 
 To request a certificate using the `webroot` plugin, the paths to the webroots
 for all domains must be given through `webroot_paths`. If `domains` and
-`webroot_paths` are not the same length, `webroot_paths` will cycle to make up
-the difference.
+`webroot_paths` are not the same length, the last `webroot_paths` element will
+be used for all subsequent domains.
 
 ```puppet
 letsencrypt::certonly { 'foo':
