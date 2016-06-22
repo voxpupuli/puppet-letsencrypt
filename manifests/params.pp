@@ -9,7 +9,7 @@ class certbot::params {
   $path                = '/opt/certbot'
   $venv_path           = '/opt/certbot/.venv' # virtualenv path for vcs-installed certbot
   $repo                = 'https://github.com/certbot/certbot.git'
-  $version             = 'v0.4.2'
+  $version             = 'v0.8.1'
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
