@@ -1,13 +1,13 @@
-# == Class: letsencrypt
+# == Class: certbot::config
 #
 #   This class configures the Let's Encrypt client. This is a private class.
 #
-class letsencrypt::config (
-  $config_file         = $letsencrypt::config_file,
-  $config              = $letsencrypt::config,
-  $email               = $letsencrypt::email,
-  $unsafe_registration = $letsencrypt::unsafe_registration,
-  $agree_tos           = $letsencrypt::agree_tos,
+class certbot::config (
+  $config_file         = $certbot::config_file,
+  $config              = $certbot::config,
+  $email               = $certbot::email,
+  $unsafe_registration = $certbot::unsafe_registration,
+  $agree_tos           = $certbot::agree_tos,
 ) {
 
   assert_private()
@@ -16,7 +16,7 @@ class letsencrypt::config (
     fail("You must agree to the Let's Encrypt Terms of Service! See: https://letsencrypt.org/repository for more information." )
   }
 
-  file { '/etc/letsencrypt': ensure => directory }
+  file { '/etc/certbot': ensure => directory }
 
   if $email {
     $_config = merge($config, {'email' => $email})
@@ -26,21 +26,21 @@ class letsencrypt::config (
 
   unless 'email' in $_config {
     if $unsafe_registration {
-      warning('No email address specified for the letsencrypt class! Registering unsafely!')
+      warning('No email address specified for the certbot class! Registering unsafely!')
       ini_setting { "${config_file} register-unsafely-without-email true":
         ensure  => present,
         path    => $config_file,
         section => '',
         setting => 'register-unsafely-without-email',
         value   => true,
-        require => File['/etc/letsencrypt'],
+        require => File['/etc/certbot'],
       }
     } else {
-      fail("Please specify an email address to register with Let's Encrypt using the \$email parameter on the letsencrypt class")
+      fail("Please specify an email address to register with Let's Encrypt using the \$email parameter on the certbot class")
     }
   }
 
-  $_config_joined = join_keys_to_values($_config, '=')
-  letsencrypt::config::ini { $_config_joined: }
+  $_config_joined = { '' => $_config }
+  create_ini_settings($_config_joined, { path => $config_file })
 
 }

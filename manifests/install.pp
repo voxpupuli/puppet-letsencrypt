@@ -1,21 +1,21 @@
-# == Class: letsencrypt::install
+# == Class: certbot::install
 #
 #   This class installs the Let's Encrypt client.  This is a private class.
 #
 # === Parameters:
 #
 # [*manage_install*]
-#   A feature flag to toggle the management of the letsencrypt client
+#   A feature flag to toggle the management of the certbot client
 #   installation.
 # [*manage_dependencies*]
-#   A feature flag to toggle the management of the letsencrypt dependencies.
+#   A feature flag to toggle the management of the certbot dependencies.
 # [*configure_epel*]
 #   A feature flag to include the 'epel' class and depend on it for package
 #   installation.
 # [*install_method*]
-#   Method to install the letsencrypt client, either package or vcs.
+#   Method to install the certbot client, either package or vcs.
 # [*path*]
-#   The path to the letsencrypt installation.
+#   The path to the certbot installation.
 # [*repo*]
 #   A Git URL to install the Let's encrypt client from.
 # [*version*]
@@ -26,18 +26,18 @@
 #   method.
 # [*package_name*]
 #   Name of package to use when installing the client with the `package`
-#   method. 
+#   method.
 #
-class letsencrypt::install (
-  $manage_install      = $letsencrypt::manage_install,
-  $manage_dependencies = $letsencrypt::manage_dependencies,
-  $configure_epel      = $letsencrypt::configure_epel,
-  $install_method      = $letsencrypt::install_method,
-  $package_name        = $letsencrypt::package_name,
-  $package_ensure      = $letsencrypt::package_ensure,
-  $path                = $letsencrypt::path,
-  $repo                = $letsencrypt::repo,
-  $version             = $letsencrypt::version,
+class certbot::install (
+  $manage_install      = $certbot::manage_install,
+  $manage_dependencies = $certbot::manage_dependencies,
+  $configure_epel      = $certbot::configure_epel,
+  $install_method      = $certbot::install_method,
+  $package_name        = $certbot::package_name,
+  $package_ensure      = $certbot::package_ensure,
+  $path                = $certbot::path,
+  $repo                = $certbot::repo,
+  $version             = $certbot::version,
 ) {
   validate_bool($manage_install, $manage_dependencies, $configure_epel)
   validate_re($install_method, ['^package$', '^vcs$'])
@@ -57,14 +57,14 @@ class letsencrypt::install (
       revision => $version,
     }
   } else {
-    package { 'letsencrypt':
+    package { 'certbot':
       ensure => $package_ensure,
       name   => $package_name,
     }
 
     if $configure_epel {
       include ::epel
-      Class['epel'] -> Package['letsencrypt']
+      Class['epel'] -> Package['certbot']
     }
   }
 }

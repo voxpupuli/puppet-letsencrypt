@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'letsencrypt::install' do
+describe 'certbot::install' do
   let(:params) { default_params.merge(additional_params) }
   let(:default_params) do
     {
@@ -8,10 +8,10 @@ describe 'letsencrypt::install' do
       package_ensure: 'installed',
       manage_install: true,
       manage_dependencies: true,
-      path: '/opt/letsencrypt',
-      repo: 'https://github.com/letsencrypt/letsencrypt.git',
+      path: '/opt/certbot',
+      repo: 'https://github.com/certbot/certbot.git',
       version: 'v0.4.2',
-      package_name: 'letsencrypt',
+      package_name: 'certbot',
     }
   end
   let(:additional_params) { { } }
@@ -22,11 +22,11 @@ describe 'letsencrypt::install' do
     it { is_expected.to compile }
 
     it 'should contain the correct resources' do
-      is_expected.not_to contain_vcsrepo('/opt/letsencrypt')
+      is_expected.not_to contain_vcsrepo('/opt/certbot')
       is_expected.not_to contain_package('python')
       is_expected.not_to contain_package('git')
 
-      is_expected.to contain_package('letsencrypt').with_ensure('installed')
+      is_expected.to contain_package('certbot').with_ensure('installed')
     end
 
     describe 'with configure_epel => true' do
@@ -37,7 +37,7 @@ describe 'letsencrypt::install' do
 
       it 'should contain the correct resources' do
         is_expected.to contain_class('epel')
-        is_expected.to contain_package('letsencrypt').that_requires('Class[epel]')
+        is_expected.to contain_package('certbot').that_requires('Class[epel]')
       end
     end
 
@@ -45,7 +45,7 @@ describe 'letsencrypt::install' do
       let(:additional_params) { { install_method: 'package', package_ensure: '0.3.0-1.el7' } }
 
       it { is_expected.to compile }
-      it { is_expected.to contain_package('letsencrypt').with_ensure('0.3.0-1.el7') }
+      it { is_expected.to contain_package('certbot').with_ensure('0.3.0-1.el7') }
     end
   end
 
@@ -55,29 +55,29 @@ describe 'letsencrypt::install' do
     it { is_expected.to compile }
 
     it 'should contain the correct resources' do
-      is_expected.to contain_vcsrepo('/opt/letsencrypt').with({
-        source: 'https://github.com/letsencrypt/letsencrypt.git',
+      is_expected.to contain_vcsrepo('/opt/certbot').with({
+        source: 'https://github.com/certbot/certbot.git',
         revision: 'v0.4.2'
       })
       is_expected.to contain_package('python')
       is_expected.to contain_package('git')
 
-      is_expected.not_to contain_package('letsencrypt')
+      is_expected.not_to contain_package('certbot')
     end
 
     describe 'with custom path' do
-      let(:additional_params) { { install_method: 'vcs', path: '/usr/lib/letsencrypt' } }
-      it { is_expected.to contain_vcsrepo('/usr/lib/letsencrypt') }
+      let(:additional_params) { { install_method: 'vcs', path: '/usr/lib/certbot' } }
+      it { is_expected.to contain_vcsrepo('/usr/lib/certbot') }
     end
 
     describe 'with custom repo' do
-      let(:additional_params) { { install_method: 'vcs', repo: 'git://foo.com/letsencrypt.git' } }
-      it { is_expected.to contain_vcsrepo('/opt/letsencrypt').with_source('git://foo.com/letsencrypt.git') }
+      let(:additional_params) { { install_method: 'vcs', repo: 'git://foo.com/certbot.git' } }
+      it { is_expected.to contain_vcsrepo('/opt/certbot').with_source('git://foo.com/certbot.git') }
     end
 
     describe 'with custom version' do
       let(:additional_params) { { install_method: 'vcs', version: 'foo' } }
-      it { is_expected.to contain_vcsrepo('/opt/letsencrypt').with_revision('foo') }
+      it { is_expected.to contain_vcsrepo('/opt/certbot').with_revision('foo') }
     end
 
     describe 'with manage_dependencies set to false' do

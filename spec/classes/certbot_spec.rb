@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'letsencrypt' do
+describe 'certbot' do
   {'Debian' => '9.0', 'RedHat' => '7.2'}.each do |osfamily, osversion|
     context "on #{osfamily} based operating systems" do
       let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin' } }
@@ -20,77 +20,77 @@ describe 'letsencrypt' do
           end
 
           it 'should contain the correct resources' do
-            is_expected.to contain_class('letsencrypt::install').with({
+            is_expected.to contain_class('certbot::install').with({
               configure_epel: epel,
               manage_install: true,
               manage_dependencies: true,
-              repo: 'https://github.com/letsencrypt/letsencrypt.git',
+              repo: 'https://github.com/certbot/certbot.git',
               version: 'v0.4.2'
-            }).that_notifies('Exec[initialize letsencrypt]')
+            }).that_notifies('Exec[initialize certbot]')
 
-            is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
-            is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
-            is_expected.to contain_exec('initialize letsencrypt')
-            is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
+            is_expected.to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com')
+            is_expected.to contain_ini_setting('/etc/certbot/cli.ini  server').with_value('https://acme-v01.api.letsencrypt.org/directory')
+            is_expected.to contain_exec('initialize certbot')
+            is_expected.to contain_class('certbot::config').that_comes_before('Exec[initialize certbot]')
           end
         end
 
         describe 'with custom path' do
-          let(:additional_params) { { path: '/usr/lib/letsencrypt', install_method: 'vcs' } }
-          it { is_expected.to contain_class('letsencrypt::install').with_path('/usr/lib/letsencrypt') }
-          it { is_expected.to contain_exec('initialize letsencrypt').with_command('/usr/lib/letsencrypt/letsencrypt-auto -h') }
+          let(:additional_params) { { path: '/usr/lib/certbot', install_method: 'vcs' } }
+          it { is_expected.to contain_class('certbot::install').with_path('/usr/lib/certbot') }
+          it { is_expected.to contain_exec('initialize certbot').with_command('/usr/lib/certbot/certbot-auto -h') }
         end
 
         describe 'with custom environment variables' do
           let(:additional_params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
-          it { is_expected.to contain_exec('initialize letsencrypt').with_environment([ 'VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz' ]) }
+          it { is_expected.to contain_exec('initialize certbot').with_environment([ 'VENV_PATH=/opt/certbot/.venv', 'FOO=bar', 'FIZZ=buzz' ]) }
         end
 
         describe 'with custom repo' do
-          let(:additional_params) { { repo: 'git://foo.com/letsencrypt.git' } }
-          it { is_expected.to contain_class('letsencrypt::install').with_repo('git://foo.com/letsencrypt.git') }
+          let(:additional_params) { { repo: 'git://foo.com/certbot.git' } }
+          it { is_expected.to contain_class('certbot::install').with_repo('git://foo.com/certbot.git') }
         end
 
         describe 'with custom version' do
           let(:additional_params) { { version: 'foo' } }
-          it { is_expected.to contain_class('letsencrypt::install').with_path('/opt/letsencrypt').with_version('foo') }
+          it { is_expected.to contain_class('certbot::install').with_path('/opt/certbot').with_version('foo') }
         end
 
         describe 'with custom package_ensure' do
           let(:additional_params) { { package_ensure: '0.3.0-1.el7' } }
-          it { is_expected.to contain_class('letsencrypt::install').with_package_ensure('0.3.0-1.el7') }
+          it { is_expected.to contain_class('certbot::install').with_package_ensure('0.3.0-1.el7') }
         end
 
         describe 'with custom config file' do
-          let(:additional_params) { { config_file: '/etc/letsencrypt/custom_config.ini' } }
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/custom_config.ini server https://acme-v01.api.letsencrypt.org/directory') }
+          let(:additional_params) { { config_file: '/etc/certbot/custom_config.ini' } }
+          it { is_expected.to contain_ini_setting('/etc/certbot/custom_config.ini  server').with_value('https://acme-v01.api.letsencrypt.org/directory') }
         end
 
         describe 'with custom config' do
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini foo bar') }
+          it { is_expected.to contain_ini_setting('/etc/certbot/cli.ini  foo').with_value('bar') }
         end
 
         describe 'with manage_config set to false' do
           let(:additional_params) { { manage_config: false } }
-          it { is_expected.not_to contain_class('letsencrypt::config') }
+          it { is_expected.not_to contain_class('certbot::config') }
         end
 
         describe 'with manage_install set to false' do
           let(:additional_params) { { manage_install: false } }
-          it { is_expected.not_to contain_class('letsencrypt::install') }
+          it { is_expected.not_to contain_class('certbot::install') }
         end
 
         describe 'with install_method => package' do
-          let(:additional_params) { { install_method: 'package', package_command: 'letsencrypt' } }
-          it { is_expected.to contain_class('letsencrypt::install').with_install_method('package') }
-          it { is_expected.to contain_exec('initialize letsencrypt').with_command('letsencrypt -h') }
+          let(:additional_params) { { install_method: 'package', package_command: 'certbot' } }
+          it { is_expected.to contain_class('certbot::install').with_install_method('package') }
+          it { is_expected.to contain_exec('initialize certbot').with_command('certbot -h') }
         end
 
         describe 'with install_method => vcs' do
           let(:additional_params) { { install_method: 'vcs' } }
-          it { is_expected.to contain_class('letsencrypt::install').with_install_method('vcs') }
-          it { is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto -h') }
+          it { is_expected.to contain_class('certbot::install').with_install_method('vcs') }
+          it { is_expected.to contain_exec('initialize certbot').with_command('/opt/certbot/certbot-auto -h') }
         end
 
         context 'when not agreeing to the TOS' do
@@ -102,7 +102,7 @@ describe 'letsencrypt' do
       context 'when specifying an email in $config' do
         let(:params) { { config: { 'email' => 'foo@example.com' } } }
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
+        it { is_expected.to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com') }
       end
 
       context 'when not specifying the email parameter or an email key in $config' do
@@ -112,8 +112,8 @@ describe 'letsencrypt' do
 
         context 'with unsafe_registration set to true' do
           let(:params) {{ unsafe_registration: true }}
-          it { is_expected.not_to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini register-unsafely-without-email true') }
+          it { is_expected.not_to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com') }
+          it { is_expected.to contain_ini_setting('/etc/certbot/cli.ini register-unsafely-without-email true') }
         end
       end
     end
@@ -127,7 +127,7 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+        is_expected.to contain_class('certbot::install').with(install_method: 'vcs')
       end
     end
   end
@@ -140,10 +140,10 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
-        is_expected.to contain_package('letsencrypt').with(name: 'certbot')
+        is_expected.to contain_class('epel').that_comes_before('Package[certbot]')
+        is_expected.to contain_class('certbot::install').with(install_method: 'package')
+        is_expected.to contain_class('certbot').with(package_command: 'certbot')
+        is_expected.to contain_package('certbot').with(name: 'certbot')
       end
     end
   end
@@ -156,9 +156,9 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
-        is_expected.not_to contain_class('epel').that_comes_before('Package[letsencrypt]')
-        is_expected.not_to contain_class('letsencrypt::install').with(install_method: 'package')
+        is_expected.to contain_class('certbot::install').with(install_method: 'vcs')
+        is_expected.not_to contain_class('epel').that_comes_before('Package[certbot]')
+        is_expected.not_to contain_class('certbot::install').with(install_method: 'package')
       end
     end
   end
@@ -171,7 +171,7 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+        is_expected.to contain_class('certbot::install').with(install_method: 'vcs')
       end
     end
   end
@@ -184,7 +184,7 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+        is_expected.to contain_class('certbot::install').with(install_method: 'package')
       end
     end
   end
@@ -197,7 +197,7 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+        is_expected.to contain_class('certbot::install').with(install_method: 'vcs')
       end
     end
   end
@@ -210,11 +210,11 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+        is_expected.to contain_class('certbot::install').with(install_method: 'package')
       end
     end
   end
-  
+
   context 'on Gentoo operating system' do
     let(:facts) { { osfamily: 'Gentoo', operatingsystem: 'Gentoo', operatingsystemrelease: '4.4.6-r2', operatingsystemmajrelease: '4', path: '/usr/bin' } }
     let(:params) { { email: 'foo@example.com' } }
@@ -223,11 +223,11 @@ describe 'letsencrypt' do
       it { is_expected.to compile }
 
       it 'should contain the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')
-        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
-        is_expected.to contain_package('letsencrypt').with(name: 'app-crypt/certbot')
+        is_expected.to contain_class('certbot::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')
+        is_expected.to contain_class('certbot').with(package_command: 'certbot')
+        is_expected.to contain_package('certbot').with(name: 'app-crypt/certbot')
       end
     end
   end
-  
+
 end

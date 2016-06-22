@@ -1,12 +1,12 @@
 {
-  "name": "danzilio-letsencrypt",
-  "version": "1.0.1",
+  "name": "danzilio-certbot",
+  "version": "1.0.0",
   "author": "David Danzilio",
-  "summary": "A module to install the Letsencrypt client and request certs.",
+  "summary": "A module to install the certbot Let's Encrypt client and request certs.",
   "license": "Apache-2.0",
-  "source": "https://github.com/danzilio/puppet-letsencrypt",
-  "project_page": "https://github.com/danzilio/puppet-letsencrypt",
-  "issues_url": "https://github.com/danzilio/puppet-letsencrypt/issues",
+  "source": "https://github.com/danzilio/puppet-certbot",
+  "project_page": "https://github.com/danzilio/puppet-certbot",
+  "issues_url": "https://github.com/danzilio/puppet-certbot/issues",
   "tags": [
     "letsencrypt"
   ],
@@ -53,7 +53,7 @@
     },
     {
       "name": "puppetlabs/inifile",
-      "version_requirement": ">=1.4.0 <2.0.0"
+      "version_requirement": ">=1.5.0 <2.0.0"
     },
     {
       "name": "puppetlabs/vcsrepo",
