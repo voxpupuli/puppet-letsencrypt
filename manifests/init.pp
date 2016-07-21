@@ -77,7 +77,7 @@ class certbot (
   validate_re($install_method, ['^package$', '^vcs$'])
 
   if $manage_install {
-    contain certbot::install
+    contain ::certbot::install
     Class['certbot::install'] ~> Exec['initialize certbot']
   }
 
@@ -90,7 +90,7 @@ class certbot (
   }
 
   if $manage_config {
-    contain certbot::config
+    contain ::certbot::config
     Class['certbot::config'] -> Exec['initialize certbot']
   }
 

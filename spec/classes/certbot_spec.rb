@@ -25,7 +25,7 @@ describe 'certbot' do
               manage_install: true,
               manage_dependencies: true,
               repo: 'https://github.com/certbot/certbot.git',
-              version: 'v0.4.2'
+              version: 'v0.8.1'
             }).that_notifies('Exec[initialize certbot]')
 
             is_expected.to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com')
