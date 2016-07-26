@@ -59,7 +59,7 @@ define certbot::certonly (
   }
   $command_end = inline_template('<% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
   $command = "${command_start}${command_domains}${command_end}"
-  $live_path = inline_template('/etc/certbot/live/<%= @domains.first %>/cert.pem')
+  $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
   $venv_path_var = "VENV_PATH=${certbot::venv_path}"
   exec { "certbot certonly ${title}":

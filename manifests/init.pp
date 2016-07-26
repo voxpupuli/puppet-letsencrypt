@@ -85,8 +85,8 @@ class certbot (
     $command      = $package_command
     $command_init = $package_command
   } elsif $install_method == 'vcs' {
-    $command      = "${venv_path}/bin/certbot"
     $command_init = "${path}/certbot-auto"
+    $command      = $command_init
   }
 
   if $manage_config {
