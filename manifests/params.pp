@@ -5,9 +5,8 @@ class certbot::params {
   $manage_install      = true
   $manage_dependencies = true
   $package_ensure      = 'installed'
-  $config_file         = '/etc/certbot/cli.ini'
+  $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/certbot'
-  $venv_path           = '/opt/certbot/.venv' # virtualenv path for vcs-installed certbot
   $repo                = 'https://github.com/certbot/certbot.git'
   $version             = 'v0.8.1'
   $config              = {
