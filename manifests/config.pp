@@ -16,7 +16,7 @@ class certbot::config (
     fail("You must agree to the Let's Encrypt Terms of Service! See: https://letsencrypt.org/repository for more information." )
   }
 
-  file { '/etc/certbot': ensure => directory }
+  file { '/etc/letsencrypt': ensure => directory }
 
   if $email {
     $_config = merge($config, {'email' => $email})
@@ -33,7 +33,7 @@ class certbot::config (
         section => '',
         setting => 'register-unsafely-without-email',
         value   => true,
-        require => File['/etc/certbot'],
+        require => File['/etc/letsencrypt'],
       }
     } else {
       fail("Please specify an email address to register with Let's Encrypt using the \$email parameter on the certbot class")
