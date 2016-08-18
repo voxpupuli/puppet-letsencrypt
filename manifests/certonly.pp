@@ -76,7 +76,7 @@ define letsencrypt::certonly (
   if $manage_cron {
     $maincommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
     if $cron_before_command {
-      $renewcommand = "(${cron_before_command}) && $maincommand"
+      $renewcommand = "(${cron_before_command}) && ${maincommand}"
     } else {
       $renewcommand = $maincommand
     }
