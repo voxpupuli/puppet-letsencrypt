@@ -41,6 +41,12 @@ class certbot::config (
   }
 
   $_config_joined = { '' => $_config }
-  create_ini_settings($_config_joined, { path => $config_file })
+
+  $config_defaults = {
+    path => $config_file,
+    require => File[$config_file],
+  }
+
+  create_ini_settings($_config_joined, $config_defaults)
 
 }

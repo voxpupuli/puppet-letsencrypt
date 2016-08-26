@@ -28,8 +28,8 @@ describe 'certbot' do
               version: 'v0.8.1'
             }).that_notifies('Exec[initialize certbot]')
 
-            is_expected.to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com')
-            is_expected.to contain_ini_setting('/etc/certbot/cli.ini  server').with_value('https://acme-v01.api.letsencrypt.org/directory')
+            is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini  email').with_value('foo@example.com')
+            is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini  server').with_value('https://acme-v01.api.letsencrypt.org/directory')
             is_expected.to contain_exec('initialize certbot')
             is_expected.to contain_class('certbot::config').that_comes_before('Exec[initialize certbot]')
           end
