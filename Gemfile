@@ -13,7 +13,6 @@ group :test do
   end
   gem 'puppet-lint-alias-check', '~> 0.1.1'
   gem 'puppet-lint-file_source_rights-check', '~> 0.1.1'
-  gem 'puppet-lint-fileserver-check', '~> 1.2', '>= 1.2.1'
   gem 'puppet-lint-spaceship_operator_without_tag-check', '~> 0.1.1'
   gem 'puppet-lint-variable_contains_upcase', '~> 1.0', '>= 1.0.2'
   gem 'puppet-lint-param-docs', '~> 1.4', '>= 1.4.1'

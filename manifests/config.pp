@@ -16,8 +16,12 @@ class certbot::config (
     fail("You must agree to the Let's Encrypt Terms of Service! See: https://letsencrypt.org/repository for more information." )
   }
 
-  file { '/etc/letsencrypt':
-    ensure => directory,
+  file {
+    '/etc/letsencrypt' :
+      ensure => directory;
+
+    $config_file :
+      ensure => file;
   }
 
   if $email {
@@ -44,14 +48,10 @@ class certbot::config (
 
   $_config_joined = { '' => $_config }
 
-  $config_defaults = {
+  $config_defaults_option = {
     path => $config_file,
-    require => [
-      File['/etc/letsencrypt'],
-      File[$config_file],
-    ],
   }
 
-  create_ini_settings($_config_joined, $config_defaults)
+  create_ini_settings($_config_joined, $config_defaults_option)
 
 }
