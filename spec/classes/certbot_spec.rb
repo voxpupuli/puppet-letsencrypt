@@ -43,7 +43,7 @@ describe 'certbot' do
 
         describe 'with custom environment variables' do
           let(:additional_params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
-          it { is_expected.to contain_exec('initialize certbot').with_environment([ 'VENV_PATH=/opt/certbot/.venv', 'FOO=bar', 'FIZZ=buzz' ]) }
+          it { is_expected.to contain_exec('initialize certbot').with_environment([ 'FOO=bar', 'FIZZ=buzz' ]) }
         end
 
         describe 'with custom repo' do
@@ -68,7 +68,7 @@ describe 'certbot' do
 
         describe 'with custom config' do
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
-          it { is_expected.to contain_ini_setting('/etc/certbot/cli.ini  foo').with_value('bar') }
+          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini  foo').with_value('bar') }
         end
 
         describe 'with manage_config set to false' do
@@ -102,7 +102,7 @@ describe 'certbot' do
       context 'when specifying an email in $config' do
         let(:params) { { config: { 'email' => 'foo@example.com' } } }
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com') }
+        it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini  email').with_value('foo@example.com') }
       end
 
       context 'when not specifying the email parameter or an email key in $config' do
@@ -112,8 +112,8 @@ describe 'certbot' do
 
         context 'with unsafe_registration set to true' do
           let(:params) {{ unsafe_registration: true }}
-          it { is_expected.not_to contain_ini_setting('/etc/certbot/cli.ini  email').with_value('foo@example.com') }
-          it { is_expected.to contain_ini_setting('/etc/certbot/cli.ini register-unsafely-without-email true') }
+          it { is_expected.not_to contain_ini_setting('/etc/letsencrypt/cli.ini  email').with_value('foo@example.com') }
+          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini register-unsafely-without-email true') }
         end
       end
     end
