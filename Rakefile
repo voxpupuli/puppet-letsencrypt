@@ -31,7 +31,7 @@ PuppetLint.configuration.ignore_paths = exclude_paths
 PuppetSyntax.exclude_paths = exclude_paths
 
 desc 'Run metadata-json-lint'
-task :metadata do
+task :metadata_lint do
   out = `bundle exec metadata-json-lint metadata.json`
   $CHILD_STATUS != 0 ? (fail out) : (puts 'Metadata OK!')
 end
