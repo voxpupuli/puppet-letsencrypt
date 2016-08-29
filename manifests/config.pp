@@ -9,7 +9,6 @@ class certbot::config (
   $unsafe_registration = $certbot::unsafe_registration,
   $agree_tos           = $certbot::agree_tos,
 ) {
-
   assert_private()
 
   unless $agree_tos {
