@@ -38,6 +38,9 @@ define letsencrypt::certonly (
   $manage_cron          = false,
   $cron_success_command = undef,
 ) {
+
+  include ::letsencrypt
+  
   validate_array($domains)
   validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
   if $webroot_paths {
