@@ -68,6 +68,7 @@ define letsencrypt::certonly (
     environment => concat([ $venv_path_var ], $environment),
     creates     => $live_path,
     require     => Class['letsencrypt'],
+    refreshonly => true,
   }
 
   if $manage_cron {
