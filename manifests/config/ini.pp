@@ -10,6 +10,7 @@ define letsencrypt::config::ini () {
   $setting = $name_split[0]
   $value = $name_split[1]
   $config_file = $::letsencrypt::config::config_file
+  $config_dir = $::letsencrypt::config::config_dir
 
   ini_setting { "${config_file} ${setting} ${value}":
     ensure  => present,
@@ -17,7 +18,7 @@ define letsencrypt::config::ini () {
     section => '',
     setting => $setting,
     value   => $value,
-    require => File['/etc/letsencrypt'],
+    require => File[$config_dir],
   }
 
 }
