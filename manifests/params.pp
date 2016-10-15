@@ -5,7 +5,6 @@ class letsencrypt::params {
   $manage_install      = true
   $manage_dependencies = true
   $package_ensure      = 'installed'
-  $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/letsencrypt'
   $venv_path           = '/opt/letsencrypt/.venv' # virtualenv path for vcs-installed letsencrypt
   $repo                = 'https://github.com/letsencrypt/letsencrypt.git'
@@ -19,27 +18,40 @@ class letsencrypt::params {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
   } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
     $install_method = 'package'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
+    $config_dir = '/etc/letsencrypt'
   } elsif $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
   } elsif $::osfamily == 'Gentoo' {
     $install_method = 'package'
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
-  } elsif $::osfamily == 'OpenBSD' {
+    $config_dir = '/etc/letsencrypt'
+} elsif $::osfamily == 'OpenBSD' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
+  } elsif $::osfamily == 'FreeBSD' {
+    $install_method = 'package'
+    $package_name = 'py27-certbot'
+    $package_command = 'certbot'
+    $config_dir = '/usr/local/etc/letsencrypt'
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
+    $config_dir = '/etc/letsencrypt'
   }
+
+  $config_file = "${config_dir}/cli.ini"
 
   if $::osfamily == 'RedHat' {
     $configure_epel = true
