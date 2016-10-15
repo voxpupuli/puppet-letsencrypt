@@ -102,6 +102,11 @@ describe 'letsencrypt' do
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto -h') }
         end
 
+        describe 'with custom config directory' do
+          let(:additional_params) { { config_dir: '/foo/bar/baz' } }
+          it { is_expected.to contain_file('/foo/bar/baz').with(ensure: 'directory') }
+        end
+
         context 'when not agreeing to the TOS' do
           let(:params) { { agree_tos: false } }
 
@@ -238,6 +243,22 @@ describe 'letsencrypt' do
         is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')
         is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
         is_expected.to contain_package('letsencrypt').with(name: 'app-crypt/certbot')
+      end
+    end
+  end
+
+  context 'on FreeBSD operating system' do
+    let(:facts) { { osfamily: 'FreeBSD', operatingsystem: 'FreeBSD', operatingsystemrelease: '10.3-RELEASE-p7', operatingsystemmajrelease: '10', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'contains the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'py27-certbot')
+        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+        is_expected.to contain_package('letsencrypt').with(name: 'py27-certbot')
+        is_expected.to contain_file('/usr/local/etc/letsencrypt').with(ensure: 'directory')
       end
     end
   end
