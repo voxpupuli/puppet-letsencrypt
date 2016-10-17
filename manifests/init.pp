@@ -77,7 +77,7 @@ class letsencrypt (
   validate_re($install_method, ['^package$', '^vcs$'])
 
   if $manage_install {
-    contain letsencrypt::install
+    contain letsencrypt::install # lint:ignore:relative_classname_inclusion
     Class['letsencrypt::install'] ~> Exec['initialize letsencrypt']
   }
 
@@ -92,7 +92,7 @@ class letsencrypt (
   }
 
   if $manage_config {
-    contain letsencrypt::config
+    contain letsencrypt::config # lint:ignore:relative_classname_inclusion
     Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
