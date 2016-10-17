@@ -28,17 +28,9 @@ group :test do
   # Fixes specifically for the purpose of supporting Ruby and/or Puppet
   # versions in TravisCI to allow testing for legacy versions.
   if ENV['TRAVIS']
-    # json_pure latest versions break on old Ruby versions, so we pin the version.
     unless ENV['TRAVIS_RUBY_VERSION'] >= '2.2'
       gem 'json_pure', '~> 1.8'
-    end
-
-    if ENV['TRAVIS_RUBY_VERSION'] >= '2.2'
-      if ENV['PUPPET_VERSION'] == '~> 3.4'
-        # Ruby 2.2 and later removed Syck, but Puppet 3.x still requires it, so
-        # we install it here for compatibility.
-        gem 'syck'
-      end
+      gem 'rubocop', '~> 0.39.0'
     end
   end
 end
