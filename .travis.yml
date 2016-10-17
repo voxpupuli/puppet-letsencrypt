@@ -7,6 +7,8 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1
+  - 2.2.5
+  - 2.3.1
 script: bundle exec rake test
 env:
   - PUPPET_VERSION="~> 3.4.0"
@@ -17,3 +19,13 @@ env:
   - PUPPET_VERSION="~> 4.3.0"
   - PUPPET_VERSION="~> 4"
   - PUPPET_VERSION="~> 4" STRICT_VARIABLES="yes"
+matrix:
+  exclude:
+   - rvm: 2.2.5
+     env: PUPPET_VERSION="~> 3.4"
+   - rvm: 2.2.5
+     env: PUPPET_VERSION="~> 3.4.0"
+   - rvm: 2.3.1
+     env: PUPPET_VERSION="~> 3.4"
+   - rvm: 2.3.1
+     env: PUPPET_VERSION="~> 3.4.0"
