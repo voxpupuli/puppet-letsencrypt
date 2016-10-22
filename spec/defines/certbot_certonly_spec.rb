@@ -88,14 +88,14 @@ describe 'certbot::certonly' do
       describe 'when specifying custom environment variables' do
         let(:title) { 'foo.example.com' }
         let(:params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
-        it { is_expected.to contain_exec('certbot certonly foo.example.com').with_environment([ "VENV_PATH=/opt/certbot/.venv", 'FOO=bar', 'FIZZ=buzz' ]) }
+        it { is_expected.to contain_exec('certbot certonly foo.example.com').with_environment([ 'FOO=bar', 'FIZZ=buzz' ]) }
       end
 
       context 'with custom environment variables and manage cron' do
         let(:title) { 'foo.example.com' }
         let(:params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ], manage_cron: true } }
 
-        it { is_expected.to contain_cron('certbot renew cron foo.example.com').with_environment([ "VENV_PATH=/opt/certbot/.venv", 'FOO=bar', 'FIZZ=buzz' ]) }
+        it { is_expected.to contain_cron('certbot renew cron foo.example.com').with_environment([ 'FOO=bar', 'FIZZ=buzz' ]) }
       end
     end
   end
