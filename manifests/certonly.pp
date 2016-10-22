@@ -20,7 +20,7 @@
 #   An array of additional command line arguments to pass to the
 #   `certbot-auto` command.
 # [*environment*]
-#   An optional array of environment variables (in addition to VENV_PATH).
+#   An optional array of environment variables.
 # [*manage_cron*]
 #   Boolean indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
@@ -61,11 +61,10 @@ define certbot::certonly (
   $command = "${command_start}${command_domains}${command_end}"
   $live_path = inline_template('/etc/letsencrypt/live/<%= @domains.first %>/cert.pem')
 
-  $venv_path_var = "VENV_PATH=${certbot::venv_path}"
   exec { "certbot certonly ${title}":
     command     => $command,
     path        => $::path,
-    environment => concat([ $venv_path_var ], $environment),
+    environment => $environment,
     creates     => $live_path,
     require     => Class['certbot'],
   }
@@ -82,7 +81,7 @@ define certbot::certonly (
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
     cron { "certbot renew cron ${title}":
       command     => $cron_cmd,
-      environment => concat([ $venv_path_var ], $environment),
+      environment => $environment,
       user        => root,
       hour        => $cron_hour,
       minute      => $cron_minute,
