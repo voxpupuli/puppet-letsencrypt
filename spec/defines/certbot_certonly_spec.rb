@@ -7,7 +7,7 @@ describe 'certbot::certonly' do
       context 'with a single domain' do
         let(:title) { 'foo.example.com' }
         it { is_expected.to contain_exec('certbot certonly foo.example.com') }
-        it { is_expected.to contain_exec('certbot certonly foo.example.com').with_creates '/etc/certbot/live/foo.example.com/cert.pem' }
+        it { is_expected.to contain_exec('certbot certonly foo.example.com').with_creates '/etc/letsencrypt/live/foo.example.com/cert.pem' }
         it { is_expected.to contain_exec('certbot certonly foo.example.com').with_command 'certbot --agree-tos certonly -a standalone -d foo.example.com' }
       end
 
