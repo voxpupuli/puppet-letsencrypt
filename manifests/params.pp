@@ -1,4 +1,4 @@
-class letsencrypt::params {
+class certbot::params {
   $agree_tos           = true
   $unsafe_registration = false
   $manage_config       = true
@@ -6,10 +6,9 @@ class letsencrypt::params {
   $manage_dependencies = true
   $package_ensure      = 'installed'
   $config_file         = '/etc/letsencrypt/cli.ini'
-  $path                = '/opt/letsencrypt'
-  $venv_path           = '/opt/letsencrypt/.venv' # virtualenv path for vcs-installed letsencrypt
-  $repo                = 'https://github.com/letsencrypt/letsencrypt.git'
+  $path                = '/opt/certbot'
   $version             = 'v0.9.3'
+  $repo                = 'https://github.com/certbot/certbot.git'
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
@@ -32,8 +31,8 @@ class letsencrypt::params {
     $package_command = 'certbot'
   } else {
     $install_method = 'vcs'
-    $package_name = 'letsencrypt'
-    $package_command = 'letsencrypt'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
   }
 
   if $::osfamily == 'RedHat' {
