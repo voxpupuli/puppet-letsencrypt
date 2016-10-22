@@ -18,6 +18,10 @@ test/version_tmp
 tmp
 Gemfile.lock
 
+# rvm
+.ruby-gemset
+.ruby-version
+
 # YARD artifacts
 .yardoc
 _yardoc

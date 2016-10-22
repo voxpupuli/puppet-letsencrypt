@@ -9,14 +9,19 @@ class certbot::config (
   $unsafe_registration = $certbot::unsafe_registration,
   $agree_tos           = $certbot::agree_tos,
 ) {
-
   assert_private()
 
   unless $agree_tos {
     fail("You must agree to the Let's Encrypt Terms of Service! See: https://letsencrypt.org/repository for more information." )
   }
 
-  file { '/etc/certbot': ensure => directory }
+  file {
+    '/etc/letsencrypt' :
+      ensure => directory;
+
+    $config_file :
+      ensure => file;
+  }
 
   if $email {
     $_config = merge($config, {'email' => $email})
@@ -33,7 +38,7 @@ class certbot::config (
         section => '',
         setting => 'register-unsafely-without-email',
         value   => true,
-        require => File['/etc/certbot'],
+        require => File['/etc/letsencrypt'],
       }
     } else {
       fail("Please specify an email address to register with Let's Encrypt using the \$email parameter on the certbot class")
@@ -41,6 +46,11 @@ class certbot::config (
   }
 
   $_config_joined = { '' => $_config }
-  create_ini_settings($_config_joined, { path => $config_file })
+
+  $config_defaults_option = {
+    path => $config_file,
+  }
+
+  create_ini_settings($_config_joined, $config_defaults_option)
 
 }

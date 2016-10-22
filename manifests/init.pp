@@ -10,7 +10,7 @@
 # [*path*]
 #   The path to the certbot installation.
 # [*environment*]
-#   An optional array of environment variables (in addition to VENV_PATH)
+#   An optional array of environment variables.
 # [*repo*]
 #   A Git URL to install the Let's encrypt client from.
 # [*version*]
@@ -50,7 +50,6 @@
 class certbot (
   $email               = undef,
   $path                = $certbot::params::path,
-  $venv_path           = $certbot::params::venv_path,
   $environment         = [],
   $repo                = $certbot::params::repo,
   $version             = $certbot::params::version,
@@ -85,8 +84,8 @@ class certbot (
     $command      = $package_command
     $command_init = $package_command
   } elsif $install_method == 'vcs' {
-    $command      = "${venv_path}/bin/certbot"
     $command_init = "${path}/certbot-auto"
+    $command      = $command_init
   }
 
   if $manage_config {
@@ -98,7 +97,7 @@ class certbot (
   exec { 'initialize certbot':
     command     => "${command_init} -h",
     path        => $::path,
-    environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
+    environment => $environment,
     refreshonly => true,
   }
 }

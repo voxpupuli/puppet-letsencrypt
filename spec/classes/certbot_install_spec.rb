@@ -41,12 +41,12 @@ describe 'certbot::install' do
       end
     end
 
-    describe 'with package_ensure => 0.3.0-1.el7' do
-      let(:additional_params) { { install_method: 'package', package_ensure: '0.3.0-1.el7' } }
-
-      it { is_expected.to compile }
-      it { is_expected.to contain_package('certbot').with_ensure('0.3.0-1.el7') }
-    end
+    # describe 'with package_ensure => 0.3.0-1.el7' do
+    #   let(:additional_params) { { install_method: 'package', package_ensure: '0.3.0-1.el7' } }
+    #
+    #   it { is_expected.to compile }
+    #   it { is_expected.to contain_package('certbot').with_ensure('0.3.0-1.el7') }
+    # end
   end
 
   describe 'with install_method => vcs' do
