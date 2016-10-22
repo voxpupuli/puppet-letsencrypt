@@ -72,6 +72,7 @@ define certbot::certonly (
 
   if $manage_cron {
     $renewcommand = "${command_start}--keep-until-expiring --quiet ${command_domains}${command_end}"
+
     if $cron_success_command {
       $cron_cmd = "${renewcommand} && (${cron_success_command})"
     } else {
