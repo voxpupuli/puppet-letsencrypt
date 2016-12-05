@@ -9,7 +9,7 @@
 #   precedence over an 'email' setting defined in $config.
 # [*path*]
 #   The path to the letsencrypt installation.
-# [*environment*]
+# [*venv_vars*]
 #   An optional array of environment variables (in addition to VENV_PATH)
 # [*repo*]
 #   A Git URL to install the Let's encrypt client from.
@@ -54,8 +54,8 @@
 class letsencrypt (
   Optional[String] $email                = undef,
   String $path                           = $letsencrypt::params::path,
-  $venv_path                             = $letsencrypt::params::venv_path,
-  Array $environment                     = [],
+  $venv_path                             = [],
+  Array $venv_vars                       = $letsencrypt::params::venv_vars,
   String $repo                           = $letsencrypt::params::repo,
   String $version                        = $letsencrypt::params::version,
   String $package_name                   = $letsencrypt::params::package_name,
@@ -98,7 +98,7 @@ class letsencrypt (
   exec { 'initialize letsencrypt':
     command     => "${command_init} -h",
     path        => $::path,
-    environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
+    environment => concat([ "VENV_PATH=${venv_path}" ], $venv_vars),
     refreshonly => true,
   }
 }
