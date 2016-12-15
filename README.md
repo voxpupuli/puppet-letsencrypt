@@ -44,7 +44,7 @@ initialize the client, and install a configuration file for the client.
 Alternatively, you can specify your email address in the $config hash:
 
 ```puppet
-class { ::cerbot:
+class { ::certbot:
   config => {
     email  => 'foo@example.com',
     server => 'https://acme-v01.api.letsencrypt.org/directory',
