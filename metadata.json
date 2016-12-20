@@ -1,6 +1,6 @@
 {
   "name": "danzilio-letsencrypt",
-  "version": "999.999.999",
+  "version": "999.999.1000",
   "author": "David Danzilio",
   "summary": "This module has been moved to voxpupuli/letsencrypt",
   "license": "Apache-2.0",
