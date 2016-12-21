@@ -11,17 +11,17 @@ describe 'letsencrypt::install' do
       path: '/opt/letsencrypt',
       repo: 'https://github.com/letsencrypt/letsencrypt.git',
       version: 'v0.9.3',
-      package_name: 'letsencrypt',
+      package_name: 'letsencrypt'
     }
   end
-  let(:additional_params) { { } }
+  let(:additional_params) { {} }
 
   describe 'with install_method => package' do
     let(:additional_params) { { install_method: 'package' } }
 
     it { is_expected.to compile }
 
-    it 'should contain the correct resources' do
+    it 'contains the correct resources' do
       is_expected.not_to contain_vcsrepo('/opt/letsencrypt')
       is_expected.not_to contain_package('python')
       is_expected.not_to contain_package('git')
@@ -35,7 +35,7 @@ describe 'letsencrypt::install' do
 
       it { is_expected.to compile }
 
-      it 'should contain the correct resources' do
+      it 'contains the correct resources' do
         is_expected.to contain_class('epel')
         is_expected.to contain_package('letsencrypt').that_requires('Class[epel]')
       end
@@ -54,11 +54,9 @@ describe 'letsencrypt::install' do
 
     it { is_expected.to compile }
 
-    it 'should contain the correct resources' do
-      is_expected.to contain_vcsrepo('/opt/letsencrypt').with({
-        source: 'https://github.com/letsencrypt/letsencrypt.git',
-        revision: 'v0.9.3'
-      })
+    it 'contains the correct resources' do
+      is_expected.to contain_vcsrepo('/opt/letsencrypt').with(source: 'https://github.com/letsencrypt/letsencrypt.git',
+                                                              revision: 'v0.9.3')
       is_expected.to contain_package('python')
       is_expected.to contain_package('git')
 
@@ -82,7 +80,7 @@ describe 'letsencrypt::install' do
 
     describe 'with manage_dependencies set to false' do
       let(:additional_params) { { install_method: 'vcs', manage_dependencies: false } }
-      it 'should not contain the dependencies' do
+      it 'does not contain the dependencies' do
         is_expected.not_to contain_package('git')
         is_expected.not_to contain_package('python')
       end

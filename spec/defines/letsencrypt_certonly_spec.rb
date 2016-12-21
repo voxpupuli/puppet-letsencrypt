@@ -1,5 +1,5 @@
 describe 'letsencrypt::certonly' do
-  {'Debian' => '9.0', 'Ubuntu' => '16.04', 'RedHat' => '7.2'}.each do |osfamily, osversion|
+  { 'Debian' => '9.0', 'Ubuntu' => '16.04', 'RedHat' => '7.2' }.each do |osfamily, osversion|
     context "on #{osfamily} based operating systems" do
       let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin' } }
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
@@ -25,31 +25,37 @@ describe 'letsencrypt::certonly' do
 
       context 'with webroot plugin' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { plugin: 'webroot',
-                         webroot_paths: ['/var/www/foo'] } }
+        let(:params) do
+          { plugin: 'webroot',
+            webroot_paths: ['/var/www/foo'] }
+        end
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command 'letsencrypt --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com' }
       end
 
       context 'with webroot plugin and multiple domains' do
         let(:title) { 'foo' }
-        let(:params) { { domains: ['foo.example.com', 'bar.example.com'],
-                         plugin: 'webroot',
-                         webroot_paths: ['/var/www/foo', '/var/www/bar'] } }
+        let(:params) do
+          { domains: ['foo.example.com', 'bar.example.com'],
+            plugin: 'webroot',
+            webroot_paths: ['/var/www/foo', '/var/www/bar'] }
+        end
         it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/bar -d bar.example.com' }
       end
 
       context 'with webroot plugin, one webroot, and multiple domains' do
         let(:title) { 'foo' }
-        let(:params) { { domains: ['foo.example.com', 'bar.example.com'],
-                         plugin: 'webroot',
-                         webroot_paths: ['/var/www/foo'] } }
+        let(:params) do
+          { domains: ['foo.example.com', 'bar.example.com'],
+            plugin: 'webroot',
+            webroot_paths: ['/var/www/foo'] }
+        end
         it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --agree-tos certonly -a webroot --webroot-path /var/www/foo -d foo.example.com -d bar.example.com' }
       end
 
       context 'with webroot plugin and no webroot_paths' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'webroot' } }
-        it { is_expected.to raise_error Puppet::Error, /'webroot_paths' parameter must be specified/ }
+        it { is_expected.to raise_error Puppet::Error, %r{'webroot_paths' parameter must be specified} }
       end
 
       context 'with custom plugin' do
@@ -60,16 +66,20 @@ describe 'letsencrypt::certonly' do
 
       context 'with custom plugin and manage cron' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { plugin: 'apache',
-                         manage_cron: true } }
+        let(:params) do
+          { plugin: 'apache',
+            manage_cron: true }
+        end
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command 'letsencrypt --agree-tos certonly -a apache --keep-until-expiring --quiet -d foo.example.com' }
       end
 
       context 'with custom plugin and manage cron and cron_success_command' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { plugin: 'apache',
-                         manage_cron: true,
-                         cron_success_command: "echo success" } }
+        let(:params) do
+          { plugin: 'apache',
+            manage_cron: true,
+            cron_success_command: 'echo success' }
+        end
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command 'letsencrypt --agree-tos certonly -a apache --keep-until-expiring --quiet -d foo.example.com && (echo success)' }
       end
 
@@ -87,15 +97,15 @@ describe 'letsencrypt::certonly' do
 
       describe 'when specifying custom environment variables' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ] } }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_environment([ "VENV_PATH=/opt/letsencrypt/.venv", 'FOO=bar', 'FIZZ=buzz' ]) }
+        let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
       end
 
       context 'with custom environment variables and manage cron' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { environment: [ 'FOO=bar', 'FIZZ=buzz' ], manage_cron: true } }
+        let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'], manage_cron: true } }
 
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_environment([ "VENV_PATH=/opt/letsencrypt/.venv", 'FOO=bar', 'FIZZ=buzz' ]) }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
       end
     end
   end
