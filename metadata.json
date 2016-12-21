@@ -1,12 +1,12 @@
 {
-  "name": "danzilio-letsencrypt",
-  "version": "999.999.1000",
-  "author": "David Danzilio",
+  "name": "puppet-letsencrypt",
+  "version": "2.0.0",
+  "author": "Vox pupuli",
   "summary": "This module has been moved to voxpupuli/letsencrypt",
   "license": "Apache-2.0",
-  "source": "https://github.com/danzilio/puppet-letsencrypt",
-  "project_page": "https://github.com/danzilio/puppet-letsencrypt",
-  "issues_url": "https://github.com/danzilio/puppet-letsencrypt/issues",
+  "source": "https://github.com/voxpupuli/puppet-letsencrypt",
+  "project_page": "https://github.com/voxpupuli/puppet-letsencrypt",
+  "issues_url": "https://github.com/voxpupuli/puppet-letsencrypt/issues",
   "tags": [
     "letsencrypt"
   ],
@@ -43,7 +43,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 3.4.0"
+      "version_requirement": ">= 3.8.7 <5.0.0"
     }
   ],
   "dependencies": [

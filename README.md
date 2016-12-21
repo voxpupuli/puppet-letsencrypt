@@ -1,14 +1,10 @@
-# **THIS MODULE HAS BEEN MOVED TO VOXPUPULI**
-
-This module has been donated to Vox Pupuli and can be found at https://github.com/voxpupuli/puppet-letsencrypt.
-
-[![Puppet Forge](http://img.shields.io/puppetforge/v/danzilio/letsencrypt.svg?style=flat)](https://forge.puppetlabs.com/danzilio/letsencrypt) [![Build Status](https://travis-ci.org/danzilio/puppet-letsencrypt.svg)](https://travis-ci.org/danzilio/puppet-letsencrypt) [![Documentation Status](http://img.shields.io/badge/docs-puppet--strings-ff69b4.svg?style=flat)](http://danzilio.github.io/puppet-letsencrypt)
+[![Puppet Forge](http://img.shields.io/puppetforge/v/puppet/letsencrypt.svg?style=flat)](https://forge.puppetlabs.com/puppet/letsencrypt) [![Build Status](https://travis-ci.org/voxpupuli/puppet-letsencrypt.svg)](https://travis-ci.org/voxpupuli/puppet-letsencrypt) [![Documentation Status](http://img.shields.io/badge/docs-puppet--strings-ff69b4.svg?style=flat)](http://voxpupuli.github.io/puppet-letsencrypt)
 
 This module installs the Let's Encrypt client from source and allows you to request certificates.
 
 ## Support
 
-This module requires Puppet >= 3.4. and is currently only written to work on
+This module requires Puppet >= 3.8.7. and is currently only written to work on
 Debian and RedHat based operating systems, although it may work on others.
 
 ## Dependencies
