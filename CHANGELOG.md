@@ -1,8 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased][unreleased]
+## 2016-12-22 Release 1.0.1
 - Ability to run commands after a successful cronjob-based renewal with the `cron_success_command` parameter.
+- Modulesync with latest Vox Pupuli defaults
+- First release in the Vox Pupuli namespace, this module got donated by danzilio
 
 ## [1.0.0] - 2016-02-22
 ## Added
@@ -50,11 +52,12 @@ All notable changes to this project will be documented in this file. This projec
 ## [0.1.0] - 2015-12-03
 Initial Release
 
-[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.4.0...v1.0.0
-[0.4.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.2...v0.4.0
-[0.3.2]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.1...v0.3.2
-[0.3.1]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.3.0...v0.3.1
-[0.3.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/danzilio/puppet-letsencrypt/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/danzilio/puppet-letsencrypt/tree/v0.1.0
+[unreleased]: https://github.com/danzilio/puppet-letsencrypt/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.4.0...v1.0.0
+[0.4.0]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.3.2...v0.4.0
+[0.3.2]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.1.0

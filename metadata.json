@@ -1,14 +1,16 @@
 {
   "name": "puppet-letsencrypt",
-  "version": "2.0.0",
-  "author": "Vox pupuli",
-  "summary": "This module has been moved to voxpupuli/letsencrypt",
+  "version": "1.0.1",
+  "author": "Vox Pupuli",
+  "summary": "Manages lets-encrypt and certbot + related certs",
   "license": "Apache-2.0",
   "source": "https://github.com/voxpupuli/puppet-letsencrypt",
   "project_page": "https://github.com/voxpupuli/puppet-letsencrypt",
   "issues_url": "https://github.com/voxpupuli/puppet-letsencrypt/issues",
   "tags": [
-    "letsencrypt"
+    "letsencrypt",
+    "let's encrypt",
+    "certbot"
   ],
   "operatingsystem_support": [
     {
