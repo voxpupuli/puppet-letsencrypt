@@ -1,6 +1,6 @@
 {
   "name": "puppet-letsencrypt",
-  "version": "1.0.1",
+  "version": "1.0.2-rc0",
   "author": "Vox Pupuli",
   "summary": "Manages lets-encrypt and certbot + related certs",
   "license": "Apache-2.0",
