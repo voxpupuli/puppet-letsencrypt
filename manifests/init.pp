@@ -24,7 +24,7 @@
 #   `package` method.
 # [*package_command*]
 #   Path or name for letsencrypt executable when installing the client with
-#   the `package` method. 
+#   the `package` method.
 # [*config_file*]
 #   The path to the configuration file for the letsencrypt cli.
 # [*config*]
@@ -67,14 +67,15 @@ class letsencrypt (
   $agree_tos           = $letsencrypt::params::agree_tos,
   $unsafe_registration = $letsencrypt::params::unsafe_registration,
 ) inherits letsencrypt::params {
-  validate_string($path, $repo, $version, $config_file, $package_name, $package_command)
+
+  validate_legacy('Stdlib::Compat::String','validate_string', $path, $repo, $version, $config_file, $package_name, $package_command)
   if $email {
-    validate_string($email)
+    validate_legacy('Stdlib::Compat::String','validate_string', $email)
   }
-  validate_array($environment)
-  validate_bool($manage_config, $manage_install, $manage_dependencies, $configure_epel, $agree_tos, $unsafe_registration)
-  validate_hash($config)
-  validate_re($install_method, ['^package$', '^vcs$'])
+  validate_legacy('Stdlib::Compat::Array', 'validate_array', $environment)
+  validate_legacy('Stdlib::Compat::Bool', 'validate_bool', $manage_config, $manage_install, $manage_dependencies, $configure_epel, $agree_tos, $unsafe_registration)
+  validate_legacy('Stdlib::Compat::Hash', 'validate_hash', $config)
+  validate_legacy('Optional[String]', 'validate_re', $install_method, ['^package$', '^vcs$'])
 
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
