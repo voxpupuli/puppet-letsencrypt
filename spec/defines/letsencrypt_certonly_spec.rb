@@ -70,7 +70,7 @@ describe 'letsencrypt::certonly' do
           { plugin: 'apache',
             manage_cron: true }
         end
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command 'letsencrypt --agree-tos certonly -a apache --keep-until-expiring --quiet -d foo.example.com' }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command 'letsencrypt --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com' }
       end
 
       context 'with custom plugin and manage cron and cron_success_command' do
@@ -80,7 +80,7 @@ describe 'letsencrypt::certonly' do
             manage_cron: true,
             cron_success_command: 'echo success' }
         end
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command 'letsencrypt --agree-tos certonly -a apache --keep-until-expiring --quiet -d foo.example.com && (echo success)' }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command 'letsencrypt --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com && (echo success)' }
       end
 
       context 'with invalid plugin' do
