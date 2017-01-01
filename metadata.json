@@ -1,14 +1,16 @@
 {
-  "name": "danzilio-letsencrypt",
-  "version": "1.0.1",
-  "author": "David Danzilio",
-  "summary": "A module to install the Letsencrypt client and request certs.",
+  "name": "puppet-letsencrypt",
+  "version": "1.0.2-rc0",
+  "author": "Vox Pupuli",
+  "summary": "Manages lets-encrypt and certbot + related certs",
   "license": "Apache-2.0",
-  "source": "https://github.com/danzilio/puppet-letsencrypt",
-  "project_page": "https://github.com/danzilio/puppet-letsencrypt",
-  "issues_url": "https://github.com/danzilio/puppet-letsencrypt/issues",
+  "source": "https://github.com/voxpupuli/puppet-letsencrypt",
+  "project_page": "https://github.com/voxpupuli/puppet-letsencrypt",
+  "issues_url": "https://github.com/voxpupuli/puppet-letsencrypt/issues",
   "tags": [
-    "letsencrypt"
+    "letsencrypt",
+    "let's encrypt",
+    "certbot"
   ],
   "operatingsystem_support": [
     {
@@ -43,7 +45,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 3.4.0"
+      "version_requirement": ">= 3.8.7 <5.0.0"
     }
   ],
   "dependencies": [
@@ -53,11 +55,11 @@
     },
     {
       "name": "puppetlabs/inifile",
-      "version_requirement": ">=1.4.0 <2.0.0"
+      "version_requirement": ">=1.4.1 <2.0.0"
     },
     {
       "name": "puppetlabs/vcsrepo",
-      "version_requirement": ">=1.3.0 <2.0.0"
+      "version_requirement": ">=1.3.1 <2.0.0"
     },
     {
       "name": "stahnma/epel",

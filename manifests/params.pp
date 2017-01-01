@@ -9,7 +9,7 @@ class letsencrypt::params {
   $path                = '/opt/letsencrypt'
   $venv_path           = '/opt/letsencrypt/.venv' # virtualenv path for vcs-installed letsencrypt
   $repo                = 'https://github.com/letsencrypt/letsencrypt.git'
-  $version             = 'v0.4.2'
+  $version             = 'v0.9.3'
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
