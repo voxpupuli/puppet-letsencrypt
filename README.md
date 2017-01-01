@@ -116,11 +116,13 @@ letsencrypt::certonly { 'foo':
 
 To automatically renew a certificate, you can pass the `manage_cron` parameter.
 You can optionally add a shell command to be run on success using the `cron_success_command` parameter.
+You can optionally add a shell command to be run on before using the `cron_before_command` parameter.
 
 ```puppet
 letsencrypt::certonly { 'foo':
   domains => ['foo.example.com', 'bar.example.com'],
   manage_cron => true,
+  cron_before_command => 'service nginx stop',
   cron_success_command => '/bin/systemctl reload nginx.service',
 }
 ```

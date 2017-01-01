@@ -1,6 +1,9 @@
 # Change log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased][unreleased]
+- Ability to run commands before a cronjob-based renewal with the `cron_before_command` parameter.
+
 ## 2016-12-22 Release 1.0.1
 - Ability to run commands after a successful cronjob-based renewal with the `cron_success_command` parameter.
 - Modulesync with latest Vox Pupuli defaults
