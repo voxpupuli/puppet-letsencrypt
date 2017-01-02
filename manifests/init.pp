@@ -46,6 +46,8 @@
 #   A flag to agree to the Let's Encrypt Terms of Service.
 # [*unsafe_registration*]
 #   A flag to allow using the 'register-unsafely-without-email' flag.
+# [*certonly*]
+#   A hash containing all the configuration for creating a certonly
 #
 class letsencrypt (
   $email               = undef,
@@ -66,6 +68,7 @@ class letsencrypt (
   $install_method      = $letsencrypt::params::install_method,
   $agree_tos           = $letsencrypt::params::agree_tos,
   $unsafe_registration = $letsencrypt::params::unsafe_registration,
+  $certonly            = {},
 ) inherits letsencrypt::params {
   validate_string($path, $repo, $version, $config_file, $package_name, $package_command)
   if $email {
@@ -103,4 +106,8 @@ class letsencrypt (
     environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
     refreshonly => true,
   }
+
+  $real_certonly = hiera_hash('letsencrypt::certonly', $certonly)
+  create_resources(::letsencrypt::certonly, $real_certonly)
+
 }
