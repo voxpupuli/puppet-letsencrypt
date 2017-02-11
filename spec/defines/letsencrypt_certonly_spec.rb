@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe 'letsencrypt::certonly' do
   { 'Debian' => '9.0', 'Ubuntu' => '16.04', 'RedHat' => '7.2' }.each do |osfamily, osversion|
     context "on #{osfamily} based operating systems" do
