@@ -38,6 +38,7 @@ define letsencrypt::certonly (
   $additional_args      = undef,
   $environment          = [],
   $manage_cron          = false,
+  $suppress_cron_output = false,
   $cron_before_command  = undef,
   $cron_success_command = undef,
 ) {
@@ -54,6 +55,7 @@ define letsencrypt::certonly (
   }
   validate_array($environment)
   validate_bool($manage_cron)
+  validate_bool($suppress_cron_output)
 
   $command_start = "${letsencrypt_command} --text --agree-tos certonly -a ${plugin} "
   $command_domains = $plugin ? {
@@ -75,10 +77,15 @@ define letsencrypt::certonly (
 
   if $manage_cron {
     $maincommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
-    if $cron_before_command {
-      $renewcommand = "(${cron_before_command}) && ${maincommand}"
+    if $suppress_cron_output {
+      $croncommand = "${maincommand} > /dev/null 2>&1"
     } else {
-      $renewcommand = $maincommand
+      $croncommand = $maincommand
+    }
+    if $cron_before_command {
+      $renewcommand = "(${cron_before_command}) && ${croncommand}"
+    } else {
+      $renewcommand = $croncommand
     }
     if $cron_success_command {
       $cron_cmd = "${renewcommand} && (${cron_success_command})"
