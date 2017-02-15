@@ -33,17 +33,17 @@
 #   succeeds.
 #
 define letsencrypt::certonly (
-  Array $domains                                   = [$title],
-  $custom_plugin        = false,
-  Enum['apache', 'standalone', 'webroot'] $plugin  = 'standalone',
-  Optional[Array] $webroot_paths                   = undef,
-  String $letsencrypt_command                      = $letsencrypt::command,
-  Optional[Array] $additional_args                 = undef,
-  Array $environment                               = [],
-  Boolean $manage_cron                             = false,
-  Boolean $suppress_cron_output                    = false,
-  $cron_before_command                             = undef,
-  $cron_success_command                            = undef,
+  Array $domains                                            = [$title],
+  Boolean $custom_plugin                                    = false,
+  Enum['apache', 'standalone', 'webroot', 'nginx'] $plugin  = 'standalone',
+  Optional[Array] $webroot_paths                            = undef,
+  String $letsencrypt_command                               = $letsencrypt::command,
+  Optional[Array] $additional_args                          = undef,
+  Array $environment                                        = [],
+  Boolean $manage_cron                                      = false,
+  Boolean $suppress_cron_output                             = false,
+  $cron_before_command                                      = undef,
+  $cron_success_command                                     = undef,
 ) {
 
   if $plugin == 'webroot' {
@@ -51,7 +51,6 @@ define letsencrypt::certonly (
       fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
     }
   }
-  validate_bool($custom_plugin)
 
   if ($custom_plugin) {
     $command_start = "${letsencrypt_command} --text --agree-tos certonly "
