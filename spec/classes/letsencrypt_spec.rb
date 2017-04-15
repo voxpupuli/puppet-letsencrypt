@@ -35,70 +35,83 @@ describe 'letsencrypt' do
 
         describe 'with custom path' do
           let(:additional_params) { { path: '/usr/lib/letsencrypt', install_method: 'vcs' } }
+
           it { is_expected.to contain_class('letsencrypt::install').with_path('/usr/lib/letsencrypt') }
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/usr/lib/letsencrypt/letsencrypt-auto -h') }
         end
 
         describe 'with custom environment variables' do
           let(:additional_params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
+
           it { is_expected.to contain_exec('initialize letsencrypt').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
         end
 
         describe 'with custom repo' do
           let(:additional_params) { { repo: 'git://foo.com/letsencrypt.git' } }
+
           it { is_expected.to contain_class('letsencrypt::install').with_repo('git://foo.com/letsencrypt.git') }
         end
 
         describe 'with custom version' do
           let(:additional_params) { { version: 'foo' } }
+
           it { is_expected.to contain_class('letsencrypt::install').with_path('/opt/letsencrypt').with_version('foo') }
         end
 
         describe 'with custom package_ensure' do
           let(:additional_params) { { package_ensure: '0.3.0-1.el7' } }
+
           it { is_expected.to contain_class('letsencrypt::install').with_package_ensure('0.3.0-1.el7') }
         end
 
         describe 'with custom config file' do
           let(:additional_params) { { config_file: '/etc/letsencrypt/custom_config.ini' } }
+
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/custom_config.ini server https://acme-v01.api.letsencrypt.org/directory') }
         end
 
         describe 'with custom config' do
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
+
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini foo bar') }
         end
 
         describe 'with manage_config set to false' do
           let(:additional_params) { { manage_config: false } }
+
           it { is_expected.not_to contain_class('letsencrypt::config') }
         end
 
         describe 'with manage_install set to false' do
           let(:additional_params) { { manage_install: false } }
+
           it { is_expected.not_to contain_class('letsencrypt::install') }
         end
 
         describe 'with install_method => package' do
           let(:additional_params) { { install_method: 'package', package_command: 'letsencrypt' } }
+
           it { is_expected.to contain_class('letsencrypt::install').with_install_method('package') }
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('letsencrypt -h') }
         end
 
         describe 'with install_method => vcs' do
           let(:additional_params) { { install_method: 'vcs' } }
+
           it { is_expected.to contain_class('letsencrypt::install').with_install_method('vcs') }
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto -h') }
         end
 
         context 'when not agreeing to the TOS' do
           let(:params) { { agree_tos: false } }
+
           it { is_expected.to raise_error Puppet::Error, %r{You must agree to the Let's Encrypt Terms of Service} }
         end
       end
 
       context 'when specifying an email in $config' do
         let(:params) { { config: { 'email' => 'foo@example.com' } } }
+
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
       end
@@ -110,6 +123,7 @@ describe 'letsencrypt' do
 
         context 'with unsafe_registration set to true' do
           let(:params) { { unsafe_registration: true } }
+
           it { is_expected.not_to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini register-unsafely-without-email true') }
         end
