@@ -18,6 +18,11 @@ class letsencrypt::config (
 
   file { '/etc/letsencrypt': ensure => directory }
 
+  file { $letsencrypt::cron_scripts_path:
+    ensure => directory,
+    purge  => true,
+  }
+
   if $email {
     $_config = merge($config, {'email' => $email})
   } else {

@@ -46,6 +46,8 @@
 #   A flag to agree to the Let's Encrypt Terms of Service.
 # [*unsafe_registration*]
 #   A flag to allow using the 'register-unsafely-without-email' flag.
+# [*cron_scripts_path*]
+#   The path to put the script we'll call with cron. Defaults to $puppet_vardir/letsencrypt.
 #
 class letsencrypt (
   $email               = undef,
@@ -59,6 +61,7 @@ class letsencrypt (
   $package_command     = $letsencrypt::params::package_command,
   $config_file         = $letsencrypt::params::config_file,
   $config              = $letsencrypt::params::config,
+  $cron_scripts_path   = $letsencrypt::params::cron_scripts_path,
   $manage_config       = $letsencrypt::params::manage_config,
   $manage_install      = $letsencrypt::params::manage_install,
   $manage_dependencies = $letsencrypt::params::manage_dependencies,
@@ -67,7 +70,7 @@ class letsencrypt (
   $agree_tos           = $letsencrypt::params::agree_tos,
   $unsafe_registration = $letsencrypt::params::unsafe_registration,
 ) inherits letsencrypt::params {
-  validate_string($path, $repo, $version, $config_file, $package_name, $package_command)
+  validate_string($path, $repo, $version, $config_file, $package_name, $package_command, $cron_scripts_path)
   if $email {
     validate_string($email)
   }
