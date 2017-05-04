@@ -14,10 +14,10 @@ class letsencrypt::params {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
 
-  if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '9') >= 0 {
+  if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8') >= 0 {
     $install_method = 'package'
-    $package_name = 'letsencrypt'
-    $package_command = 'letsencrypt'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
   } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
     $install_method = 'package'
     $package_name = 'letsencrypt'
