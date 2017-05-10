@@ -94,8 +94,15 @@ define letsencrypt::certonly (
     }
     $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
     $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
+    file { "${::letsencrypt::cron_scripts_path}/renew-${title}.sh":
+      ensure  => 'file',
+      mode    => '0755',
+      owner   => 'root',
+      group   => 'root',
+      content => "#!/bin/sh\n${cron_cmd}",
+    }
     cron { "letsencrypt renew cron ${title}":
-      command     => $cron_cmd,
+      command     => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
       environment => concat([ $venv_path_var ], $environment),
       user        => root,
       hour        => $cron_hour,
