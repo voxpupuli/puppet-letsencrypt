@@ -43,7 +43,7 @@ define letsencrypt::certonly (
   $cron_success_command = undef,
 ) {
   validate_array($domains)
-  validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
+  validate_re($plugin, ['^apache$', '^standalone$', '^webroot$', '^manual$'])
   if $webroot_paths {
     validate_array($webroot_paths)
   } elsif $plugin == 'webroot' {
