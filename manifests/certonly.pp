@@ -29,6 +29,10 @@
 # [*cron_success_command*]
 #   String representation of a command that should be run if the renewal command
 #   succeeds.
+# [*cron_hour*]
+#   If set, force cron's hour to this value. Must be between 0 and 23.
+# [*cron_minute*]
+#   If set, force cron's minute to this value. Must be between 0 and 59.
 #
 define letsencrypt::certonly (
   $domains              = [$title],
@@ -41,6 +45,8 @@ define letsencrypt::certonly (
   $suppress_cron_output = false,
   $cron_before_command  = undef,
   $cron_success_command = undef,
+  $cron_hour            = undef,
+  $cron_minute          = undef
 ) {
   validate_array($domains)
   validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
@@ -56,6 +62,18 @@ define letsencrypt::certonly (
   validate_array($environment)
   validate_bool($manage_cron)
   validate_bool($suppress_cron_output)
+  if $cron_hour {
+    validate_integer($cron_hour)
+    if ($cron_hour < 0 or $cron_hour > 23) {
+      fail("\$cron_hour must be set between 0 and 23, is ${cron_hour}")
+    }
+  }
+  if $cron_minute {
+    validate_integer($cron_minute)
+    if ($cron_minute < 0 or $cron_minute > 59) {
+      fail("\$cron_minute must be set between 0 and 59, is ${cron_minute}")
+    }
+  }
 
   $command_start = "${letsencrypt_command} --text --agree-tos certonly -a ${plugin} "
   $command_domains = $plugin ? {
@@ -92,8 +110,14 @@ define letsencrypt::certonly (
     } else {
       $cron_cmd = $renewcommand
     }
-    $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
-    $cron_minute = fqdn_rand(60, $title ) # 0 - 59, seed is title plus fqdn
+    $_cron_hour = $cron_hour ? {
+      undef   => fqdn_rand(24, $title), # 0 - 23, seed is title plus fqdn
+      default => $cron_hour
+    }
+    $_cron_minute = $cron_minute ? {
+      undef   => fqdn_rand(60, $title), # 0 - 59, seed is title plus fqdn
+      default => $cron_minute
+    }
     file { "${::letsencrypt::cron_scripts_path}/renew-${title}.sh":
       ensure  => 'file',
       mode    => '0755',
@@ -105,8 +129,8 @@ define letsencrypt::certonly (
       command     => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
       environment => concat([ $venv_path_var ], $environment),
       user        => root,
-      hour        => $cron_hour,
-      minute      => $cron_minute,
+      hour        => $_cron_hour,
+      minute      => $_cron_minute,
     }
   }
 }

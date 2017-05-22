@@ -110,6 +110,41 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\n(echo before) && letsencrypt --text --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com && (echo success)" }
       end
 
+      context 'with custom hour and minute' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          { manage_cron: true,
+            cron_hour: 23,
+            cron_minute: 59 }
+        end
+        it {
+          is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour '23'
+          is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute '59'
+        }
+      end
+
+      context 'with invalid custom hour' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          { manage_cron: true,
+            cron_hour: 27 }
+        end
+        it {
+          is_expected.to raise_error Puppet::Error
+        }
+      end
+
+      context 'with invalid custom minute' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          { manage_cron: true,
+            cron_minute: 60 }
+        end
+        it {
+          is_expected.to raise_error Puppet::Error
+        }
+      end
+
       context 'with invalid plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'bad' } }
