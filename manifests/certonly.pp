@@ -31,31 +31,23 @@
 #   succeeds.
 #
 define letsencrypt::certonly (
-  $domains              = [$title],
-  $plugin               = 'standalone',
-  $webroot_paths        = undef,
-  $letsencrypt_command  = $letsencrypt::command,
-  $additional_args      = undef,
-  $environment          = [],
-  $manage_cron          = false,
-  $suppress_cron_output = false,
-  $cron_before_command  = undef,
-  $cron_success_command = undef,
+  Array $domains                                   = [$title],
+  Enum['apache', 'standalone', 'webroot'] $plugin  = 'standalone',
+  Optional[Array] $webroot_paths                   = undef,
+  String $letsencrypt_command                      = $letsencrypt::command,
+  Optional[Array] $additional_args                 = undef,
+  Array $environment                               = [],
+  Boolean $manage_cron                             = false,
+  Boolean $suppress_cron_output                    = false,
+  $cron_before_command                             = undef,
+  $cron_success_command                            = undef,
 ) {
-  validate_array($domains)
-  validate_re($plugin, ['^apache$', '^standalone$', '^webroot$'])
-  if $webroot_paths {
-    validate_array($webroot_paths)
-  } elsif $plugin == 'webroot' {
-    fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
+
+  if $plugin == 'webroot' {
+    unless $webroot_paths {
+      fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
+    }
   }
-  validate_string($letsencrypt_command)
-  if $additional_args {
-    validate_array($additional_args)
-  }
-  validate_array($environment)
-  validate_bool($manage_cron)
-  validate_bool($suppress_cron_output)
 
   $command_start = "${letsencrypt_command} --text --agree-tos certonly -a ${plugin} "
   $command_domains = $plugin ? {
