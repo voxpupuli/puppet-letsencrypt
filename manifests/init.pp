@@ -24,7 +24,7 @@
 #   `package` method.
 # [*package_command*]
 #   Path or name for letsencrypt executable when installing the client with
-#   the `package` method. 
+#   the `package` method.
 # [*config_file*]
 #   The path to the configuration file for the letsencrypt cli.
 # [*config*]

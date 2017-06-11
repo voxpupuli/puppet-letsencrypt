@@ -26,7 +26,7 @@
 #   method.
 # [*package_name*]
 #   Name of package to use when installing the client with the `package`
-#   method. 
+#   method.
 #
 class letsencrypt::install (
   Boolean $manage_install                = $letsencrypt::manage_install,
