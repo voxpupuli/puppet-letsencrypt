@@ -29,19 +29,16 @@
 #   method. 
 #
 class letsencrypt::install (
-  $manage_install      = $letsencrypt::manage_install,
-  $manage_dependencies = $letsencrypt::manage_dependencies,
-  $configure_epel      = $letsencrypt::configure_epel,
-  $install_method      = $letsencrypt::install_method,
-  $package_name        = $letsencrypt::package_name,
-  $package_ensure      = $letsencrypt::package_ensure,
-  $path                = $letsencrypt::path,
-  $repo                = $letsencrypt::repo,
-  $version             = $letsencrypt::version,
+  Boolean $manage_install                = $letsencrypt::manage_install,
+  Boolean $manage_dependencies           = $letsencrypt::manage_dependencies,
+  Boolean $configure_epel                = $letsencrypt::configure_epel,
+  Enum['package', 'vcs'] $install_method = $letsencrypt::install_method,
+  String $package_name                   = $letsencrypt::package_name,
+  String $package_ensure                 = $letsencrypt::package_ensure,
+  String $path                           = $letsencrypt::path,
+  String $repo                           = $letsencrypt::repo,
+  String $version                        = $letsencrypt::version,
 ) {
-  validate_bool($manage_install, $manage_dependencies, $configure_epel)
-  validate_re($install_method, ['^package$', '^vcs$'])
-  validate_string($path, $repo, $version, $package_name)
 
   if $install_method == 'vcs' {
     if $manage_dependencies {
