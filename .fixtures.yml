@@ -1,16 +1,8 @@
 fixtures:
   repositories:
-    epel:
-      repo: 'https://github.com/stahnma/puppet-module-epel.git'
-      ref: '1.2.2'
-    inifile:
-      repo: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
-      ref: '1.4.2'
-    stdlib:
-      repo: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
-      ref: '4.9.0'
-    vcsrepo:
-      repo: 'https://github.com/puppetlabs/puppetlabs-vcsrepo.git'
-      ref: '1.3.1'
+    epel: 'https://github.com/stahnma/puppet-module-epel.git'
+    inifile: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
+    stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
+    vcsrepo: 'https://github.com/puppetlabs/puppetlabs-vcsrepo.git'
   symlinks:
     letsencrypt: "#{source_dir}"

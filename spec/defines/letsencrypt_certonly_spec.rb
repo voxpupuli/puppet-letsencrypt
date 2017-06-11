@@ -77,12 +77,14 @@ describe 'letsencrypt::certonly' do
       context 'with custom plugin and manage cron' do
         let(:title) { 'foo.example.com' }
         let(:params) do
-          { plugin: 'apache',
-            manage_cron: true }
+          {
+            plugin: 'apache',
+            manage_cron: true
+          }
         end
 
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com" }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com" }
       end
 
       context 'with custom puppet_vardir path and manage_cron' do
@@ -100,14 +102,16 @@ describe 'letsencrypt::certonly' do
       context 'with custom plugin and manage cron and cron_success_command' do
         let(:title) { 'foo.example.com' }
         let(:params) do
-          { plugin: 'apache',
+          {
+            plugin: 'apache',
             manage_cron: true,
             cron_before_command: 'echo before',
-            cron_success_command: 'echo success' }
+            cron_success_command: 'echo success'
+          }
         end
 
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\n(echo before) && letsencrypt --text --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com && (echo success)" }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\n(echo before) && letsencrypt --text --agree-tos certonly -a apache --keep-until-expiring -d foo.example.com && (echo success)" }
       end
 
       context 'with invalid plugin' do
@@ -145,8 +149,8 @@ describe 'letsencrypt::certonly' do
             suppress_cron_output: true }
         end
 
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/tmp/LE_puppet_vardir/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos certonly -a standalone --keep-until-expiring -d foo.example.com > /dev/null 2>&1" }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos certonly -a standalone --keep-until-expiring -d foo.example.com > /dev/null 2>&1" }
       end
     end
   end
