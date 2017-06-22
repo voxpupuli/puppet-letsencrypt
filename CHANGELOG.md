@@ -4,8 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not impact the functionality of the module.
 
-## [1.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/1.1.0) (2017-02-11)
-[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.1...1.1.0)
+## [v2.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.0.0) (2017-06-22)
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.1.0...v2.0.0)
+
+**Merged pull requests:**
+
+- replace validate\_\* with proper puppet4 datatypes [\#93](https://github.com/voxpupuli/puppet-letsencrypt/pull/93) ([bastelfreak](https://github.com/bastelfreak))
+- Use the correct package names on Debian [\#88](https://github.com/voxpupuli/puppet-letsencrypt/pull/88) ([ekohl](https://github.com/ekohl))
+- fix "-":12: command too long. errors in crontab file, can't install. [\#87](https://github.com/voxpupuli/puppet-letsencrypt/pull/87) ([saimonn](https://github.com/saimonn))
+- Added ability to suppress cron output [\#79](https://github.com/voxpupuli/puppet-letsencrypt/pull/79) ([grega](https://github.com/grega))
+
+## [v1.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v1.1.0) (2017-02-11)
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.1...v1.1.0)
 
 **Merged pull requests:**
 
