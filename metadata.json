@@ -10,7 +10,8 @@
   "tags": [
     "letsencrypt",
     "let's encrypt",
-    "certbot"
+    "certbot",
+    "acme"
   ],
   "operatingsystem_support": [
     {
