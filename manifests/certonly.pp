@@ -7,6 +7,8 @@
 #
 # [*domains*]
 #   Namevar. An array of domains to include in the CSR.
+# [*custom_plugin*]
+#   Whether to use a custom plugin in additional_args and disable -a flag.
 # [*plugin*]
 #   The authenticator plugin to use when requesting the certificate.
 # [*webroot_paths*]
@@ -31,16 +33,17 @@
 #   succeeds.
 #
 define letsencrypt::certonly (
-  Array $domains                                   = [$title],
-  Enum['apache', 'standalone', 'webroot'] $plugin  = 'standalone',
-  Optional[Array] $webroot_paths                   = undef,
-  String $letsencrypt_command                      = $letsencrypt::command,
-  Optional[Array] $additional_args                 = undef,
-  Array $environment                               = [],
-  Boolean $manage_cron                             = false,
-  Boolean $suppress_cron_output                    = false,
-  $cron_before_command                             = undef,
-  $cron_success_command                            = undef,
+  Array $domains                                            = [$title],
+  Boolean $custom_plugin                                    = false,
+  Enum['apache', 'standalone', 'webroot', 'nginx'] $plugin  = 'standalone',
+  Optional[Array] $webroot_paths                            = undef,
+  String $letsencrypt_command                               = $letsencrypt::command,
+  Optional[Array] $additional_args                          = undef,
+  Array $environment                                        = [],
+  Boolean $manage_cron                                      = false,
+  Boolean $suppress_cron_output                             = false,
+  $cron_before_command                                      = undef,
+  $cron_success_command                                     = undef,
 ) {
 
   if $plugin == 'webroot' {
@@ -49,7 +52,12 @@ define letsencrypt::certonly (
     }
   }
 
-  $command_start = "${letsencrypt_command} --text --agree-tos certonly -a ${plugin} "
+  if ($custom_plugin) {
+    $command_start = "${letsencrypt_command} --text --agree-tos certonly "
+  } else {
+    $command_start = "${letsencrypt_command} --text --agree-tos certonly -a ${plugin} "
+  }
+
   $command_domains = $plugin ? {
     'webroot' => inline_template('<%= @domains.zip(@webroot_paths).map { |domain| "#{"--webroot-path #{domain[1]} " if domain[1]}-d #{domain[0]}"}.join(" ") %>'),
     default   => inline_template('-d <%= @domains.join(" -d ")%>'),
