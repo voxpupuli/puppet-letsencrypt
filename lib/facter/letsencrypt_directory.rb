@@ -6,9 +6,10 @@ Facter.add(:letsencrypt_directory) do
     certs = {}
 
     # locate the certificate repository
-    livedir = ([ '/etc/letsencrypt/live', '/etc/certbot/live' ]
-      .map { |path| Pathname.new path }
-      .find(&:directory?))
+    livedir = [
+      '/etc/letsencrypt/live',
+      '/etc/certbot/live'
+    ].map { |path| Pathname.new path }.find(&:directory?)
 
     # collect the sans from each certificate
     Pathname.new(livedir).children.select(&:directory?).each do |path|
@@ -17,7 +18,7 @@ Facter.add(:letsencrypt_directory) do
       san = cert.extensions.find { |e| e.oid == 'subjectAltName' }
       names = san.value.split(',').map { |entry| entry.split(':')[1] }
       names.each do |n|
-          certs[n] = path.to_s
+        certs[n] = path.to_s
       end
     end unless livedir.nil?
 
