@@ -7,7 +7,7 @@ Facter.add(:letsencrypt_live) do
     if !livedir.directory?
       []
     else
-      livedir.children.select(&:directory?).map(&:basename).map { |name| name.to_s }
+      livedir.children.select(&:directory?).map(&:basename).map(&:to_s)
     end
   end
 end
