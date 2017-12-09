@@ -1,14 +1,14 @@
 require 'pathname'
 
 Facter.add(:letsencrypt_live) do
-    setcode do
-        livedir = Pathname.new('/etc/letsencrypt/live')
+  setcode do
+    livedir = Pathname.new('/etc/letsencrypt/live')
 
-        if !livedir.directory? then []
-        else (livedir.children
-            .select(&:directory?)
-            .collect(&:basename)
-            .map { |name| name.to_s })
-        end
+    if !livedir.directory? then []
+    else (livedir.children
+      .select(&:directory?)
+      .collect(&:basename)
+      .map { |name| name.to_s })
     end
+  end
 end
