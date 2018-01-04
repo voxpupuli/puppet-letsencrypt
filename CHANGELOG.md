@@ -4,15 +4,20 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v2.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.2.0) (2017-11-21)
+## [v2.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.2.0) (2018-01-04)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.1.0...v2.2.0)
 
 **Merged pull requests:**
 
+- bump inifile dependency to allow 2.x [\#109](https://github.com/voxpupuli/puppet-letsencrypt/pull/109) ([bastelfreak](https://github.com/bastelfreak))
+- release 2.2.0 [\#108](https://github.com/voxpupuli/puppet-letsencrypt/pull/108) ([bastelfreak](https://github.com/bastelfreak))
 - Update vcsrepo requirement \(smaller 3\) [\#107](https://github.com/voxpupuli/puppet-letsencrypt/pull/107) ([kallies](https://github.com/kallies))
 - Remove EOL operatingsystems [\#106](https://github.com/voxpupuli/puppet-letsencrypt/pull/106) ([ekohl](https://github.com/ekohl))
+- release 2.1.0 [\#104](https://github.com/voxpupuli/puppet-letsencrypt/pull/104) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v2.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.1.0) (2017-11-13)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.0.1...v2.1.0)
 
 **Implemented enhancements:**
@@ -27,17 +32,18 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- release 2.1.0 [\#104](https://github.com/voxpupuli/puppet-letsencrypt/pull/104) ([bastelfreak](https://github.com/bastelfreak))
+- release 2.0.1 [\#100](https://github.com/voxpupuli/puppet-letsencrypt/pull/100) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v2.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.0.1) (2017-09-17)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.0.0...v2.0.1)
 
 **Merged pull requests:**
 
-- release 2.0.1 [\#100](https://github.com/voxpupuli/puppet-letsencrypt/pull/100) ([bastelfreak](https://github.com/bastelfreak))
 - fixed randomness if the domain is almost same [\#96](https://github.com/voxpupuli/puppet-letsencrypt/pull/96) ([ashish1099](https://github.com/ashish1099))
 
 ## [v2.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.0.0) (2017-06-22)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.1.0...v2.0.0)
 
 **Merged pull requests:**
@@ -49,6 +55,7 @@ These should not affect the functionality of the module.
 - Added ability to suppress cron output [\#79](https://github.com/voxpupuli/puppet-letsencrypt/pull/79) ([grega](https://github.com/grega))
 
 ## [v1.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v1.1.0) (2017-02-11)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.1...v1.1.0)
 
 **Merged pull requests:**
@@ -58,6 +65,7 @@ These should not affect the functionality of the module.
 - Add cron\_before\_command [\#48](https://github.com/voxpupuli/puppet-letsencrypt/pull/48) ([gkopylov](https://github.com/gkopylov))
 
 ## [v1.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v1.0.1) (2016-12-23)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v999.999.999...v1.0.1)
 
 **Merged pull requests:**
@@ -67,6 +75,7 @@ These should not affect the functionality of the module.
 - Typo cerbot -\> certbot in README.md [\#68](https://github.com/voxpupuli/puppet-letsencrypt/pull/68) ([rudibroekhuizen](https://github.com/rudibroekhuizen))
 
 ## [v999.999.999](https://github.com/voxpupuli/puppet-letsencrypt/tree/v999.999.999) (2016-12-20)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.0...v999.999.999)
 
 **Closed issues:**
@@ -104,6 +113,7 @@ These should not affect the functionality of the module.
 - Changing default version to 0.4.0 [\#15](https://github.com/voxpupuli/puppet-letsencrypt/pull/15) ([as0bu](https://github.com/as0bu))
 
 ## [v1.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v1.0.0) (2016-02-22)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.4.0...v1.0.0)
 
 **Merged pull requests:**
@@ -113,6 +123,7 @@ These should not affect the functionality of the module.
 - Install LE package on EL7, Ubuntu 16.04 and Debian 9+ [\#11](https://github.com/voxpupuli/puppet-letsencrypt/pull/11) ([domcleal](https://github.com/domcleal))
 
 ## [v0.4.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.4.0) (2016-02-01)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.3.2...v0.4.0)
 
 **Merged pull requests:**
@@ -122,6 +133,7 @@ These should not affect the functionality of the module.
 - add optional cron job for certificate renewal [\#8](https://github.com/voxpupuli/puppet-letsencrypt/pull/8) ([hdeadman](https://github.com/hdeadman))
 
 ## [v0.3.2](https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.3.2) (2015-12-14)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.3.1...v0.3.2)
 
 **Merged pull requests:**
@@ -130,9 +142,11 @@ These should not affect the functionality of the module.
 - Replace package with ensure\_packages [\#6](https://github.com/voxpupuli/puppet-letsencrypt/pull/6) ([AndreaGiardini](https://github.com/AndreaGiardini))
 
 ## [v0.3.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.3.1) (2015-12-08)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.3.0...v0.3.1)
 
 ## [v0.3.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.3.0) (2015-12-08)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.2.0...v0.3.0)
 
 **Merged pull requests:**
@@ -143,9 +157,13 @@ These should not affect the functionality of the module.
 - A collection of commits working toward getting this to v1 [\#1](https://github.com/voxpupuli/puppet-letsencrypt/pull/1) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v0.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.2.0) (2015-12-03)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v0.1.0...v0.2.0)
 
 ## [v0.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v0.1.0) (2015-12-03)
 
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/12019701ec328a3e8ed152ef4eb8a6f0f7524467...v0.1.0)
 
-\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+
+
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
