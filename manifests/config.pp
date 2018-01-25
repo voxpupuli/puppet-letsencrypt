@@ -3,6 +3,7 @@
 #   This class configures the Let's Encrypt client. This is a private class.
 #
 class letsencrypt::config (
+  $config_dir          = $letsencrypt::config_dir,
   $config_file         = $letsencrypt::config_file,
   $config              = $letsencrypt::config,
   $email               = $letsencrypt::email,
@@ -16,7 +17,7 @@ class letsencrypt::config (
     fail("You must agree to the Let's Encrypt Terms of Service! See: https://letsencrypt.org/repository for more information." )
   }
 
-  file { '/etc/letsencrypt': ensure => directory }
+  file { $config_dir: ensure => directory }
 
   file { $letsencrypt::cron_scripts_path:
     ensure => directory,
@@ -38,14 +39,21 @@ class letsencrypt::config (
         section => '',
         setting => 'register-unsafely-without-email',
         value   => true,
-        require => File['/etc/letsencrypt'],
+        require => File[$config_dir],
       }
     } else {
       fail("Please specify an email address to register with Let's Encrypt using the \$email parameter on the letsencrypt class")
     }
   }
 
-  $_config_joined = join_keys_to_values($_config, '=')
-  letsencrypt::config::ini { $_config_joined: }
-
+  $_config.each |$key,$value| {
+    ini_setting { "${config_file} ${key} ${value}":
+      ensure  => present,
+      path    => $config_file,
+      section => '',
+      setting => $key,
+      value   => $value,
+      require => File[$config_dir],
+    }
+  }
 }
