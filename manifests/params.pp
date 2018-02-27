@@ -47,9 +47,8 @@ class letsencrypt::params {
     $configure_epel = false
   }
 
-  if $::osfamily == 'OpenBSD' {
-    $cron_owner_group = 'wheel'
-  } else {
-    $cron_owner_group = 'root'
+  $cron_owner_group = $::osfamily ? {
+    'OpenBSD' =>  'wheel',
+    default   =>  'root',
   }
 }
