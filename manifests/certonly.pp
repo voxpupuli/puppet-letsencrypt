@@ -98,7 +98,7 @@ define letsencrypt::certonly (
       ensure  => 'file',
       mode    => '0755',
       owner   => 'root',
-      group   => "${::letsencrypt::cron_owner_group}",
+      group   => $::letsencrypt::cron_owner_group,
       content => "#!/bin/sh\n${cron_cmd}",
     }
     cron { "letsencrypt renew cron ${title}":
