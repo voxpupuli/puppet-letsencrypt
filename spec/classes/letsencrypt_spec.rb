@@ -241,4 +241,18 @@ describe 'letsencrypt' do
       end
     end
   end
+  context 'on OpenBSD operating system' do
+    let(:facts) { { osfamily: 'OpenBSD', operatingsystem: 'OpenBSD', operatingsystemrelease: '6.2', operatingsystemmajrelease: '6', path: '/usr/bin' } }
+    let(:params) { { email: 'foo@example.com' } }
+
+    describe 'with defaults' do
+      it { is_expected.to compile }
+
+      it 'contains the correct resources' do
+        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'certbot')
+        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+        is_expected.to contain_package('letsencrypt').with(name: 'certbot')
+      end
+    end
+  end
 end
