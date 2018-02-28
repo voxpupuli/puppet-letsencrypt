@@ -53,9 +53,9 @@ define letsencrypt::certonly (
   }
 
   if ($custom_plugin) {
-    $command_start = "${letsencrypt_command} --text --agree-tos -n certonly "
+    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly "
   } else {
-    $command_start = "${letsencrypt_command} --text --agree-tos -n certonly -a ${plugin} "
+    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly -a ${plugin} "
   }
 
   $command_domains = $plugin ? {
