@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.3.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.3.0) (2018-02-28)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.2.0...v2.3.0)
+
+**Implemented enhancements:**
+
+- Add OpenBSD support [\#114](https://github.com/voxpupuli/puppet-letsencrypt/pull/114) ([arthurbarton](https://github.com/arthurbarton))
+
 ## [v2.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.2.0) (2018-01-04)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.1.0...v2.2.0)
