@@ -31,6 +31,10 @@ class letsencrypt::params {
     $install_method = 'package'
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
+  } elsif $::osfamily == 'OpenBSD' {
+    $install_method = 'package'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
@@ -41,5 +45,10 @@ class letsencrypt::params {
     $configure_epel = true
   } else {
     $configure_epel = false
+  }
+
+  $cron_owner_group = $::osfamily ? {
+    'OpenBSD' =>  'wheel',
+    default   =>  'root',
   }
 }
