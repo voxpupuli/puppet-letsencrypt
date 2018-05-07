@@ -25,6 +25,8 @@
 # [*package_command*]
 #   Path or name for letsencrypt executable when installing the client with
 #   the `package` method.
+# [*config_dir*]
+#   The path to the configuration directory.
 # [*config_file*]
 #   The path to the configuration file for the letsencrypt cli.
 # [*config*]
@@ -69,6 +71,7 @@ class letsencrypt (
   Enum['package', 'vcs'] $install_method = $letsencrypt::params::install_method,
   Boolean $agree_tos                     = $letsencrypt::params::agree_tos,
   Boolean $unsafe_registration           = $letsencrypt::params::unsafe_registration,
+  Stdlib::Unixpath $config_dir           = $letsencrypt::params::config_dir,
 ) inherits letsencrypt::params {
 
   if $manage_install {
