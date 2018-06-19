@@ -35,7 +35,7 @@
 define letsencrypt::certonly (
   Array $domains                                            = [$title],
   Boolean $custom_plugin                                    = false,
-  Enum['apache', 'standalone', 'webroot', 'nginx'] $plugin  = 'standalone',
+  Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-route53'] $plugin  = 'standalone',
   Optional[Array] $webroot_paths                            = undef,
   String $letsencrypt_command                               = $letsencrypt::command,
   Optional[Array] $additional_args                          = undef,
