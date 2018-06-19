@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.4.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.4.0) (2018-06-19)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.3.0...v2.4.0)
+
+**Implemented enhancements:**
+
+- Support dns-route53 plugin [\#123](https://github.com/voxpupuli/puppet-letsencrypt/pull/123) ([jwm](https://github.com/jwm))
+- Allow custom config dir; FreeBSD support [\#117](https://github.com/voxpupuli/puppet-letsencrypt/pull/117) ([a01fe](https://github.com/a01fe))
+- Fixes \#81 added -n flag to certbot to run in unattended mode. [\#112](https://github.com/voxpupuli/puppet-letsencrypt/pull/112) ([K0HAX](https://github.com/K0HAX))
+
+**Closed issues:**
+
+- route53 plugin support [\#118](https://github.com/voxpupuli/puppet-letsencrypt/issues/118)
+
+**Merged pull requests:**
+
+- Remove docker nodesets [\#121](https://github.com/voxpupuli/puppet-letsencrypt/pull/121) ([bastelfreak](https://github.com/bastelfreak))
+- drop EOL OSs; fix puppet version range [\#120](https://github.com/voxpupuli/puppet-letsencrypt/pull/120) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v2.3.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.3.0) (2018-02-28)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.2.0...v2.3.0)
@@ -11,6 +30,10 @@ These should not affect the functionality of the module.
 **Implemented enhancements:**
 
 - Add OpenBSD support [\#114](https://github.com/voxpupuli/puppet-letsencrypt/pull/114) ([arthurbarton](https://github.com/arthurbarton))
+
+**Closed issues:**
+
+- Run fails on prompt during certonly if certs are not yet due for renewal [\#81](https://github.com/voxpupuli/puppet-letsencrypt/issues/81)
 
 ## [v2.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.2.0) (2018-01-04)
 
@@ -22,7 +45,6 @@ These should not affect the functionality of the module.
 - release 2.2.0 [\#108](https://github.com/voxpupuli/puppet-letsencrypt/pull/108) ([bastelfreak](https://github.com/bastelfreak))
 - Update vcsrepo requirement \(smaller 3\) [\#107](https://github.com/voxpupuli/puppet-letsencrypt/pull/107) ([kallies](https://github.com/kallies))
 - Remove EOL operatingsystems [\#106](https://github.com/voxpupuli/puppet-letsencrypt/pull/106) ([ekohl](https://github.com/ekohl))
-- release 2.1.0 [\#104](https://github.com/voxpupuli/puppet-letsencrypt/pull/104) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v2.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.1.0) (2017-11-13)
 
@@ -37,10 +59,6 @@ These should not affect the functionality of the module.
 - Puppet support in readme and metadata.json conflicts [\#102](https://github.com/voxpupuli/puppet-letsencrypt/issues/102)
 - Could not find declared class ::letsencrypt [\#101](https://github.com/voxpupuli/puppet-letsencrypt/issues/101)
 - Please issue a new release [\#54](https://github.com/voxpupuli/puppet-letsencrypt/issues/54)
-
-**Merged pull requests:**
-
-- release 2.0.1 [\#100](https://github.com/voxpupuli/puppet-letsencrypt/pull/100) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v2.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.0.1) (2017-09-17)
 
@@ -80,7 +98,6 @@ These should not affect the functionality of the module.
 
 - Bump minimum version dependencies \(for Puppet 4\) [\#72](https://github.com/voxpupuli/puppet-letsencrypt/pull/72) ([juniorsysadmin](https://github.com/juniorsysadmin))
 - release 1.0.1 [\#71](https://github.com/voxpupuli/puppet-letsencrypt/pull/71) ([bastelfreak](https://github.com/bastelfreak))
-- Typo cerbot -\> certbot in README.md [\#68](https://github.com/voxpupuli/puppet-letsencrypt/pull/68) ([rudibroekhuizen](https://github.com/rudibroekhuizen))
 
 ## [v999.999.999](https://github.com/voxpupuli/puppet-letsencrypt/tree/v999.999.999) (2016-12-20)
 
@@ -104,7 +121,6 @@ These should not affect the functionality of the module.
 - Bump LetsEncrypt version to 0.9.3 \(latest as of Oct 2016\)  [\#61](https://github.com/voxpupuli/puppet-letsencrypt/pull/61) ([jethrocarr](https://github.com/jethrocarr))
 - Fix cronspam [\#60](https://github.com/voxpupuli/puppet-letsencrypt/pull/60) ([jethrocarr](https://github.com/jethrocarr))
 - Fix failing builds [\#57](https://github.com/voxpupuli/puppet-letsencrypt/pull/57) ([jethrocarr](https://github.com/jethrocarr))
-- Certbot [\#49](https://github.com/voxpupuli/puppet-letsencrypt/pull/49) ([cpitkin](https://github.com/cpitkin))
 - Remove webroot\_paths cycling to match domains list [\#42](https://github.com/voxpupuli/puppet-letsencrypt/pull/42) ([danzilio](https://github.com/danzilio))
 - Validate presence of webroot\_paths with webroot plugin [\#39](https://github.com/voxpupuli/puppet-letsencrypt/pull/39) ([domcleal](https://github.com/domcleal))
 - Fix validation of letsencrypt\_command [\#38](https://github.com/voxpupuli/puppet-letsencrypt/pull/38) ([domcleal](https://github.com/domcleal))
