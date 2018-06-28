@@ -67,11 +67,11 @@ define letsencrypt::certonly (
   $command = "${command_start}${command_domains}${command_end}"
   $live_path = inline_template("${config_dir}/live/<%= @domains.first %>/cert.pem")
 
-  $venv_path_var = "VENV_PATH=${letsencrypt::venv_path}"
+  $execution_environment = concat([ "VENV_PATH=${letsencrypt::venv_path}", ], $environment)
   exec { "letsencrypt certonly ${title}":
     command     => $command,
     path        => $::path,
-    environment => concat([ $venv_path_var ], $environment),
+    environment => $execution_environment,
     creates     => $live_path,
     require     => Class['letsencrypt'],
   }
@@ -100,14 +100,13 @@ define letsencrypt::certonly (
       mode    => '0755',
       owner   => 'root',
       group   => $::letsencrypt::cron_owner_group,
-      content => "#!/bin/sh\n${cron_cmd}",
+      content => template('letsencrypt/renew-script.sh.erb'),
     }
     cron { "letsencrypt renew cron ${title}":
-      command     => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
-      environment => concat([ $venv_path_var ], $environment),
-      user        => root,
-      hour        => $cron_hour,
-      minute      => $cron_minute,
+      command => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
+      user    => root,
+      hour    => $cron_hour,
+      minute  => $cron_minute,
     }
   }
 }

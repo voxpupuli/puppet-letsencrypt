@@ -84,7 +84,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring -d foo.example.com" }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring -d foo.example.com\n" }
       end
 
       context 'with custom puppet_vardir path and manage_cron' do
@@ -96,7 +96,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/tmp/custom_vardir/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/tmp/custom_vardir/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring -d foo.example.com" }
+        it { is_expected.to contain_file('/tmp/custom_vardir/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring -d foo.example.com\n" }
       end
 
       context 'with custom plugin and manage cron and cron_success_command' do
@@ -111,7 +111,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\n(echo before) && letsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring -d foo.example.com && (echo success)" }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n(echo before) && letsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring -d foo.example.com && (echo success)\n" }
       end
 
       context 'without plugin' do
@@ -146,7 +146,7 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
         let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'], manage_cron: true } }
 
-        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nexport FOO=bar\nexport FIZZ=buzz\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring -d foo.example.com\n" }
       end
 
       context 'with manage cron and suppress_cron_output' do
@@ -157,7 +157,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring -d foo.example.com > /dev/null 2>&1" }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring -d foo.example.com > /dev/null 2>&1\n" }
       end
 
       context 'with custom config_dir' do
