@@ -21,6 +21,12 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --text --agree-tos --non-interactive certonly -a standalone -d foo.example.com -d bar.example.com' }
       end
 
+      context 'with wildcard domain' do
+        let(:title) { 'foo' }
+        let(:params) { { domains: [ '*.example.com'] } }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_creates '/etc/letsencrypt/live/example.com/cert.pem'}
+      end
+
       context 'with custom command' do
         let(:title) { 'foo.example.com' }
         let(:params) { { letsencrypt_command: '/usr/lib/letsencrypt/letsencrypt-auto' } }
