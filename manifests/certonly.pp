@@ -65,7 +65,7 @@ define letsencrypt::certonly (
   }
   $command_end = inline_template('<% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
   $command = "${command_start}${command_domains}${command_end}"
-  $live_path = inline_template("${config_dir}/live/<%= @domains.first %>/cert.pem")
+  $live_path = inline_template("${config_dir}/live/<%= @domains.first.gsub('*.','') %>/cert.pem")
 
   $venv_path_var = "VENV_PATH=${letsencrypt::venv_path}"
   exec { "letsencrypt certonly ${title}":
