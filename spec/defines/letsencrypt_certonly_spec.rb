@@ -23,8 +23,9 @@ describe 'letsencrypt::certonly' do
 
       context 'with wildcard domain' do
         let(:title) { 'foo' }
-        let(:params) { { domains: [ '*.example.com'] } }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_creates '/etc/letsencrypt/live/example.com/cert.pem'}
+        let(:params) { { domains: ['*.example.com'] } }
+
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_creates '/etc/letsencrypt/live/example.com/cert.pem' }
       end
 
       context 'with custom command' do
