@@ -19,11 +19,6 @@ class letsencrypt::params {
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
-    $install_method = 'package'
-    $package_name = 'letsencrypt'
-    $package_command = 'letsencrypt'
-    $config_dir = '/etc/letsencrypt'
   } elsif $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
