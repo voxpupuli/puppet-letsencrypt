@@ -33,24 +33,22 @@
 #   succeeds.
 #
 define letsencrypt::certonly (
-  Array $domains                                            = [$title],
-  Boolean $custom_plugin                                    = false,
-  Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-route53', 'dns-google'] $plugin  = 'standalone',
-  Optional[Array] $webroot_paths                            = undef,
-  String $letsencrypt_command                               = $letsencrypt::command,
-  Optional[Array] $additional_args                          = undef,
-  Array $environment                                        = [],
-  Boolean $manage_cron                                      = false,
-  Boolean $suppress_cron_output                             = false,
-  $cron_before_command                                      = undef,
-  $cron_success_command                                     = undef,
-  Stdlib::Unixpath $config_dir                              = $letsencrypt::config_dir,
+  Array[Stdlib::Host]     $domains              = [$title],
+  Boolean                 $custom_plugin        = false,
+  Letsencrypt::Plugin     $plugin               = 'standalone',
+  Array[Stdlib::Unixpath] $webroot_paths        = [],
+  String[1]               $letsencrypt_command  = $letsencrypt::command,
+  Array[String[1]]        $additional_args      = [],
+  Array[String[1]]        $environment          = [],
+  Boolean                 $manage_cron          = false,
+  Boolean                 $suppress_cron_output = false,
+  Optional[String[1]]     $cron_before_command  = undef,
+  Optional[String[1]]     $cron_success_command = undef,
+  Stdlib::Unixpath        $config_dir           = $letsencrypt::config_dir,
 ) {
 
-  if $plugin == 'webroot' {
-    unless $webroot_paths {
-      fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
-    }
+  if $plugin == 'webroot' and empty($webroot_paths) {
+    fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
   }
 
   if ($custom_plugin) {
@@ -59,15 +57,31 @@ define letsencrypt::certonly (
     $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly -a ${plugin} "
   }
 
-  $command_domains = $plugin ? {
-    'webroot' => inline_template('<%= @domains.zip(@webroot_paths).map { |domain| "#{"--webroot-path #{domain[1]} " if domain[1]}-d #{domain[0]}"}.join(" ") %>'),
-    default   => inline_template('-d <%= @domains.join(" -d ")%>'),
+  if $plugin == 'webroot' {
+    $_command_domains = zip($domains, $webroot_paths).map |$domain| {
+      if $domain[1] {
+        "--webroot-path ${domain[1]} -d ${domain[0]}"
+      } else {
+        "-d ${domain[0]}"
+      }
+    }
+    $command_domains = join($_command_domains, ' ')
+  } else {
+    $_command_domains = join($domains, ' -d ')
+    $command_domains  = "-d ${_command_domains}"
   }
-  $command_end = inline_template('<% if @additional_args %> <%= @additional_args.join(" ") %><%end%>')
-  $command = "${command_start}${command_domains}${command_end}"
-  $live_path = inline_template("${config_dir}/live/<%= @domains.first %>/cert.pem")
 
-  $execution_environment = concat([ "VENV_PATH=${letsencrypt::venv_path}", ], $environment)
+  if empty($additional_args) {
+    $command_end = undef
+  } else {
+    # ['',] adds an additional whitespace in the front
+    $command_end = join(['',] + $additional_args, ' ')
+  }
+
+  $command = "${command_start}${command_domains}${command_end}"
+  $live_path = "${config_dir}/live/${domains[0]}/cert.pem"
+
+  $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
   exec { "letsencrypt certonly ${title}":
     command     => $command,
     path        => $::path,
