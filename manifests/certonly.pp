@@ -65,10 +65,10 @@ define letsencrypt::certonly (
         "-d ${domain[0]}"
       }
     }
-    $command_domains = join($_command_domains, ' ')
+    $command_domains = join([ "--cert-name ${title}", ] + $_command_domains, ' ')
   } else {
     $_command_domains = join($domains, ' -d ')
-    $command_domains  = "-d ${_command_domains}"
+    $command_domains  = "--cert-name ${title} -d ${_command_domains}"
   }
 
   if empty($additional_args) {
@@ -82,11 +82,12 @@ define letsencrypt::certonly (
   $live_path = "${config_dir}/live/${domains[0]}/cert.pem"
 
   $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
+  $verify_domains = join($domains, ' -d ')
   exec { "letsencrypt certonly ${title}":
     command     => $command,
     path        => $::path,
     environment => $execution_environment,
-    creates     => $live_path,
+    unless      => "test -f ${live_path} && ${letsencrypt_command} certificates --cert-name ${title} -d ${verify_domains} | grep -q 'Certificate Path'",
     require     => Class['letsencrypt'],
   }
 
