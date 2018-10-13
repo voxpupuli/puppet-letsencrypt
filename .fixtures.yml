@@ -4,5 +4,3 @@ fixtures:
     inifile: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
     stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
     vcsrepo: 'https://github.com/puppetlabs/puppetlabs-vcsrepo.git'
-  symlinks:
-    letsencrypt: "#{source_dir}"
