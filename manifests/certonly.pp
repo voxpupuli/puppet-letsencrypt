@@ -33,7 +33,7 @@
 #   succeeds.
 #
 define letsencrypt::certonly (
-  Array[Stdlib::Host]     $domains              = [$title],
+  Array[String[1]]        $domains              = [$title],
   Boolean                 $custom_plugin        = false,
   Letsencrypt::Plugin     $plugin               = 'standalone',
   Array[Stdlib::Unixpath] $webroot_paths        = [],
