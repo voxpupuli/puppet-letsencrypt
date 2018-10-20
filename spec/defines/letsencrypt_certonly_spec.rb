@@ -16,9 +16,9 @@ describe 'letsencrypt::certonly' do
 
       context 'with multiple domains' do
         let(:title) { 'foo' }
-        let(:params) { { domains: ['foo.example.com', 'bar.example.com'] } }
+        let(:params) { { domains: ['foo.example.com', 'bar.example.com', '*.example.com'] } }
 
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --text --agree-tos --non-interactive certonly -a standalone --cert-name foo -d foo.example.com -d bar.example.com' }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command 'letsencrypt --text --agree-tos --non-interactive certonly -a standalone --cert-name foo -d foo.example.com -d bar.example.com -d *.example.com' }
       end
 
       context 'with custom command' do
