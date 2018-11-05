@@ -61,6 +61,7 @@ class letsencrypt::params {
 
   $cron_owner_group = $::osfamily ? {
     'OpenBSD' =>  'wheel',
+    'FreeBSD' =>  'wheel',
     default   =>  'root',
   }
 }
