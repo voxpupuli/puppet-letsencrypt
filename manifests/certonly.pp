@@ -44,6 +44,7 @@ define letsencrypt::certonly (
   Boolean                 $suppress_cron_output = false,
   Optional[String[1]]     $cron_before_command  = undef,
   Optional[String[1]]     $cron_success_command = undef,
+  Optional[Array]         $cron_monthday        = ['*'],
   Stdlib::Unixpath        $config_dir           = $letsencrypt::config_dir,
 ) {
 
@@ -118,10 +119,11 @@ define letsencrypt::certonly (
       content => template('letsencrypt/renew-script.sh.erb'),
     }
     cron { "letsencrypt renew cron ${title}":
-      command => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
-      user    => root,
-      hour    => $cron_hour,
-      minute  => $cron_minute,
+      command  => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
+      user     => root,
+      hour     => $cron_hour,
+      minute   => $cron_minute,
+      monthday => $cron_monthday,
     }
   }
 }

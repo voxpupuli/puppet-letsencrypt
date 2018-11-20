@@ -160,6 +160,17 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com > /dev/null 2>&1\n" }
       end
 
+      context 'with manage cron and custom day of month' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          { manage_cron: true,
+            cron_monthday: [1, 15] }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with(monthday: [1, 15]) }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
       context 'with custom config_dir' do
         let(:title) { 'foo.example.com' }
         let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', config_dir => '/foo/bar/baz', package_command => 'letsencrypt'}" }
