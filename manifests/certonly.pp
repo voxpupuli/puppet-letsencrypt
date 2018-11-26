@@ -33,18 +33,19 @@
 #   succeeds.
 #
 define letsencrypt::certonly (
-  Array[String[1]]        $domains              = [$title],
-  Boolean                 $custom_plugin        = false,
-  Letsencrypt::Plugin     $plugin               = 'standalone',
-  Array[Stdlib::Unixpath] $webroot_paths        = [],
-  String[1]               $letsencrypt_command  = $letsencrypt::command,
-  Array[String[1]]        $additional_args      = [],
-  Array[String[1]]        $environment          = [],
-  Boolean                 $manage_cron          = false,
-  Boolean                 $suppress_cron_output = false,
-  Optional[String[1]]     $cron_before_command  = undef,
-  Optional[String[1]]     $cron_success_command = undef,
-  Stdlib::Unixpath        $config_dir           = $letsencrypt::config_dir,
+  Array[String[1]]                          $domains              = [$title],
+  Boolean                                   $custom_plugin        = false,
+  Letsencrypt::Plugin                       $plugin               = 'standalone',
+  Array[Stdlib::Unixpath]                   $webroot_paths        = [],
+  String[1]                                 $letsencrypt_command  = $letsencrypt::command,
+  Array[String[1]]                          $additional_args      = [],
+  Array[String[1]]                          $environment          = [],
+  Boolean                                   $manage_cron          = false,
+  Boolean                                   $suppress_cron_output = false,
+  Optional[String[1]]                       $cron_before_command  = undef,
+  Optional[String[1]]                       $cron_success_command = undef,
+  Array[Variant[Integer[0, 59], String[1]]] $cron_monthday        = ['*'],
+  Stdlib::Unixpath                          $config_dir           = $letsencrypt::config_dir,
 ) {
 
   if $plugin == 'webroot' and empty($webroot_paths) {
@@ -118,10 +119,11 @@ define letsencrypt::certonly (
       content => template('letsencrypt/renew-script.sh.erb'),
     }
     cron { "letsencrypt renew cron ${title}":
-      command => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
-      user    => root,
-      hour    => $cron_hour,
-      minute  => $cron_minute,
+      command  => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
+      user     => root,
+      hour     => $cron_hour,
+      minute   => $cron_minute,
+      monthday => $cron_monthday,
     }
   }
 }
