@@ -21,7 +21,7 @@
 # [*additional_args*]
 #   An array of additional command line arguments to pass to the
 #   `letsencrypt-auto` command.
-# [*environment*]
+# [*venv_vars*]
 #   An optional array of environment variables (in addition to VENV_PATH).
 # [*manage_cron*]
 #   Boolean indicating whether or not to schedule cron job for renewal.
@@ -39,7 +39,7 @@ define letsencrypt::certonly (
   Array[Stdlib::Unixpath]                   $webroot_paths        = [],
   String[1]                                 $letsencrypt_command  = $letsencrypt::command,
   Array[String[1]]                          $additional_args      = [],
-  Array[String[1]]                          $environment          = [],
+  Array[String[1]]                          $venv_vars            = [],
   Boolean                                   $manage_cron          = false,
   Boolean                                   $suppress_cron_output = false,
   Optional[String[1]]                       $cron_before_command  = undef,
@@ -82,7 +82,7 @@ define letsencrypt::certonly (
   $command = "${command_start}${command_domains}${command_end}"
   $live_path = "${config_dir}/live/${domains[0]}/cert.pem"
 
-  $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
+  $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $venv_vars
   $verify_domains = join($domains, ' -d ')
   exec { "letsencrypt certonly ${title}":
     command     => $command,

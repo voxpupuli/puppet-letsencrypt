@@ -41,8 +41,7 @@ describe 'letsencrypt' do
         end
 
         describe 'with custom environment variables' do
-          let(:additional_params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
-
+          let(:additional_params) { { venv_vars: ['FOO=bar', 'FIZZ=buzz'] } }
           it { is_expected.to contain_exec('initialize letsencrypt').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
         end
 

@@ -137,14 +137,13 @@ describe 'letsencrypt::certonly' do
 
       describe 'when specifying custom environment variables' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
-
+        let(:params) { { venv_vars: ['FOO=bar', 'FIZZ=buzz'] } }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
       end
 
       context 'with custom environment variables and manage cron' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'], manage_cron: true } }
+        let(:params) { { venv_vars: ['FOO=bar', 'FIZZ=buzz'], manage_cron: true } }
 
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nexport FOO=bar\nexport FIZZ=buzz\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
       end
