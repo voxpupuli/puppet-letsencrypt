@@ -74,7 +74,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command 'letsencrypt --text --agree-tos --non-interactive certonly -a apache --cert-name foo.example.com -d foo.example.com' }
       end
 
-      context 'with custom plugin and manage cron' do
+      context 'with custom plugin and manage_cron' do
         let(:title) { 'foo.example.com' }
         let(:params) do
           {
@@ -85,6 +85,108 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '/var/lib/puppet/letsencrypt/renew-foo.example.com.sh' }
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
+      context 'with manage_cron and defined cron_hour (integer)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_hour: 13,
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour 13 }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
+      context 'with manage_cron and out of range defined cron_hour (integer)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_hour: 24,
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to raise_error Puppet::Error }
+      end
+
+      context 'with manage_cron and defined cron_hour (string)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_hour: '00',
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour '00' }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
+      context 'with manage_cron and defined cron_hour (array)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_hour: [1, 13],
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour [1, 13] }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
+      context 'with manage_cron and defined cron_minute (integer)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_minute: 15,
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute 15 }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
+      context 'with manage_cron and out of range defined cron_hour (integer)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_hour: 66,
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to raise_error Puppet::Error }
+      end
+
+      context 'with manage_cron and defined cron_minute (string)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_minute: '15',
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute '15' }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+      end
+
+      context 'with manage_cron and defined cron_minute (array)' do
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          {
+            cron_minute: [0, 30],
+            manage_cron: true
+          }
+        end
+
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute [0, 30] }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nletsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
       end
 
       context 'with custom puppet_vardir path and manage_cron' do
@@ -142,7 +244,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_environment(['VENV_PATH=/opt/letsencrypt/.venv', 'FOO=bar', 'FIZZ=buzz']) }
       end
 
-      context 'with custom environment variables and manage cron' do
+      context 'with custom environment variables and manage_cron' do
         let(:title) { 'foo.example.com' }
         let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'], manage_cron: true } }
 
