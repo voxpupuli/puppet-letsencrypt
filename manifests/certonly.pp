@@ -31,6 +31,12 @@
 # [*cron_success_command*]
 #   String representation of a command that should be run if the renewal command
 #   succeeds.
+# [*cron_hour*]
+#   Optional string, integer or array, hour(s) that the renewal command should execute.
+#   e.g. '[0,12]' execute at midnight and midday.  Default - seeded random hour.
+# [*cron_minute*]
+#   Optional string, integer or array, minute(s) that the renewal command should execute.
+#   e.g. 0 or '00' or [0,30].  Default - seeded random minute.
 #
 define letsencrypt::certonly (
   Array[String[1]]                          $domains              = [$title],
@@ -45,6 +51,8 @@ define letsencrypt::certonly (
   Optional[String[1]]                       $cron_before_command  = undef,
   Optional[String[1]]                       $cron_success_command = undef,
   Array[Variant[Integer[0, 59], String[1]]] $cron_monthday        = ['*'],
+  Variant[Integer[0,23], String, Array]     $cron_hour            = fqdn_rand(24, $title),
+  Variant[Integer[0,59], String, Array]     $cron_minute          = fqdn_rand(60, fqdn_rand_string(10, $title)),
   Stdlib::Unixpath                          $config_dir           = $letsencrypt::config_dir,
 ) {
 
@@ -109,8 +117,6 @@ define letsencrypt::certonly (
     } else {
       $cron_cmd = $renewcommand
     }
-    $cron_hour = fqdn_rand(24, $title) # 0 - 23, seed is title plus fqdn
-    $cron_minute = fqdn_rand(60, fqdn_rand_string(10,$title)) # 0 - 59, seed is title plus fqdn
     file { "${::letsencrypt::cron_scripts_path}/renew-${title}.sh":
       ensure  => 'file',
       mode    => '0755',
