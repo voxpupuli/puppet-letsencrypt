@@ -91,12 +91,13 @@ define letsencrypt::certonly (
   $live_path = "${config_dir}/live/${domains[0]}/cert.pem"
 
   $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
-  $verify_domains = join($domains, ' -d ')
+  $verify_domains = join(unique($domains), ' ')
   exec { "letsencrypt certonly ${title}":
     command     => $command,
     path        => $::path,
     environment => $execution_environment,
-    unless      => "test -f ${live_path} && ${letsencrypt_command} certificates --cert-name ${title} -d ${verify_domains} | grep -q 'Certificate Path'",
+    onlyif      => "test -f ${live_path} && ( openssl x509 -in ${live_path} -text -noout | grep -oE 'DNS:[^\s,]*' | sed 's/^DNS://g;'; echo '${verify_domains}' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'",
+    provider    => 'shell',
     require     => Class['letsencrypt'],
   }
 
