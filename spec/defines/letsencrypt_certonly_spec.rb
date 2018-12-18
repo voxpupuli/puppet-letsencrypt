@@ -10,8 +10,7 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
 
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com') }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless "test -f /etc/letsencrypt/live/foo.example.com/cert.pem && letsencrypt certificates --cert-name foo.example.com -d foo.example.com | grep -q 'Certificate Path'" }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command 'letsencrypt --text --agree-tos --non-interactive certonly -a standalone --cert-name foo.example.com -d foo.example.com' }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /etc/letsencrypt/live/foo.example.com/cert.pem && ( openssl x509 -in /etc/letsencrypt/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
       end
 
       context 'with multiple domains' do
@@ -277,7 +276,7 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
         let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', config_dir => '/foo/bar/baz', package_command => 'letsencrypt'}" }
 
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with(unless: "test -f /foo/bar/baz/live/foo.example.com/cert.pem && letsencrypt certificates --cert-name foo.example.com -d foo.example.com | grep -q 'Certificate Path'") }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /foo/bar/baz/live/foo.example.com/cert.pem && ( openssl x509 -in /foo/bar/baz/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
       end
     end
   end
@@ -287,6 +286,7 @@ describe 'letsencrypt::certonly' do
     let(:facts) { { osfamily: 'FreeBSD', operatingsystem: 'FreeBSD', operatingsystemrelease: '10.3-RELEASE-p7', operatingsystemmajrelease: '10', path: '/usr/bin' } }
     let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com'}" }
 
-    it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with(unless: "test -f /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem && certbot certificates --cert-name foo.example.com -d foo.example.com | grep -q 'Certificate Path'", command: %r{^certbot}) }
+    it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command %r{^certbot} }
+    it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem && ( openssl x509 -in /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
   end
 end
