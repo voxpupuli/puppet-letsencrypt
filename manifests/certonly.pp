@@ -125,7 +125,7 @@ define letsencrypt::certonly (
       content => template('letsencrypt/renew-script.sh.erb'),
     }
     cron { "letsencrypt renew cron ${title}":
-      command  => "${::letsencrypt::cron_scripts_path}/renew-${title}.sh",
+      command  => "\"${::letsencrypt::cron_scripts_path}/renew-${title}.sh\"",
       user     => root,
       hour     => $cron_hour,
       minute   => $cron_minute,
