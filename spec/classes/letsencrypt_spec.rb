@@ -23,7 +23,7 @@ describe 'letsencrypt' do
             is_expected.to contain_class('letsencrypt::install').with(configure_epel: epel,
                                                                       manage_install: true,
                                                                       manage_dependencies: true,
-                                                                      repo: 'https://github.com/letsencrypt/letsencrypt.git',
+                                                                      repo: 'https://github.com/certbot/certbot.git',
                                                                       version: 'v0.9.3').that_notifies('Exec[initialize letsencrypt]')
 
             is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
