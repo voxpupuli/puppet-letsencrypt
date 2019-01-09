@@ -11,8 +11,9 @@ This module installs the Let's Encrypt client from source and allows you to requ
 
 ## Support
 
-This module requires Puppet >= 4.7.0. and is currently only written to work on
-Debian and RedHat based operating systems, although it may work on others.
+This module is currently only written to work on Debian and RedHat based
+operating systems, although it may work on others. The supported Puppet
+versions are defined in the [metadata.json](metadata.json)
 
 ## Dependencies
 
