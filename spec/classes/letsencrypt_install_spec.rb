@@ -9,7 +9,7 @@ describe 'letsencrypt::install' do
       manage_install: true,
       manage_dependencies: true,
       path: '/opt/letsencrypt',
-      repo: 'https://github.com/letsencrypt/letsencrypt.git',
+      repo: 'https://github.com/certbot/certbot.git',
       version: 'v0.9.3',
       package_name: 'letsencrypt'
     }
@@ -55,7 +55,7 @@ describe 'letsencrypt::install' do
     it { is_expected.to compile }
 
     it 'contains the correct resources' do
-      is_expected.to contain_vcsrepo('/opt/letsencrypt').with(source: 'https://github.com/letsencrypt/letsencrypt.git',
+      is_expected.to contain_vcsrepo('/opt/letsencrypt').with(source: 'https://github.com/certbot/certbot.git',
                                                               revision: 'v0.9.3')
       is_expected.to contain_package('python')
       is_expected.to contain_package('git')
