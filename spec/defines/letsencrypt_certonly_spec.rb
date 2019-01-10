@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe 'letsencrypt::certonly' do
-  { 'Debian' => '9.0', 'Ubuntu' => '16.04', 'RedHat' => '7.2' }.each do |osfamily, osversion|
-    context "on #{osfamily} based operating systems" do
-      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin' } }
+  on_supported_os.each do |os, facts|
+    let :facts do
+      facts
+    end
+    context "on #{os} based operating systems" do
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
       context 'with a single domain' do
@@ -189,7 +191,9 @@ describe 'letsencrypt::certonly' do
       end
 
       context 'with custom puppet_vardir path and manage_cron' do
-        let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin', puppet_vardir: '/tmp/custom_vardir' } }
+        let :facts do
+          super().merge({puppet_vardir: '/tmp/custom_vardir' })
+        end
         let(:title) { 'foo.example.com' }
         let(:params) do
           { plugin: 'apache',
