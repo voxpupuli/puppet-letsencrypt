@@ -5,6 +5,7 @@ describe 'letsencrypt::certonly' do
     let :facts do
       facts
     end
+
     context "on #{os} based operating systems" do
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
@@ -192,7 +193,7 @@ describe 'letsencrypt::certonly' do
 
       context 'with custom puppet_vardir path and manage_cron' do
         let :facts do
-          super().merge({puppet_vardir: '/tmp/custom_vardir' })
+          super().merge(puppet_vardir: '/tmp/custom_vardir')
         end
         let(:title) { 'foo.example.com' }
         let(:params) do
