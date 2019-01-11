@@ -14,37 +14,37 @@ class letsencrypt::params {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
 
-  if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8') >= 0 {
+  if $facts['operatingsystem'] == 'Debian' and versioncmp($facts['operatingsystemrelease'], '8') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') == 0 {
+  } elsif $facts['operatingsystem'] == 'Ubuntu' and versioncmp($facts['operatingsystemrelease'], '16.04') == 0 {
     $install_method = 'package'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
     $config_dir = '/etc/letsencrypt'
-  } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '18.04') >= 0 {
+  } elsif $facts['operatingsystem'] == 'Ubuntu' and versioncmp($facts['operatingsystemrelease'], '18.04') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+  } elsif $facts['osfamily'] == 'RedHat' and versioncmp($facts['operatingsystemmajrelease'], '7') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $::osfamily == 'Gentoo' {
+  } elsif $facts['osfamily'] == 'Gentoo' {
     $install_method = 'package'
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-} elsif $::osfamily == 'OpenBSD' {
+} elsif $facts['osfamily'] == 'OpenBSD' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $::osfamily == 'FreeBSD' {
+  } elsif $facts['osfamily'] == 'FreeBSD' {
     $install_method = 'package'
     $package_name = 'py27-certbot'
     $package_command = 'certbot'
@@ -58,13 +58,13 @@ class letsencrypt::params {
 
   $config_file = "${config_dir}/cli.ini"
 
-  if $::osfamily == 'RedHat' {
+  if $facts['osfamily'] == 'RedHat' {
     $configure_epel = true
   } else {
     $configure_epel = false
   }
 
-  $cron_owner_group = $::osfamily ? {
+  $cron_owner_group = $facts['osfamily'] ? {
     'OpenBSD' =>  'wheel',
     'FreeBSD' =>  'wheel',
     default   =>  'root',
