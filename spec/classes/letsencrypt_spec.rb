@@ -15,11 +15,7 @@ describe 'letsencrypt' do
         describe 'with defaults' do
           it { is_expected.to compile }
 
-          epel = if facts[:osfamily] == 'RedHat'
-                   true
-                 else
-                   false
-                 end
+          epel = facts[:osfamily] == 'RedHat'
 
           it 'contains the correct resources' do
             is_expected.to contain_class('letsencrypt::install').with(configure_epel: epel,
@@ -45,16 +41,13 @@ describe 'letsencrypt' do
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'certbot')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Debian' && facts[:operatingsystemmajrelease] == '8'
+            elsif facts[:operatingsystem] == 'Debian'
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             elsif facts[:operatingsystem] == 'Ubuntu' && facts[:operatingsystemmajrelease] == '14.04'
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Ubuntu' && facts[:operatingsystemmajrelease] == '16.04'
-              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Ubuntu' && facts[:operatingsystemmajrelease] == '18.04'
+            elsif facts[:operatingsystem] == 'Ubuntu'
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             elsif facts[:operatingsystem] == 'Gentoo'
