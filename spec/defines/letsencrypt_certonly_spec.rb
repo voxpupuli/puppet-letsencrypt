@@ -319,19 +319,20 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/foo/bar/baz').with_ensure('directory') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /foo/bar/baz/live/foo.example.com/cert.pem && ( openssl x509 -in /foo/bar/baz/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
       end
+
+
+      next unless facts[:os]['name'] == 'FreeBSD'
+      context 'on FreeBSD' do
+        let(:title) { 'foo.example.com' }
+        let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com'}" }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command %r{^certbot} }
+        it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
+        it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
+        it { is_expected.to contain_file('/usr/local/etc/letsencrypt').with_ensure('directory') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem && ( openssl x509 -in /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
+      end
     end
-  end
-
-  context 'on FreeBSD' do
-    let(:title) { 'foo.example.com' }
-    let(:facts) { { osfamily: 'FreeBSD', operatingsystem: 'FreeBSD', operatingsystemrelease: '10.3-RELEASE-p7', operatingsystemmajrelease: '10', path: '/usr/bin' } }
-    let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com'}" }
-
-    it { is_expected.to compile.with_all_deps }
-    it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command %r{^certbot} }
-    it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
-    it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
-    it { is_expected.to contain_file('/usr/local/etc/letsencrypt').with_ensure('directory') }
-    it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem && ( openssl x509 -in /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
   end
 end
