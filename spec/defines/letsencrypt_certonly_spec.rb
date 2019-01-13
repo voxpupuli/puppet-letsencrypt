@@ -10,19 +10,10 @@ describe 'letsencrypt::certonly' do
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
       # FreeBSD uses a different filesystem path
-      pathprefix = case facts[:kernel]
-                   when 'Linux'
-                     ''
-                   when 'FreeBSD'
-                     '/usr/local'
-                   end
+      pathprefix = facts[:kernel] == 'FreeBSD' ? '/usr/local' : ''
+
       # Ubuntu 14.04 uses VCS as install method. That results in an absolute path to the binary
-      binaryprefix = case facts[:os]['release']['full']
-                     when '14.04'
-                       '/opt/letsencrypt/.venv/bin/'
-                     else
-                       ''
-                     end
+      binaryprefix = facts[:os]['release']['full'] == '14.04' ? '/opt/letsencrypt/.venv/bin/' : ''
 
       context 'with a single domain' do
         let(:title) { 'foo.example.com' }
@@ -342,8 +333,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_onlyif "test -f /foo/bar/baz/live/foo.example.com/cert.pem && ( openssl x509 -in /foo/bar/baz/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
       end
 
-      next unless facts[:os]['name'] == 'FreeBSD'
-      context 'on FreeBSD' do
+      context 'on FreeBSD', if: facts[:os]['name'] == 'FreeBSD' do
         let(:title) { 'foo.example.com' }
         let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com'}" }
 

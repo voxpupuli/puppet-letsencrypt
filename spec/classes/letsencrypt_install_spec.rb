@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe 'letsencrypt::install' do
   on_supported_os.each do |os, facts|
-    let :facts do
-      facts
-    end
     let(:params) { default_params.merge(additional_params) }
     let(:default_params) do
       {
@@ -21,6 +18,10 @@ describe 'letsencrypt::install' do
     let(:additional_params) { {} }
 
     context "on #{os} based operating systems" do
+      let :facts do
+        facts
+      end
+
       describe 'with install_method => package' do
         let(:additional_params) { { install_method: 'package' } }
 
