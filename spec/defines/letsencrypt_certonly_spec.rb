@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe 'letsencrypt::certonly' do
   on_supported_os.each do |os, facts|
-    let :facts do
-      facts
-    end
-
     context "on #{os} based operating systems" do
+      let :facts do
+        facts
+      end
+
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
       context 'with a single domain' do
