@@ -9,7 +9,7 @@ class letsencrypt::params {
   $venv_path           = '/opt/letsencrypt/.venv' # virtualenv path for vcs-installed letsencrypt
   $repo                = 'https://github.com/certbot/certbot.git'
   $cron_scripts_path   = "${facts['puppet_vardir']}/letsencrypt" # path for renewal scripts called by cron
-  $version             = 'v0.9.3'
+  $version             = 'v0.30.0'
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
