@@ -103,6 +103,7 @@ define letsencrypt::certonly (
 
   if $manage_cron {
     $maincommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
+    $cron_ensure = present
     if $suppress_cron_output {
       $croncommand = "${maincommand} > /dev/null 2>&1"
     } else {
@@ -125,12 +126,17 @@ define letsencrypt::certonly (
       group   => $::letsencrypt::cron_owner_group,
       content => template('letsencrypt/renew-script.sh.erb'),
     }
-    cron { "letsencrypt renew cron ${title}":
-      command  => "\"${::letsencrypt::cron_scripts_path}/renew-${title}.sh\"",
-      user     => root,
-      hour     => $cron_hour,
-      minute   => $cron_minute,
-      monthday => $cron_monthday,
-    }
+  } else {
+    $cron_ensure = absent
   }
+
+  cron { "letsencrypt renew cron ${title}":
+    ensure   => $cron_ensure,
+    command  => "\"${::letsencrypt::cron_scripts_path}/renew-${title}.sh\"",
+    user     => root,
+    hour     => $cron_hour,
+    minute   => $cron_minute,
+    monthday => $cron_monthday,
+  }
+
 }
