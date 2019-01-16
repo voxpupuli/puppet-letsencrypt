@@ -23,8 +23,9 @@
 #   `letsencrypt-auto` command.
 # [*environment*]
 #   An optional array of environment variables (in addition to VENV_PATH).
-# [*manage_cron*]
-#   Boolean indicating whether or not to schedule cron job for renewal.
+# [*ensure_cron*]
+#   Intended state of the cron and helper script resources. Accepts either
+#   'present' or 'absent'. Default: 'absent'
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
 # [*cron_before_command*]
 #   String representation of a command that should be run before renewal command
@@ -46,7 +47,7 @@ define letsencrypt::certonly (
   String[1]                                 $letsencrypt_command  = $letsencrypt::command,
   Array[String[1]]                          $additional_args      = [],
   Array[String[1]]                          $environment          = [],
-  Boolean                                   $manage_cron          = false,
+  Enum['present','absent']                  $ensure_cron          = 'absent',
   Boolean                                   $suppress_cron_output = false,
   Optional[String[1]]                       $cron_before_command  = undef,
   Optional[String[1]]                       $cron_success_command = undef,
@@ -101,9 +102,8 @@ define letsencrypt::certonly (
     require     => Class['letsencrypt'],
   }
 
-  if $manage_cron {
+  if $ensure_cron  == 'present' {
     $maincommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
-    $cron_ensure = present
     $cron_script_ensure = 'file'
 
     if $suppress_cron_output {
@@ -122,8 +122,7 @@ define letsencrypt::certonly (
       $cron_cmd = $renewcommand
     }
   } else {
-    $cron_ensure = absent
-    $cron_script_ensure = absent
+    $cron_script_ensure = 'absent'
   }
 
   file { "${::letsencrypt::cron_scripts_path}/renew-${title}.sh":
@@ -135,7 +134,7 @@ define letsencrypt::certonly (
   }
 
   cron { "letsencrypt renew cron ${title}":
-    ensure   => $cron_ensure,
+    ensure   => $ensure_cron,
     command  => "\"${::letsencrypt::cron_scripts_path}/renew-${title}.sh\"",
     user     => root,
     hour     => $cron_hour,
