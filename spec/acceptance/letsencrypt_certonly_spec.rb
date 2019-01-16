@@ -12,7 +12,7 @@ describe 'letsencrypt::certonly' do
 
       letsencrypt::certonly { 'foo':
         domains              => ['foo.example.com', 'bar.example.com'],
-        manage_cron          => true,
+        ensure_cron          => 'present',
         cron_hour            => [0,12],
         cron_minute          => '30',
         cron_before_command  => 'service apache stop',
