@@ -130,7 +130,7 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
-* `manage_cron` can be used to automatically renew the certificate
+* `ensure_cron` can be used to automatically renew the certificate
 * `cron_success_command` can be used to run a shell command on a successful renewal
 * `cron_before_command` can be used to run a shell command before a renewal
 * `cron_monthday` can be used to specify one or multiple days of the month to run the cron job (defaults to every day)
@@ -141,7 +141,7 @@ letsencrypt::certonly { 'foo':
 ```puppet
 letsencrypt::certonly { 'foo':
   domains              => ['foo.example.com', 'bar.example.com'],
-  manage_cron          => true,
+  ensure_cron          => 'present',
   cron_hour            => [0,12],
   cron_minute          => '30',
   cron_before_command  => 'service nginx stop',
