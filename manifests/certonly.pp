@@ -96,7 +96,7 @@ define letsencrypt::certonly (
     command     => $command,
     path        => $::path,
     environment => $execution_environment,
-    onlyif      => "test -f ${live_path} && ( openssl x509 -in ${live_path} -text -noout | grep -oE 'DNS:[^\s,]*' | sed 's/^DNS://g;'; echo '${verify_domains}' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'",
+    onlyif      => "(openssl x509 -in ${live_path} -text -noout | grep -oE 'DNS:[^\s,]*' | sed 's/^DNS://g;'; echo '${verify_domains}' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'",
     provider    => 'shell',
     require     => Class['letsencrypt'],
   }
