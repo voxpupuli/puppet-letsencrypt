@@ -101,4 +101,13 @@ class letsencrypt (
     environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
     refreshonly => true,
   }
+
+  # Used in letsencrypt::certonly Exec["letsencrypt certonly ${title}"]
+  file { '/usr/local/sbin/letsencrypt-domain-validation':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0500',
+    source => "puppet:///modules/${module_name}/domain-validation.sh",
+  }
 }

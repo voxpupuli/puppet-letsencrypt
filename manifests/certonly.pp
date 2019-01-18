@@ -97,9 +97,12 @@ define letsencrypt::certonly (
     command     => $command,
     path        => $::path,
     environment => $execution_environment,
-    unless      => "test -f ${live_path} && ! ( openssl x509 -in ${live_path} -text -noout | grep -oE 'DNS:[^\s,]*' | sed 's/^DNS://g;'; echo '${verify_domains}' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'",
+    unless      => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} ${verify_domains}",
     provider    => 'shell',
-    require     => Class['letsencrypt'],
+    require     => [
+      Class['letsencrypt'],
+      File['/usr/local/sbin/letsencrypt-domain-validation'],
+    ],
   }
 
   if $ensure_cron  == 'present' {

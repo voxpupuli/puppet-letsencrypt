@@ -38,7 +38,7 @@ describe 'letsencrypt::certonly' do
         end
         it { is_expected.to contain_exec('initialize letsencrypt') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com') }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless "test -f #{pathprefix}/etc/letsencrypt/live/foo.example.com/cert.pem && ! ( openssl x509 -in #{pathprefix}/etc/letsencrypt/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless "/usr/local/sbin/letsencrypt-domain-validation #{pathprefix}/etc/letsencrypt/live/foo.example.com/cert.pem foo.example.com" }
       end
 
       context 'with multiple domains' do
@@ -333,7 +333,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file('/foo/bar/baz').with_ensure('directory') }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless "test -f /foo/bar/baz/live/foo.example.com/cert.pem && ! ( openssl x509 -in /foo/bar/baz/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless '/usr/local/sbin/letsencrypt-domain-validation /foo/bar/baz/live/foo.example.com/cert.pem foo.example.com' }
       end
 
       context 'on FreeBSD', if: facts[:os]['name'] == 'FreeBSD' do
@@ -345,7 +345,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
         it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
         it { is_expected.to contain_file('/usr/local/etc/letsencrypt').with_ensure('directory') }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless "test -f /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem && ! ( openssl x509 -in /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem -text -noout | grep -oE 'DNS:[^ ,]*' | sed 's/^DNS://g;'; echo 'foo.example.com' | tr ' ' '\\n') | sort | uniq -c | grep -qv '^[ \t]*2[ \t]'" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless '/usr/local/sbin/letsencrypt-domain-validation /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem foo.example.com' }
       end
     end
   end
