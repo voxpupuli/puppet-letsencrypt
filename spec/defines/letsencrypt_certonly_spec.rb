@@ -100,6 +100,32 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to raise_error Puppet::Error, %r{'webroot_paths' parameter must be specified} }
       end
 
+      context 'with dns-rfc2136 plugin' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'dns-rfc2136', letsencrypt_command: "#{binaryprefix}letsencrypt" } }
+        let(:pre_condition) do
+          "class { 'letsencrypt':
+            email      => 'foo@example.com',
+            config_dir => '/etc/letsencrypt',
+            venv_path  => '/opt/letsencrypt/.venv',
+          }
+          class { 'letsencrypt::plugin::dns_rfc2136':
+            server              => '1.2.3.4',
+            key_name            => 'certbot',
+            key_secret          => 'secret',
+            key_algorithm       => 'HMAC-SHA512',
+            port                => 53,
+            manage_package      => true,
+            config_dir          => '/etc/letsencrypt',
+            propagation_seconds => 10,
+          }"
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('letsencrypt::plugin::dns_rfc2136') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-rfc2136 --cert-name foo.example.com -d foo.example.com --dns-rfc2136-credentials /etc/letsencrypt/dns-rfc2136.ini --dns-rfc2136-propagation-seconds 10" }
+      end
+
       context 'with custom plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'apache' } }
