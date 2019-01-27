@@ -68,18 +68,35 @@ define letsencrypt::certonly (
     $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} -a ${plugin} "
   }
 
-  if $plugin == 'webroot' {
-    $_command_domains = zip($domains, $webroot_paths).map |$domain| {
-      if $domain[1] {
-        "--webroot-path ${domain[1]} -d ${domain[0]}"
-      } else {
-        "-d ${domain[0]}"
+  case $plugin {
+
+    'webroot': {
+      $_command_domains = zip($domains, $webroot_paths).map |$domain| {
+        if $domain[1] {
+          "--webroot-path ${domain[1]} -d ${domain[0]}"
+        } else {
+          "-d ${domain[0]}"
+        }
       }
+      $command_domains = join([ "--cert-name ${title}", ] + $_command_domains, ' ')
     }
-    $command_domains = join([ "--cert-name ${title}", ] + $_command_domains, ' ')
-  } else {
-    $_command_domains = join($domains, ' -d ')
-    $command_domains  = "--cert-name ${title} -d ${_command_domains}"
+
+    'dns-rfc2136': {
+      require letsencrypt::plugin::dns_rfc2136
+      $dns_args = [
+        "--cert-name ${title} -d",
+        join($domains, ' -d '),
+        "--dns-rfc2136-credentials ${letsencrypt::plugin::dns_rfc2136::config_dir}/dns-rfc2136.ini",
+        "--dns-rfc2136-propagation-seconds ${letsencrypt::plugin::dns_rfc2136::propagation_seconds}",
+      ]
+      $command_domains = join($dns_args, ' ')
+    }
+
+    default: {
+      $_command_domains = join($domains, ' -d ')
+      $command_domains  = "--cert-name ${title} -d ${_command_domains}"
+    }
+
   }
 
   if empty($additional_args) {

@@ -41,6 +41,8 @@ apt::pin { 'jessie-backports-letsencrypt':
 
 ## Usage
 
+### Setting up the Let's Encrypt client
+
 To install the Let's Encrypt client with the default configuration settings you
 must provide your email address to register with the Let's Encrypt servers:
 
@@ -88,12 +90,18 @@ class { ::letsencrypt:
 }
 ```
 
+### Issuing certificates
+
+#### Standalone authenticator
+
 To request a certificate for `foo.example.com` using the `certonly` installer
 and the `standalone` authenticator:
 
 ```puppet
 letsencrypt::certonly { 'foo.example.com': }
 ```
+
+#### Apache authenticator
 
 To request a certificate for `foo.example.com` and `bar.example.com` with the
 `certonly` installer and the `apache` authenticator:
@@ -104,6 +112,8 @@ letsencrypt::certonly { 'foo':
   plugin  => 'apache',
 }
 ```
+
+#### Webroot plugin
 
 To request a certificate using the `webroot` plugin, the paths to the webroots
 for all domains must be given through `webroot_paths`. If `domains` and
@@ -118,6 +128,40 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
+#### dns-rfc2136 plugin
+
+To request a certificate using the `dns-rfc2136` plugin, you will at a minimum
+need to pass `server`, `key_name` and `key_secret` to the class
+`letsencrypt::plugin::dns_rfc2136`. Ideally the key secret should be encrypted,
+eg. with eyaml if using Hiera. It's also recommended to only enable access to
+the specific DNS records needed by the Let's Encrypt client.
+
+Plugin documentation and it's parameters can be found here:
+https://certbot-dns-rfc2136.readthedocs.io
+
+Parameter defaults:
+
+- `key_algorithm` HMAC-SHA512
+- `port` 53
+- `propagation_seconds` 10 (the plugin defaults to 60)
+
+Example:
+
+```puppet
+class { 'letsencrypt::plugin::dns_rfc2136':
+  server     => '1.2.3.4',
+  key_name   => 'certbot',
+  key_secret => '[...]==',
+}
+
+letsencrypt::certonly { 'foo':
+  domains       => ['foo.example.com', 'bar.example.com'],
+  plugin        => 'dns-rfc2136',
+}
+```
+
+#### Additional arguments
+
 If you need to pass a command line flag to the `letsencrypt-auto` command that
 is not supported natively by this module, you can use the `additional_args`
 parameter to pass those arguments:
@@ -129,6 +173,8 @@ letsencrypt::certonly { 'foo':
   additional_args => ['--foo bar', '--baz quuz'],
 }
 ```
+
+#### Cron
 
 * `ensure_cron` can be used to automatically renew the certificate
 * `cron_success_command` can be used to run a shell command on a successful renewal
