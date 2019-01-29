@@ -59,7 +59,11 @@ class letsencrypt::params {
   $config_file = "${config_dir}/cli.ini"
 
   if $facts['osfamily'] == 'RedHat' {
-    $configure_epel = true
+    if $facts['lsbdistid'] == 'Fedora' {
+      $configure_epel = false
+   } else {
+      $configure_epel = true
+   }
   } else {
     $configure_epel = false
   }
