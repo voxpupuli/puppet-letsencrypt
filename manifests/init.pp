@@ -72,6 +72,7 @@ class letsencrypt (
   Boolean $agree_tos                     = $letsencrypt::params::agree_tos,
   Boolean $unsafe_registration           = $letsencrypt::params::unsafe_registration,
   Stdlib::Unixpath $config_dir           = $letsencrypt::params::config_dir,
+  Integer[2048] $key_size                = 4096,
 ) inherits letsencrypt::params {
 
   if $manage_install {

@@ -45,6 +45,7 @@ define letsencrypt::certonly (
   Letsencrypt::Plugin                       $plugin               = 'standalone',
   Array[Stdlib::Unixpath]                   $webroot_paths        = [],
   String[1]                                 $letsencrypt_command  = $letsencrypt::command,
+  Integer[2048]                             $key_size             = $letsencrypt::key_size,
   Array[String[1]]                          $additional_args      = [],
   Array[String[1]]                          $environment          = [],
   Enum['present','absent']                  $ensure_cron          = 'absent',
@@ -62,9 +63,9 @@ define letsencrypt::certonly (
   }
 
   if ($custom_plugin) {
-    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly "
+    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} "
   } else {
-    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly -a ${plugin} "
+    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} -a ${plugin} "
   }
 
   if $plugin == 'webroot' {

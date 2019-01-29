@@ -46,7 +46,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { domains: ['foo.example.com', 'bar.example.com', '*.example.com'] } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --cert-name foo -d foo.example.com -d bar.example.com -d *.example.com" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name foo -d foo.example.com -d bar.example.com -d *.example.com" }
       end
 
       context 'with custom command' do
@@ -54,7 +54,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { letsencrypt_command: '/usr/lib/letsencrypt/letsencrypt-auto' } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command '/usr/lib/letsencrypt/letsencrypt-auto --text --agree-tos --non-interactive certonly -a standalone --cert-name foo.example.com -d foo.example.com' }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command '/usr/lib/letsencrypt/letsencrypt-auto --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name foo.example.com -d foo.example.com' }
       end
 
       context 'with webroot plugin' do
@@ -65,7 +65,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a webroot --cert-name foo.example.com --webroot-path /var/www/foo -d foo.example.com" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name foo.example.com --webroot-path /var/www/foo -d foo.example.com" }
       end
 
       context 'with webroot plugin and multiple domains' do
@@ -77,7 +77,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a webroot --cert-name foo --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/bar -d bar.example.com" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name foo --webroot-path /var/www/foo -d foo.example.com --webroot-path /var/www/bar -d bar.example.com" }
       end
 
       context 'with webroot plugin, one webroot, and multiple domains' do
@@ -89,7 +89,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a webroot --cert-name foo --webroot-path /var/www/foo -d foo.example.com -d bar.example.com" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name foo --webroot-path /var/www/foo -d foo.example.com -d bar.example.com" }
       end
 
       context 'with webroot plugin and no webroot_paths' do
@@ -105,7 +105,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { plugin: 'apache' } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a apache --cert-name foo.example.com -d foo.example.com" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a apache --cert-name foo.example.com -d foo.example.com" }
       end
 
       context 'with custom plugin and ensure_cron' do
@@ -119,7 +119,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command('"/var/lib/puppet/letsencrypt/renew-foo.example.com.sh"').with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with ensure_cron and defined cron_hour (integer)' do
@@ -133,7 +133,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour(13).with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with ensure_cron and out of range defined cron_hour (integer)' do
@@ -160,7 +160,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour('00').with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with ensure_cron and defined cron_hour (array)' do
@@ -174,7 +174,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_hour([1, 13]).with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with ensure_cron and defined cron_minute (integer)' do
@@ -188,7 +188,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute(15).with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with ensure_cron and out of range defined cron_hour (integer)' do
@@ -215,7 +215,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute('15').with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with ensure_cron and defined cron_minute (array)' do
@@ -229,7 +229,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute([0, 30]).with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with custom puppet_vardir path and ensure_cron' do
@@ -245,7 +245,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file('/tmp/custom_vardir/letsencrypt').with_ensure('directory') }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '"/tmp/custom_vardir/letsencrypt/renew-foo.example.com.sh"' }
-        it { is_expected.to contain_file('/tmp/custom_vardir/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/tmp/custom_vardir/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with custom plugin and manage cron and cron_success_command' do
@@ -261,14 +261,14 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command '"/var/lib/puppet/letsencrypt/renew-foo.example.com.sh"' }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n(echo before) && #{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com && (echo success)\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n(echo before) && #{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a apache --keep-until-expiring --cert-name foo.example.com -d foo.example.com && (echo success)\n") }
       end
 
       context 'without plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { custom_plugin: true } }
 
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --cert-name foo.example.com -d foo.example.com" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 --cert-name foo.example.com -d foo.example.com" }
       end
 
       context 'with invalid plugin' do
@@ -284,7 +284,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { additional_args: ['--foo bar', '--baz quux'] } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --cert-name foo.example.com -d foo.example.com --foo bar --baz quux" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name foo.example.com -d foo.example.com --foo bar --baz quux" }
       end
 
       describe 'when specifying custom environment variables' do
@@ -300,7 +300,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { environment: ['FOO=bar', 'FIZZ=buzz'], ensure_cron: 'present' } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nexport FOO=bar\nexport FIZZ=buzz\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\nexport FOO=bar\nexport FIZZ=buzz\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n" }
       end
 
       context 'with manage cron and suppress_cron_output' do\
@@ -312,7 +312,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command('"/var/lib/puppet/letsencrypt/renew-foo.example.com.sh"').with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com > /dev/null 2>&1\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com > /dev/null 2>&1\n") }
       end
 
       context 'with manage cron and custom day of month' do
@@ -324,7 +324,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with(monthday: [1, 15]).with_ensure('present') }
-        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nexport VENV_PATH=/opt/letsencrypt/.venv\n#{binaryprefix}letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --keep-until-expiring --cert-name foo.example.com -d foo.example.com\n") }
       end
 
       context 'with custom config_dir' do
