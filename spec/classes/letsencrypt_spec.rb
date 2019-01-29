@@ -17,6 +17,15 @@ describe 'letsencrypt' do
 
           epel = facts[:osfamily] == 'RedHat'
 
+          it 'contains File[/usr/local/sbin/letsencrypt-domain-validation]' do
+            is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
+              with_ensure('file').
+              with_owner('root').
+              with_group('root').
+              with_mode('0500').
+              with_source('puppet:///modules/letsencrypt/domain-validation.sh')
+          end
+
           it 'contains the correct resources' do
             is_expected.to contain_class('letsencrypt::install').with(configure_epel: epel,
                                                                       manage_install: true,
