@@ -9,18 +9,18 @@ shift
 domains=$(echo "${@}" | tr ' ' '\n')
 
 # If certpath doesn't exist, run the exec
-if ! test -f ${certpath}; then
+if ! test -f "${certpath}"; then
   exit 1
 fi
 
 # Get all subject alternative names from the certificate
-certdomains=$(openssl x509 -in ${certpath} -text -noout | grep -oP 'DNS:[^\s,]*' | sed 's/^DNS://g;')
+certdomains=$(openssl x509 -in "${certpath}" -text -noout | grep -oP 'DNS:[^\s,]*' | sed 's/^DNS://g;')
 
 # Sort and uniq all domains. Drop all Domains which occure twice
-result=$(echo "${certdomains}\n${domains}" | sort | uniq -c | grep -Pcv '^[ \t]*2[ \t]')
+result=$(printf '%s\n%s' "${certdomains}" "${domains}" | sort | uniq -c | grep -Pcv '^[ \t]*2[ \t]')
 
 # If all requested domains are already in the certificate, the $result will be 0 otherwise > 0
-if [ ${result} -eq 0 ]; then
+if [ "${result}" -eq 0 ]; then
   exit 0
 else
   exit 1
