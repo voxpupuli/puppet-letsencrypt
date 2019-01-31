@@ -98,7 +98,7 @@ class letsencrypt (
   # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
     command     => "${command_init} -h",
-    path        => $::path,
+    path        => $facts['path'],
     environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
     refreshonly => true,
   }

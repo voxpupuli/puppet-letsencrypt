@@ -69,4 +69,10 @@ class letsencrypt::params {
     'FreeBSD' =>  'wheel',
     default   =>  'root',
   }
+
+  $dns_rfc2136_manage_package      = true
+  $dns_rfc2136_port                = 53
+  $dns_rfc2136_algorithm           = 'HMAC-SHA512'
+  $dns_rfc2136_propagation_seconds = 10
+
 }

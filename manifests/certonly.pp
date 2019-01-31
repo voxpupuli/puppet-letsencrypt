@@ -68,18 +68,35 @@ define letsencrypt::certonly (
     $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} -a ${plugin} "
   }
 
-  if $plugin == 'webroot' {
-    $_command_domains = zip($domains, $webroot_paths).map |$domain| {
-      if $domain[1] {
-        "--webroot-path ${domain[1]} -d ${domain[0]}"
-      } else {
-        "-d ${domain[0]}"
+  case $plugin {
+
+    'webroot': {
+      $_command_domains = zip($domains, $webroot_paths).map |$domain| {
+        if $domain[1] {
+          "--webroot-path ${domain[1]} -d ${domain[0]}"
+        } else {
+          "-d ${domain[0]}"
+        }
       }
+      $command_domains = join([ "--cert-name ${title}", ] + $_command_domains, ' ')
     }
-    $command_domains = join([ "--cert-name ${title}", ] + $_command_domains, ' ')
-  } else {
-    $_command_domains = join($domains, ' -d ')
-    $command_domains  = "--cert-name ${title} -d ${_command_domains}"
+
+    'dns-rfc2136': {
+      require letsencrypt::plugin::dns_rfc2136
+      $dns_args = [
+        "--cert-name ${title} -d",
+        join($domains, ' -d '),
+        "--dns-rfc2136-credentials ${letsencrypt::plugin::dns_rfc2136::config_dir}/dns-rfc2136.ini",
+        "--dns-rfc2136-propagation-seconds ${letsencrypt::plugin::dns_rfc2136::propagation_seconds}",
+      ]
+      $command_domains = join($dns_args, ' ')
+    }
+
+    default: {
+      $_command_domains = join($domains, ' -d ')
+      $command_domains  = "--cert-name ${title} -d ${_command_domains}"
+    }
+
   }
 
   if empty($additional_args) {
@@ -96,7 +113,7 @@ define letsencrypt::certonly (
   $verify_domains = join(unique($domains), ' ')
   exec { "letsencrypt certonly ${title}":
     command     => $command,
-    path        => $::path,
+    path        => $facts['path'],
     environment => $execution_environment,
     unless      => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} ${verify_domains}",
     provider    => 'shell',
@@ -129,17 +146,17 @@ define letsencrypt::certonly (
     $cron_script_ensure = 'absent'
   }
 
-  file { "${::letsencrypt::cron_scripts_path}/renew-${title}.sh":
+  file { "${letsencrypt::cron_scripts_path}/renew-${title}.sh":
     ensure  => $cron_script_ensure,
     mode    => '0755',
     owner   => 'root',
-    group   => $::letsencrypt::cron_owner_group,
+    group   => $letsencrypt::cron_owner_group,
     content => template('letsencrypt/renew-script.sh.erb'),
   }
 
   cron { "letsencrypt renew cron ${title}":
     ensure   => $ensure_cron,
-    command  => "\"${::letsencrypt::cron_scripts_path}/renew-${title}.sh\"",
+    command  => "\"${letsencrypt::cron_scripts_path}/renew-${title}.sh\"",
     user     => root,
     hour     => $cron_hour,
     minute   => $cron_minute,
