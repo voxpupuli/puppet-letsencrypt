@@ -90,6 +90,19 @@ class { ::letsencrypt:
 }
 ```
 
+To request a wildcard certificate, you must use the ACME v2 endpoint and use
+a DNS-01 challenge. See
+https://community.letsencrypt.org/t/acme-v2-production-environment-wildcards/55578
+
+```puppet
+class { 'letsencrypt':
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v02.api.letsencrypt.org/directory',
+  }
+}
+```
+
 ### Issuing certificates
 
 #### Standalone authenticator

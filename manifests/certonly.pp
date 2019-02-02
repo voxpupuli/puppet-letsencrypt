@@ -107,7 +107,8 @@ define letsencrypt::certonly (
   }
 
   $command = "${command_start}${command_domains}${command_end}"
-  $live_path = "${config_dir}/live/${domains[0]}/cert.pem"
+  $live_path_domain = regsubst($domains[0], '^\*\.', '')
+  $live_path = "${config_dir}/live/${live_path_domain}/cert.pem"
 
   $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
   $verify_domains = join(unique($domains), ' ')
