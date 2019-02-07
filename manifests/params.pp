@@ -39,7 +39,7 @@ class letsencrypt::params {
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-} elsif $facts['osfamily'] == 'OpenBSD' {
+  } elsif $facts['osfamily'] == 'OpenBSD' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
