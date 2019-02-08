@@ -31,7 +31,7 @@ describe 'letsencrypt' do
                                                                       manage_install: true,
                                                                       manage_dependencies: true,
                                                                       repo: 'https://github.com/certbot/certbot.git',
-                                                                      version: 'v0.30.0').that_notifies('Exec[initialize letsencrypt]')
+                                                                      version: 'v0.30.2').that_notifies('Exec[initialize letsencrypt]')
             is_expected.to contain_exec('initialize letsencrypt')
             is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
 
