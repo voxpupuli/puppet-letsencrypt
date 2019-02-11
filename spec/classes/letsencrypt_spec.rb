@@ -27,21 +27,41 @@ describe 'letsencrypt' do
           end
 
           it 'contains the correct resources' do
-            is_expected.to contain_class('letsencrypt::install').with(configure_epel: epel,
-                                                                      manage_install: true,
-                                                                      manage_dependencies: true,
-                                                                      repo: 'https://github.com/certbot/certbot.git',
-                                                                      version: 'v0.30.2').that_notifies('Exec[initialize letsencrypt]')
+            is_expected.to contain_class('letsencrypt::install').
+              with(configure_epel: epel,
+                   manage_install: true,
+                   manage_dependencies: true,
+                   repo: 'https://github.com/certbot/certbot.git',
+                   version: 'v0.30.2').
+              that_notifies('Exec[initialize letsencrypt]').
+              that_comes_before('Class[letsencrypt::renew]')
             is_expected.to contain_exec('initialize letsencrypt')
             is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
+            is_expected.to contain_class('letsencrypt::renew').
+              with(pre_hook_commands: [],
+                   post_hook_commands: [],
+                   deploy_hook_commands: [],
+                   additional_args: [],
+                   cron_ensure: 'absent',
+                   cron_monthday: ['*'])
+            is_expected.to contain_cron('letsencrypt-renew').with_ensure('absent')
 
             case facts[:operatingsystem]
             when 'FreeBSD'
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com')
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+              is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').
+                with(ensure: 'directory',
+                     path: '/usr/local/etc/letsencrypt/renewal-hooks-puppet',
+                     owner: 'root',
+                     group: 'root',
+                     mode: '0755',
+                     recurse: true,
+                     purge: true)
             else
               is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
               is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+              is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').with_path('/etc/letsencrypt/renewal-hooks-puppet')
             end
 
             if facts[:osfamily] == 'RedHat' && facts[:operatingsystemmajrelease] == '7'
@@ -79,7 +99,7 @@ describe 'letsencrypt' do
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             end
           end
-        end
+        end # describe 'with defaults'
 
         describe 'with custom path' do
           let(:additional_params) { { path: '/usr/lib/letsencrypt', install_method: 'vcs' } }
@@ -166,7 +186,85 @@ describe 'letsencrypt' do
 
           it { is_expected.to raise_error Puppet::Error, %r{You must agree to the Let's Encrypt Terms of Service} }
         end
-      end
+
+        context 'with renew' do
+          describe 'pre hook' do
+            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_pre_hook_commands: ['FooBar'] } }
+
+            it { is_expected.to contain_letsencrypt__hook('renew-pre').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/renew-pre.sh') }
+          end
+
+          describe 'post hook' do
+            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_post_hook_commands: ['FooBar'] } }
+
+            it { is_expected.to contain_letsencrypt__hook('renew-post').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/renew-post.sh') }
+          end
+
+          describe 'deploy hook' do
+            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_deploy_hook_commands: ['FooBar'] } }
+
+            it { is_expected.to contain_letsencrypt__hook('renew-deploy').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/renew-deploy.sh') }
+          end
+
+          describe 'renew_cron_ensure' do
+            let(:additional_params) do
+              { install_method: 'package',
+                package_command: 'certbot',
+                renew_cron_ensure: 'present',
+                renew_cron_hour: 0,
+                renew_cron_minute: 0 }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q',
+                     hour: 0,
+                     minute: 0,
+                     monthday: '*')
+            end
+          end
+
+          describe 'renew_cron_ensure and renew_cron_monthday' do
+            let(:additional_params) { { renew_cron_ensure: 'present', renew_cron_monthday: [1, 15] } }
+
+            it { is_expected.to contain_cron('letsencrypt-renew').with_ensure('present').with_monthday([1, 15]) }
+          end
+
+          describe 'renew_cron_ensure and hooks' do
+            let(:additional_params) do
+              { config_dir: '/etc/letsencrypt',
+                install_method: 'package',
+                package_command: 'certbot',
+                renew_cron_ensure: 'present',
+                renew_pre_hook_commands: ['PreBar'],
+                renew_post_hook_commands: ['PostBar'],
+                renew_deploy_hook_commands: ['DeployBar'] }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q --pre-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-pre.sh" --post-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-post.sh" --deploy-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-deploy.sh"')
+            end
+          end
+
+          describe 'renew_cron_ensure and additional args' do
+            let(:additional_params) do
+              { install_method: 'package',
+                package_command: 'certbot',
+                renew_cron_ensure: 'present',
+                renew_additional_args: ['AdditionalBar'] }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q AdditionalBar')
+            end
+          end
+        end # context 'with renew'
+      end # context 'when specifying an email address with the email parameter'
 
       context 'when specifying an email in $config' do
         let(:params) { { config: { 'email' => 'foo@example.com' } } }

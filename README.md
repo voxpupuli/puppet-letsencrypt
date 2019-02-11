@@ -187,7 +187,43 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
-#### Cron
+### Renewing certificates
+
+There are two ways to automatically renew certificates with cron using this module.
+
+#### cron using certbot renew
+
+All installed certificates will be renewed using `certbot renew` using their
+original settings, including any not managed by Puppet.
+
+* `renew_cron_ensure` manages the cron resource. Set to `present` to enable. Default: `absent`
+* `renew_cron_minute` sets minute(s) to run the cron job. Default: Seeded random minute
+* `renew_cron_hour` sets hour(s) to run the cron job. Default: Seeded random hour
+* `renew_cron_monthday` sets month day(s) to run the cron job. Default: Every day
+
+```puppet
+class { 'letsencrypt':
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v01.api.letsencrypt.org/directory',
+  },
+  renew_cron_ensure: 'present',
+}
+```
+
+With Hiera, at 6 AM (roughly) every other day:
+
+```yaml
+---
+letsencrypt::renew_cron_ensure: 'present'
+letsencrypt::renew_cron_minute: 0
+letsencrypt::renew_cron_hour: 6
+letsencrypt::renew_cron_monthday: '1-31/2'
+```
+
+#### cron using certbot certonly
+
+Only specific certificates will be renewed using `certbot certonly`.
 
 * `manage_cron` can be used to automatically renew the certificate
 * `cron_success_command` can be used to run a shell command on a successful renewal
@@ -222,6 +258,84 @@ letsencrypt::certonly { 'foo':
   domains     => ['foo.example.com', 'bar.example.com'],
   manage_cron => true,
 }
+```
+
+## Hooks
+
+Certbot supports hooks since certbot v0.5.0, however this module uses the newer
+`--deploy-hook` replacing the deprecated `--renew-hook`. Because of this the
+minimum version you will need to manage hooks with this module is v0.17.0.
+
+All hook command parameters support both string and array.
+
+**Note on certbot hook behavior:** Hooks created by `letsencrypt::certonly` will be
+configured in the renewal config file of the certificate by certbot (stored in
+CONFIG_DIR/renewal/), which means all hooks created this way are used when running
+`certbot renew` without hook arguments. This allows you to easily create individual
+hooks for each certificate with just one cron job for renewal. HOWEVER, when running
+`certbot renew` with any of the hook arguments (setting any of the
+`letsencrypt::renew_*_hook_commands` parameters), hooks of the corresponding
+types in all renewal configs will be ignored by certbot. It's recommended to keep
+these two ways of using hooks mutually exclusive to avoid confusion. Cron jobs
+created by `letsencrypt::certonly` are unaffected as they renew certificates
+directly using `certbot certonly`.
+
+### certbot certonly
+
+Hooks created with `letsencrypt::certonly` will behave the following way:
+
+* `pre` hooks will be run before each certificate is attempted issued or renewed,
+even if the action fails.
+* `post` hooks will be run after each certificate is attempted issued or renewed,
+even if the action fails.
+* `deploy` hooks will be run after successfully issuing or renewing each certificate.
+It will not be run if no action is taken or if the action fails.
+
+```puppet
+letsencrypt::certonly { 'foo':
+  domains               => ['foo.example.com', 'bar.example.com'],
+  pre_hook_commands     => ['...'],
+  post_hook_commands    => ['...'],
+  deploy_hooks_commands => ['...'],
+}
+```
+
+### certbot renew
+
+Hooks passed to `certbot renew` will behave the following way:
+
+* `pre` hook will be run once total before any certificates are attempted issued
+or renewed. It will not be run if no actions are taken. Overrides all pre hooks
+created by `letsencrypt::certonly`.
+* `post` hook will be run once total after all certificates are issued or renewed.
+It will not be run if no actions are taken. Overrides all post hooks created by
+`letsencrypt::certonly`.
+* `deploy` hook will be run once for each successfully issued or renewed certificate.
+It will not be run otherwise. Overrides all deploy hooks created by
+`letsencrypt::certonly`.
+
+```puppet
+class { 'letsencrypt':
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v01.api.letsencrypt.org/directory',
+  },
+  renew_pre_hook_commands: [...],
+  renew_post_hook_commands: [...],
+  renew_deploy_hook_commands: [...],
+}
+```
+
+With Hiera:
+
+```yaml
+---
+letsencrypt::renew_pre_hook_commands:
+  - '...'
+letsencrypt::renew_post_hook_commands:
+  - '...'
+letsencrypt::renew_deploy_hook_commands:
+  - '...'
 ```
 
 ## Development
