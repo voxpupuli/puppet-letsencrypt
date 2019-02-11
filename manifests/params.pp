@@ -70,6 +70,15 @@ class letsencrypt::params {
     default   =>  'root',
   }
 
+  $renew_pre_hook_commands    = []
+  $renew_post_hook_commands   = []
+  $renew_deploy_hook_commands = []
+  $renew_additional_args      = []
+  $renew_cron_ensure          = 'absent'
+  $renew_cron_hour            = fqdn_rand(24)
+  $renew_cron_minute          = fqdn_rand(60, fqdn_rand_string(10))
+  $renew_cron_monthday        = '*'
+
   $dns_rfc2136_manage_package      = true
   $dns_rfc2136_port                = 53
   $dns_rfc2136_algorithm           = 'HMAC-SHA512'
