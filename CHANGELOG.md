@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v4.0.0) (2019-03-27)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v3.0.0...v4.0.0)
+
+**Breaking changes:**
+
+- Rework letsencrypt::certonly for \#175 [\#177](https://github.com/voxpupuli/puppet-letsencrypt/pull/177) ([cFire](https://github.com/cFire))
+- Certonly: Refactor manage\_cron to ensure\_cron with appropriate data type [\#161](https://github.com/voxpupuli/puppet-letsencrypt/pull/161) ([craigwatson](https://github.com/craigwatson))
+
+**Implemented enhancements:**
+
+- Add support for certbot renew and hooks [\#174](https://github.com/voxpupuli/puppet-letsencrypt/pull/174) ([Rathios](https://github.com/Rathios))
+- Add support for wildcard certs [\#171](https://github.com/voxpupuli/puppet-letsencrypt/pull/171) ([Rathios](https://github.com/Rathios))
+- Add support for dns-rfc2136 plugin [\#169](https://github.com/voxpupuli/puppet-letsencrypt/pull/169) ([Rathios](https://github.com/Rathios))
+- Add ability to control keysize. Default to 4096. [\#165](https://github.com/voxpupuli/puppet-letsencrypt/pull/165) ([treveradams](https://github.com/treveradams))
+
+**Fixed bugs:**
+
+- Fix for $live\_path variable [\#180](https://github.com/voxpupuli/puppet-letsencrypt/pull/180) ([cFire](https://github.com/cFire))
+- \#178 Add single quote around all domains names in shell commands [\#179](https://github.com/voxpupuli/puppet-letsencrypt/pull/179) ([Turgon37](https://github.com/Turgon37))
+- Fedora doesn't use EPEL for certbot/letsencrypt. [\#166](https://github.com/voxpupuli/puppet-letsencrypt/pull/166) ([treveradams](https://github.com/treveradams))
+- Fix exec onlyif logic [\#151](https://github.com/voxpupuli/puppet-letsencrypt/pull/151) ([baurmatt](https://github.com/baurmatt))
+
+**Closed issues:**
+
+- Domain wildcard should be escaped or quoted in shell commands [\#178](https://github.com/voxpupuli/puppet-letsencrypt/issues/178)
+- Upgrade letsencrypt to 0.30.2 [\#172](https://github.com/voxpupuli/puppet-letsencrypt/issues/172)
+- Disabling manage-cron does not remove crontab record [\#139](https://github.com/voxpupuli/puppet-letsencrypt/issues/139)
+- Add support for certbot hooks [\#56](https://github.com/voxpupuli/puppet-letsencrypt/issues/56)
+
+**Merged pull requests:**
+
+- surfacing package\_ensure in README [\#181](https://github.com/voxpupuli/puppet-letsencrypt/pull/181) ([Dan33l](https://github.com/Dan33l))
+- Upgrade vcs version to 0.30.2 [\#173](https://github.com/voxpupuli/puppet-letsencrypt/pull/173) ([baurmatt](https://github.com/baurmatt))
+- Add Fedora to tested systems list. [\#168](https://github.com/voxpupuli/puppet-letsencrypt/pull/168) ([treveradams](https://github.com/treveradams))
+
 ## [v3.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v3.0.0) (2019-01-14)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v2.5.0...v3.0.0)
