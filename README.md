@@ -189,7 +189,7 @@ letsencrypt::certonly { 'foo':
 
 #### Cron
 
-* `ensure_cron` can be used to automatically renew the certificate
+* `manage_cron` can be used to automatically renew the certificate
 * `cron_success_command` can be used to run a shell command on a successful renewal
 * `cron_before_command` can be used to run a shell command before a renewal
 * `cron_monthday` can be used to specify one or multiple days of the month to run the cron job (defaults to every day)
@@ -200,12 +200,27 @@ letsencrypt::certonly { 'foo':
 ```puppet
 letsencrypt::certonly { 'foo':
   domains              => ['foo.example.com', 'bar.example.com'],
-  ensure_cron          => 'present',
+  manage_cron          => true,
   cron_hour            => [0,12],
   cron_minute          => '30',
   cron_before_command  => 'service nginx stop',
   cron_success_command => '/bin/systemctl reload nginx.service',
   suppress_cron_output => true,
+}
+```
+
+#### Deprovisioning
+
+If a domain needs to be removed for any reason this can be done by setting
+`ensure` to 'absent', this will remove the certificates for this domain from
+the server. If `manage_cron` is set to true, the certificate renewal cronjob
+and shell scripts for the domain will also be removed.
+
+```puppet
+letsencrypt::certonly { 'foo':
+  ensure      => 'absent',
+  domains     => ['foo.example.com', 'bar.example.com'],
+  manage_cron => true,
 }
 ```
 
