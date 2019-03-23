@@ -15,6 +15,8 @@
 #   TSIG key algorithm.
 # [*port*]
 #   Target DNS port.
+# [*propagation_seconds*]
+#   Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 # [*manage_package*]
 #   Manage the plugin package.
 # [*config_dir*]

@@ -73,11 +73,21 @@ class letsencrypt (
   Boolean $unsafe_registration           = $letsencrypt::params::unsafe_registration,
   Stdlib::Unixpath $config_dir           = $letsencrypt::params::config_dir,
   Integer[2048] $key_size                = 4096,
+  # $renew_* should only be used in letsencrypt::renew (blame rspec)
+  $renew_pre_hook_commands               = $letsencrypt::params::renew_pre_hook_commands,
+  $renew_post_hook_commands              = $letsencrypt::params::renew_post_hook_commands,
+  $renew_deploy_hook_commands            = $letsencrypt::params::renew_deploy_hook_commands,
+  $renew_additional_args                 = $letsencrypt::params::renew_additional_args,
+  $renew_cron_ensure                     = $letsencrypt::params::renew_cron_ensure,
+  $renew_cron_hour                       = $letsencrypt::params::renew_cron_hour,
+  $renew_cron_minute                     = $letsencrypt::params::renew_cron_minute,
+  $renew_cron_monthday                   = $letsencrypt::params::renew_cron_monthday,
 ) inherits letsencrypt::params {
 
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
     Class['letsencrypt::install'] ~> Exec['initialize letsencrypt']
+    Class['letsencrypt::install'] -> Class['letsencrypt::renew']
   }
 
   $command = $install_method ? {
@@ -94,6 +104,8 @@ class letsencrypt (
     contain letsencrypt::config # lint:ignore:relative_classname_inclusion
     Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
+
+  contain letsencrypt::renew
 
   # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':

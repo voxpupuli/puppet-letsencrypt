@@ -42,6 +42,17 @@
 # [*cron_minute*]
 #   Optional string, integer or array, minute(s) that the renewal command should execute.
 #   e.g. 0 or '00' or [0,30].  Default - seeded random minute.
+# [*pre_hook_commands*]
+#   Array of commands to run in a shell before attempting to obtain/renew the certificate.
+# [*post_hook_commands*]
+#   Array of command(s) to run in a shell after attempting to obtain/renew the certificate.
+# [*deploy_hook_commands*]
+#   Array of command(s) to run in a shell once if the certificate is successfully issued.
+#   Two environmental variables are supplied by certbot:
+#   - $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
+#                       Example: /etc/letsencrypt/live/example.com
+#   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
+#                       Example: "example.com www.example.com"
 #
 define letsencrypt::certonly (
   Enum['present','absent']                  $ensure               = 'present',
@@ -61,66 +72,90 @@ define letsencrypt::certonly (
   Variant[Integer[0,23], String, Array]     $cron_hour            = fqdn_rand(24, $title),
   Variant[Integer[0,59], String, Array]     $cron_minute          = fqdn_rand(60, fqdn_rand_string(10, $title)),
   Stdlib::Unixpath                          $config_dir           = $letsencrypt::config_dir,
+  Variant[String[1], Array[String[1]]]      $pre_hook_commands    = [],
+  Variant[String[1], Array[String[1]]]      $post_hook_commands   = [],
+  Variant[String[1], Array[String[1]]]      $deploy_hook_commands = [],
 ) {
 
   if $plugin == 'webroot' and empty($webroot_paths) {
     fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
   }
 
+  # Wildcard-less title for use in file paths
+  $title_nowc = regsubst($title, '^\*\.', '')
+
   if $ensure == 'present' {
     if ($custom_plugin) {
-      $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} "
+      $default_args = "--text --agree-tos --non-interactive certonly --rsa-key-size ${key_size}"
     } else {
-      $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} -a ${plugin} "
+      $default_args = "--text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} -a ${plugin}"
     }
   } else {
-    $command_start = "${letsencrypt_command} --text --agree-tos --non-interactive delete "
+    $default_args = '--text --agree-tos --non-interactive delete'
   }
 
   case $plugin {
 
     'webroot': {
-      $_command_domains = zip($domains, $webroot_paths).map |$domain| {
+      $_plugin_args = zip($domains, $webroot_paths).map |$domain| {
         if $domain[1] {
           "--webroot-path ${domain[1]} -d ${domain[0]}"
         } else {
           "-d ${domain[0]}"
         }
       }
-      $command_domains = join([ "--cert-name ${title}", ] + $_command_domains, ' ')
+      $plugin_args = ["--cert-name ${title}"] + $_plugin_args
     }
 
     'dns-rfc2136': {
       require letsencrypt::plugin::dns_rfc2136
-      $dns_args = [
+      $plugin_args = [
         "--cert-name ${title} -d",
         join($domains, ' -d '),
         "--dns-rfc2136-credentials ${letsencrypt::plugin::dns_rfc2136::config_dir}/dns-rfc2136.ini",
         "--dns-rfc2136-propagation-seconds ${letsencrypt::plugin::dns_rfc2136::propagation_seconds}",
       ]
-      $command_domains = join($dns_args, ' ')
     }
 
     default: {
       if $ensure == 'present' {
-        $_command_domains = join($domains, ' -d ')
-        $command_domains  = "--cert-name ${title} -d ${_command_domains}"
+        $_plugin_args = join($domains, ' -d ')
+        $plugin_args  = "--cert-name ${title} -d ${_plugin_args}"
       } else {
-        $command_domains = "--cert-name ${title}"
+        $plugin_args = "--cert-name ${title}"
       }
     }
   }
 
-  if empty($additional_args) {
-    $command_end = undef
-  } else {
-    # ['',] adds an additional whitespace in the front
-    $command_end = join(['',] + $additional_args, ' ')
+  $hook_args = ['pre', 'post', 'deploy'].map | String $type | {
+    $commands = getvar("${type}_hook_commands")
+    if (!empty($commands)) {
+      $hook_file = "${config_dir}/renewal-hooks-puppet/${title_nowc}-${type}.sh"
+      letsencrypt::hook { "${title}-${type}":
+        type      => $type,
+        hook_file => $hook_file,
+        commands  => $commands,
+        before    => Exec["letsencrypt certonly ${title}"],
+      }
+      "--${type}-hook \"${hook_file}\""
+    }
+    else {
+      undef
+    }
   }
 
   # certbot uses --cert-name to generate the file path
   $live_path_certname = regsubst($title, '^\*\.', '')
   $live_path = "${config_dir}/live/${live_path_certname}/cert.pem"
+
+  $_command = flatten([
+    $letsencrypt_command,
+    $default_args,
+    $plugin_args,
+    $hook_args,
+    $additional_args,
+  ]).filter | $arg | { $arg =~ NotUndef and $arg != [] }
+  $command = join($_command, ' ')
 
   $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
   $verify_domains = join(unique($domains), ' ')
@@ -132,7 +167,7 @@ define letsencrypt::certonly (
   }
 
   exec { "letsencrypt certonly ${title}":
-    command     => "${command_start}${command_domains}${command_end}",
+    command     => $command,
     *           => $exec_ensure,
     path        => $facts['path'],
     environment => $execution_environment,
@@ -144,7 +179,7 @@ define letsencrypt::certonly (
   }
 
   if $manage_cron {
-    $maincommand = "${command_start}--keep-until-expiring ${command_domains}${command_end}"
+    $maincommand = join($_command + ['--keep-until-expiring'], ' ')
     $cron_script_ensure = $ensure ? { 'present' => 'file', default => 'absent' }
     $cron_ensure = $ensure
 
