@@ -52,6 +52,15 @@ class { ::letsencrypt:
 }
 ```
 
+If using Ubuntu16.04 with `install_method` to default `package`, you can enforce upgrade of package from 0.4 to 0.7 with :
+
+```puppet
+class { ::letsencrypt:
+  email          => 'foo@example.com',
+  package_ensure => 'latest',
+}
+```
+
 If using EL7 without EPEL-preconfigured, add `configure_epel`:
 
 ```puppet
