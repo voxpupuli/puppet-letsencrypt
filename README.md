@@ -30,8 +30,8 @@ package can be found in jessie-backports. When using
 can be used:
 
 ```puppet
-include ::apt
-include ::apt::backports
+include apt
+include apt::backports
 apt::pin { 'jessie-backports-letsencrypt':
   release  => 'jessie-backports',
   packages => prefix(['acme', 'cryptography', 'openssl', 'psutil', 'setuptools', 'pyasn1', 'pkg-resources'], 'python-'),
@@ -47,7 +47,7 @@ To install the Let's Encrypt client with the default configuration settings you
 must provide your email address to register with the Let's Encrypt servers:
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   email => 'foo@example.com',
 }
 ```
@@ -55,7 +55,7 @@ class { ::letsencrypt:
 If using Ubuntu16.04 with `install_method` to default `package`, you can enforce upgrade of package from 0.4 to 0.7 with :
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   email          => 'foo@example.com',
   package_ensure => 'latest',
 }
@@ -64,7 +64,7 @@ class { ::letsencrypt:
 If using EL7 without EPEL-preconfigured, add `configure_epel`:
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   configure_epel => true,
   email          => 'foo@example.com',
 }
@@ -79,7 +79,7 @@ the client.
 Alternatively, you can specify your email address in the $config hash:
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   config => {
     email  => 'foo@example.com',
     server => 'https://acme-v01.api.letsencrypt.org/directory',
@@ -94,7 +94,7 @@ If you don't wish to provide your email address, you can set the
 `unsafe_registration` parameter to `true` (this is not recommended):
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   unsafe_registration => true,
 }
 ```
