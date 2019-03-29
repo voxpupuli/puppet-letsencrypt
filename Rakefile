@@ -11,6 +11,7 @@ end
 
 PuppetLint.configuration.log_format = '%{path}:%{line}:%{check}:%{KIND}:%{message}'
 PuppetLint.configuration.fail_on_warnings = true
+PuppetLint.configuration.absolute_classname_reverse = true
 PuppetLint.configuration.send('relative')
 PuppetLint.configuration.send('disable_140chars')
 PuppetLint.configuration.send('disable_class_inherits_from_params_class')
