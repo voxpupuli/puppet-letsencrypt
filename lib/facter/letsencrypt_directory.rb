@@ -8,7 +8,7 @@ Facter.add(:letsencrypt_directory) do
     # locate the certificate repository
     livedir = ['/etc/letsencrypt/live', '/etc/certbot/live'].map { |path| Pathname.new path }.find(&:directory?)
 
-    unless livedir.nil
+    unless livedir.nil?
       Pathname.new(livedir).children.select(&:directory?).each do |path|
         pem = File.join(path, 'cert.pem')
         cert = OpenSSL::X509::Certificate.new(File.new(pem).read)
