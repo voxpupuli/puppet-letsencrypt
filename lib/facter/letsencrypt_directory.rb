@@ -17,6 +17,6 @@ Facter.add(:letsencrypt_directory) do
         certs[n] = path.to_s
       end
     end unless livedir.nil?
-      certs
+    certs
   end
 end
