@@ -6,7 +6,9 @@ Facter.add(:letsencrypt_directory) do
     certs = {}
 
     # locate the certificate repository
-    livedir = ['/etc/letsencrypt/live', '/etc/certbot/live'].map { |path| Pathname.new path }.find(&:directory?)
+    livedir = ['/etc/letsencrypt/live', '/etc/certbot/live'].
+              map { |path| Pathname.new path }.
+              find(&:directory?)
 
     unless livedir.nil?
       Pathname.new(livedir).children.select(&:directory?).each do |path|
@@ -19,5 +21,7 @@ Facter.add(:letsencrypt_directory) do
         end
       end
     end
+
+    certs
   end
 end
