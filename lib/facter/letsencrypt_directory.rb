@@ -18,5 +18,6 @@ Facter.add(:letsencrypt_directory) do
           certs[n] = path.to_s
         end
       end
+    end
   end
 end
