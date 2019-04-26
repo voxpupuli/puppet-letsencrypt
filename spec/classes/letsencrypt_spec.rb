@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe 'letsencrypt' do
-  { 'Debian' => '9.0', 'RedHat' => '7.2' }.each do |osfamily, osversion|
-    context "on #{osfamily} based operating systems" do
-      let(:facts) { { osfamily: osfamily, operatingsystem: osfamily, operatingsystemrelease: osversion, operatingsystemmajrelease: osversion.split('.').first, path: '/usr/bin' } }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let :facts do
+        facts
+      end
 
       context 'when specifying an email address with the email parameter' do
         let(:params) { additional_params.merge(default_params) }
@@ -13,25 +15,91 @@ describe 'letsencrypt' do
         describe 'with defaults' do
           it { is_expected.to compile }
 
-          epel = if osfamily == 'RedHat'
-                   true
-                 else
-                   false
-                 end
+          epel = facts[:osfamily] == 'RedHat'
+
+          it 'contains File[/usr/local/sbin/letsencrypt-domain-validation]' do
+            is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
+              with_ensure('file').
+              with_owner('root').
+              with_group('root').
+              with_mode('0500').
+              with_source('puppet:///modules/letsencrypt/domain-validation.sh')
+          end
 
           it 'contains the correct resources' do
-            is_expected.to contain_class('letsencrypt::install').with(configure_epel: epel,
-                                                                      manage_install: true,
-                                                                      manage_dependencies: true,
-                                                                      repo: 'https://github.com/letsencrypt/letsencrypt.git',
-                                                                      version: 'v0.9.3').that_notifies('Exec[initialize letsencrypt]')
-
-            is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
-            is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+            is_expected.to contain_class('letsencrypt::install').
+              with(configure_epel: epel,
+                   manage_install: true,
+                   manage_dependencies: true,
+                   repo: 'https://github.com/certbot/certbot.git',
+                   version: 'v0.30.2').
+              that_notifies('Exec[initialize letsencrypt]').
+              that_comes_before('Class[letsencrypt::renew]')
             is_expected.to contain_exec('initialize letsencrypt')
             is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
+            is_expected.to contain_class('letsencrypt::renew').
+              with(pre_hook_commands: [],
+                   post_hook_commands: [],
+                   deploy_hook_commands: [],
+                   additional_args: [],
+                   cron_ensure: 'absent',
+                   cron_monthday: ['*'])
+            is_expected.to contain_cron('letsencrypt-renew').with_ensure('absent')
+
+            case facts[:operatingsystem]
+            when 'FreeBSD'
+              is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com')
+              is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+              is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').
+                with(ensure: 'directory',
+                     path: '/usr/local/etc/letsencrypt/renewal-hooks-puppet',
+                     owner: 'root',
+                     group: 'root',
+                     mode: '0755',
+                     recurse: true,
+                     purge: true)
+            else
+              is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
+              is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+              is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').with_path('/etc/letsencrypt/renewal-hooks-puppet')
+            end
+
+            if facts[:osfamily] == 'RedHat' && facts[:operatingsystemmajrelease] == '7'
+              is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+              is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+              is_expected.to contain_package('letsencrypt').with(name: 'certbot')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'Debian'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'Ubuntu' && facts[:operatingsystemmajrelease] == '14.04'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'Ubuntu'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'Gentoo'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')
+              is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+              is_expected.to contain_package('letsencrypt').with(name: 'app-crypt/certbot')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'OpenBSD'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'certbot')
+              is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+              is_expected.to contain_package('letsencrypt').with(name: 'certbot')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'FreeBSD'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'py27-certbot')
+              is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
+              is_expected.to contain_package('letsencrypt').with(name: 'py27-certbot')
+              is_expected.to contain_file('/usr/local/etc/letsencrypt').with(ensure: 'directory')
+            else
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            end
           end
-        end
+        end # describe 'with defaults'
 
         describe 'with custom path' do
           let(:additional_params) { { path: '/usr/lib/letsencrypt', install_method: 'vcs' } }
@@ -73,7 +141,12 @@ describe 'letsencrypt' do
         describe 'with custom config' do
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
 
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini foo bar') }
+          case facts[:operatingsystem]
+          when 'FreeBSD'
+            it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini foo bar') }
+          else
+            it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini foo bar') }
+          end
         end
 
         describe 'with manage_config set to false' do
@@ -102,18 +175,107 @@ describe 'letsencrypt' do
           it { is_expected.to contain_exec('initialize letsencrypt').with_command('/opt/letsencrypt/letsencrypt-auto -h') }
         end
 
+        describe 'with custom config directory' do
+          let(:additional_params) { { config_dir: '/foo/bar/baz' } }
+
+          it { is_expected.to contain_file('/foo/bar/baz').with(ensure: 'directory') }
+        end
+
         context 'when not agreeing to the TOS' do
           let(:params) { { agree_tos: false } }
 
           it { is_expected.to raise_error Puppet::Error, %r{You must agree to the Let's Encrypt Terms of Service} }
         end
-      end
+
+        context 'with renew' do
+          describe 'pre hook' do
+            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_pre_hook_commands: ['FooBar'] } }
+
+            it { is_expected.to contain_letsencrypt__hook('renew-pre').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/renew-pre.sh') }
+          end
+
+          describe 'post hook' do
+            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_post_hook_commands: ['FooBar'] } }
+
+            it { is_expected.to contain_letsencrypt__hook('renew-post').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/renew-post.sh') }
+          end
+
+          describe 'deploy hook' do
+            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_deploy_hook_commands: ['FooBar'] } }
+
+            it { is_expected.to contain_letsencrypt__hook('renew-deploy').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/renew-deploy.sh') }
+          end
+
+          describe 'renew_cron_ensure' do
+            let(:additional_params) do
+              { install_method: 'package',
+                package_command: 'certbot',
+                renew_cron_ensure: 'present',
+                renew_cron_hour: 0,
+                renew_cron_minute: 0 }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q',
+                     hour: 0,
+                     minute: 0,
+                     monthday: '*')
+            end
+          end
+
+          describe 'renew_cron_ensure and renew_cron_monthday' do
+            let(:additional_params) { { renew_cron_ensure: 'present', renew_cron_monthday: [1, 15] } }
+
+            it { is_expected.to contain_cron('letsencrypt-renew').with_ensure('present').with_monthday([1, 15]) }
+          end
+
+          describe 'renew_cron_ensure and hooks' do
+            let(:additional_params) do
+              { config_dir: '/etc/letsencrypt',
+                install_method: 'package',
+                package_command: 'certbot',
+                renew_cron_ensure: 'present',
+                renew_pre_hook_commands: ['PreBar'],
+                renew_post_hook_commands: ['PostBar'],
+                renew_deploy_hook_commands: ['DeployBar'] }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q --pre-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-pre.sh" --post-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-post.sh" --deploy-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-deploy.sh"')
+            end
+          end
+
+          describe 'renew_cron_ensure and additional args' do
+            let(:additional_params) do
+              { install_method: 'package',
+                package_command: 'certbot',
+                renew_cron_ensure: 'present',
+                renew_additional_args: ['AdditionalBar'] }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q AdditionalBar')
+            end
+          end
+        end # context 'with renew'
+      end # context 'when specifying an email address with the email parameter'
 
       context 'when specifying an email in $config' do
         let(:params) { { config: { 'email' => 'foo@example.com' } } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
+        case facts[:operatingsystem]
+        when 'FreeBSD'
+          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
+        else
+          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
+        end
       end
 
       context 'when not specifying the email parameter or an email key in $config' do
@@ -124,120 +286,15 @@ describe 'letsencrypt' do
         context 'with unsafe_registration set to true' do
           let(:params) { { unsafe_registration: true } }
 
-          it { is_expected.not_to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini register-unsafely-without-email true') }
+          case facts[:operatingsystem]
+          when 'FreeBSD'
+            it { is_expected.not_to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
+            it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini register-unsafely-without-email true') }
+          else
+            it { is_expected.not_to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
+            it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini register-unsafely-without-email true') }
+          end
         end
-      end
-    end
-  end
-
-  context 'on unknown operating systems' do
-    let(:facts) { { osfamily: 'Darwin', operatingsystem: 'Darwin', operatingsystemrelease: '14.5.0', operatingsystemmajrelease: '14', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
-      end
-    end
-  end
-
-  context 'on EL7 operating system' do
-    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '7.2', operatingsystemmajrelease: '7', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
-        is_expected.to contain_package('letsencrypt').with(name: 'certbot')
-      end
-    end
-  end
-
-  context 'on EL6 operating system' do
-    let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat', operatingsystemrelease: '6.7', operatingsystemmajrelease: '6', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
-        is_expected.not_to contain_class('epel').that_comes_before('Package[letsencrypt]')
-        is_expected.not_to contain_class('letsencrypt::install').with(install_method: 'package')
-      end
-    end
-  end
-
-  context 'on Debian 8 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '8.0', operatingsystemmajrelease: '8.0', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-      end
-    end
-  end
-
-  context 'on Debian 9 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Debian', operatingsystemrelease: '9.0', operatingsystemmajrelease: '9.0', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-      end
-    end
-  end
-
-  context 'on Ubuntu 14.04 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '14.04', operatingsystemmajrelease: '14.04', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
-      end
-    end
-  end
-
-  context 'on Ubuntu 16.04 operating system' do
-    let(:facts) { { osfamily: 'Debian', operatingsystem: 'Ubuntu', operatingsystemrelease: '16.04', operatingsystemmajrelease: '16.04', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-      end
-    end
-  end
-
-  context 'on Gentoo operating system' do
-    let(:facts) { { osfamily: 'Gentoo', operatingsystem: 'Gentoo', operatingsystemrelease: '4.4.6-r2', operatingsystemmajrelease: '4', path: '/usr/bin' } }
-    let(:params) { { email: 'foo@example.com' } }
-
-    describe 'with defaults' do
-      it { is_expected.to compile }
-
-      it 'contains the correct resources' do
-        is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')
-        is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
-        is_expected.to contain_package('letsencrypt').with(name: 'app-crypt/certbot')
       end
     end
   end

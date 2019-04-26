@@ -1,0 +1,21 @@
+<%- |
+  Hash $vars,
+  String $separator = '=',
+| -%>
+# THIS FILE IS MANAGED BY PUPPET
+
+<% $vars.each | String $section, Hash $section_vars | { -%>
+<%   if (!empty($section)) { -%>
+[<%= $section %>]
+<%   } -%>
+<%   $section_vars.each | String $var, Variant[String, Integer, Array] $vals | { -%>
+<%     if ($vals =~ Array) { -%>
+<%       $vals.each | Variant[String, Integer] $val | { -%>
+<%= $var %><%= $separator %><%= $val %>
+<%       } -%>
+<%     } -%>
+<%     else { -%>
+<%= $var %><%= $separator %><%= $vals %>
+<%     } -%>
+<%   } %>
+<% } -%>
