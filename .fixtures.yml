@@ -4,5 +4,9 @@ fixtures:
     inifile: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
     stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
     vcsrepo: 'https://github.com/puppetlabs/puppetlabs-vcsrepo.git'
-  symlinks:
-    letsencrypt: "#{source_dir}"
+    yumrepo_core:
+      repo: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
+      puppet_version: ">= 6.0.0"
+    cron_core:
+      repo: https://github.com/puppetlabs/puppetlabs-cron_core.git
+      puppet_version: ">= 6.0.0"

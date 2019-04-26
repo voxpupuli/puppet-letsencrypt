@@ -5,41 +5,83 @@ class letsencrypt::params {
   $manage_install      = true
   $manage_dependencies = true
   $package_ensure      = 'installed'
-  $config_file         = '/etc/letsencrypt/cli.ini'
   $path                = '/opt/letsencrypt'
   $venv_path           = '/opt/letsencrypt/.venv' # virtualenv path for vcs-installed letsencrypt
-  $repo                = 'https://github.com/letsencrypt/letsencrypt.git'
-  $cron_scripts_path   = "${::puppet_vardir}/letsencrypt" # path for renewal scripts called by cron
-  $version             = 'v0.9.3'
+  $repo                = 'https://github.com/certbot/certbot.git'
+  $cron_scripts_path   = "${facts['puppet_vardir']}/letsencrypt" # path for renewal scripts called by cron
+  $version             = 'v0.30.2'
   $config              = {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
 
-  if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8') >= 0 {
+  if $facts['operatingsystem'] == 'Debian' and versioncmp($facts['operatingsystemrelease'], '8') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
-  } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
+    $config_dir = '/etc/letsencrypt'
+  } elsif $facts['operatingsystem'] == 'Ubuntu' and versioncmp($facts['operatingsystemrelease'], '16.04') == 0 {
     $install_method = 'package'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
-  } elsif $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+    $config_dir = '/etc/letsencrypt'
+  } elsif $facts['operatingsystem'] == 'Ubuntu' and versioncmp($facts['operatingsystemrelease'], '18.04') >= 0 {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
-  } elsif $::osfamily == 'Gentoo' {
+    $config_dir = '/etc/letsencrypt'
+  } elsif $facts['osfamily'] == 'RedHat' and versioncmp($facts['operatingsystemmajrelease'], '7') >= 0 {
+    $install_method = 'package'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
+  } elsif $facts['osfamily'] == 'Gentoo' {
     $install_method = 'package'
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
+  } elsif $facts['osfamily'] == 'OpenBSD' {
+    $install_method = 'package'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
+  } elsif $facts['osfamily'] == 'FreeBSD' {
+    $install_method = 'package'
+    $package_name = 'py27-certbot'
+    $package_command = 'certbot'
+    $config_dir = '/usr/local/etc/letsencrypt'
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
+    $config_dir = '/etc/letsencrypt'
   }
 
-  if $::osfamily == 'RedHat' {
-    $configure_epel = true
+  $config_file = "${config_dir}/cli.ini"
+
+  if $facts['osfamily'] == 'RedHat' {
+    $configure_epel = $facts['os']['name'] != 'Fedora'
   } else {
     $configure_epel = false
   }
+
+  $cron_owner_group = $facts['osfamily'] ? {
+    'OpenBSD' =>  'wheel',
+    'FreeBSD' =>  'wheel',
+    default   =>  'root',
+  }
+
+  $renew_pre_hook_commands    = []
+  $renew_post_hook_commands   = []
+  $renew_deploy_hook_commands = []
+  $renew_additional_args      = []
+  $renew_cron_ensure          = 'absent'
+  $renew_cron_hour            = fqdn_rand(24)
+  $renew_cron_minute          = fqdn_rand(60, fqdn_rand_string(10))
+  $renew_cron_monthday        = '*'
+
+  $dns_rfc2136_manage_package      = true
+  $dns_rfc2136_port                = 53
+  $dns_rfc2136_algorithm           = 'HMAC-SHA512'
+  $dns_rfc2136_propagation_seconds = 10
+
 }

@@ -1,0 +1,50 @@
+<%- |
+  Variant[String[1], Array[String[1], 1]] $commands,
+  Boolean $validate_env = false,
+| -%>
+#!/bin/bash
+# THIS FILE IS MANAGED BY PUPPET
+#
+# This script is intended to be used by certbot's hooks. The same simple Puppet
+# template is used for all three hook types (pre, post, deploy).
+#
+# When used as a deploy hook, two environmental variables are supplied by
+# certbot:
+#
+# $RENEWED_LINEAGE : Points to the live directory of the certificate. Eg.
+#                  : /etc/letsencrypt/live/example.com
+# $RENEWED_DOMAINS : Contains a space-delimited list of the certificate's
+#                  : domains. Eg. "example.com www.example.com"
+#
+
+### Configuration
+
+# Puppet sets this to 1 when the template is used for deploy hooks
+validate_env=<%= bool2str($validate_env, '1', '0') %>
+
+### Functions
+
+echo_err() {
+  echo "ERROR: $*" >&2
+}
+
+### Begin script
+
+if [[ "$validate_env" -gt 0 ]]; then
+  bork=0
+  if [[ -z "$RENEWED_DOMAINS" ]]; then
+    bork=1
+    echo_err "Environment variable RENEWED_DOMAINS is empty"
+  fi
+  if [[ -z "$RENEWED_LINEAGE" ]]; then
+    bork=1
+    echo_err "Environment variable RENEWED_LINEAGE is empty"
+  fi
+  [[ "$bork" -gt 0 ]] && exit 1
+fi
+
+<% flatten([$commands]).each | $command | { -%>
+<%= $command %>
+<% } -%>
+
+exit 0

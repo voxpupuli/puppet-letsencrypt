@@ -25,6 +25,8 @@
 # [*package_command*]
 #   Path or name for letsencrypt executable when installing the client with
 #   the `package` method.
+# [*config_dir*]
+#   The path to the configuration directory.
 # [*config_file*]
 #   The path to the configuration file for the letsencrypt cli.
 # [*config*]
@@ -69,11 +71,23 @@ class letsencrypt (
   Enum['package', 'vcs'] $install_method = $letsencrypt::params::install_method,
   Boolean $agree_tos                     = $letsencrypt::params::agree_tos,
   Boolean $unsafe_registration           = $letsencrypt::params::unsafe_registration,
+  Stdlib::Unixpath $config_dir           = $letsencrypt::params::config_dir,
+  Integer[2048] $key_size                = 4096,
+  # $renew_* should only be used in letsencrypt::renew (blame rspec)
+  $renew_pre_hook_commands               = $letsencrypt::params::renew_pre_hook_commands,
+  $renew_post_hook_commands              = $letsencrypt::params::renew_post_hook_commands,
+  $renew_deploy_hook_commands            = $letsencrypt::params::renew_deploy_hook_commands,
+  $renew_additional_args                 = $letsencrypt::params::renew_additional_args,
+  $renew_cron_ensure                     = $letsencrypt::params::renew_cron_ensure,
+  $renew_cron_hour                       = $letsencrypt::params::renew_cron_hour,
+  $renew_cron_minute                     = $letsencrypt::params::renew_cron_minute,
+  $renew_cron_monthday                   = $letsencrypt::params::renew_cron_monthday,
 ) inherits letsencrypt::params {
 
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
     Class['letsencrypt::install'] ~> Exec['initialize letsencrypt']
+    Class['letsencrypt::install'] -> Class['letsencrypt::renew']
   }
 
   $command = $install_method ? {
@@ -91,11 +105,22 @@ class letsencrypt (
     Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
+  contain letsencrypt::renew
+
   # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
     command     => "${command_init} -h",
-    path        => $::path,
+    path        => $facts['path'],
     environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
     refreshonly => true,
+  }
+
+  # Used in letsencrypt::certonly Exec["letsencrypt certonly ${title}"]
+  file { '/usr/local/sbin/letsencrypt-domain-validation':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0500',
+    source => "puppet:///modules/${module_name}/domain-validation.sh",
   }
 }
