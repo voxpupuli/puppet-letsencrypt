@@ -283,9 +283,8 @@ describe 'letsencrypt' do
           it { is_expected.to raise_error Puppet::Error, %r{Please specify an email address} }
         end
 
-        context 'with renew' do
-          describe 'pre hook' do
-            let(:additional_params) { { config_dir: '/etc/letsencrypt', renew_pre_hook_commands: ['FooBar'] } }
+        context 'with unsafe_registration set to true' do
+          let(:params) { { unsafe_registration: true } }
 
           case facts[:operatingsystem]
           when 'FreeBSD'

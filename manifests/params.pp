@@ -36,18 +36,19 @@ class letsencrypt::params {
     $config_dir = '/etc/letsencrypt'
   } elsif $facts['osfamily'] == 'Gentoo' {
     $install_method = 'package'
-    $package_name = 'certbot'
+    $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
   } elsif $facts['osfamily'] == 'OpenBSD' {
     $install_method = 'package'
-    $package_name = 'app-crypt/certbot'
+    $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
   } elsif $facts['osfamily'] == 'FreeBSD' {
     $install_method = 'package'
-    $package_name = 'certbot'
+    $package_name = 'py27-certbot'
     $package_command = 'certbot'
+    $config_dir = '/usr/local/etc/letsencrypt'
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
