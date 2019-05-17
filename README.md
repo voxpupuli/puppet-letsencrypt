@@ -347,6 +347,27 @@ letsencrypt::renew_deploy_hook_commands:
   - '...'
 ```
 
+## Facts
+
+Facts about your live certificates are available through facter. You can query the list of live certificates from puppet using `$::letsencrypt_directory` in your puppet code, hiera data or from the command line.
+
+```
+facter -p letsencrypt_directory
+{
+  legacyfiles.ijc.org => "/etc/letsencrypt/live/legacyfiles.ijc.org",
+  static.ijc.org => "/etc/letsencrypt/live/static.ijc.org",
+  ijc.org => "/etc/letsencrypt/live/ijc.org",
+  new.ijc.org => "/etc/letsencrypt/live/new.ijc.org",
+  www.ijc.org => "/etc/letsencrypt/live/ijc.org",
+  training.ijc.org => "/etc/letsencrypt/live/training.ijc.org"
+}
+```
+
+## Puppet Functions
+
+This module profiles a custom puppet function `letsencrypt_lookup` which allows you to load information about your certificates into puppet.
+This returns the same information as in the facts but for a particular domain. It accepts a single argument for your domain or wildcard domain.
+
 ## Development
 
 1. Fork it
