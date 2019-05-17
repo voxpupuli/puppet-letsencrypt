@@ -2,6 +2,7 @@ require 'openssl'
 require 'pathname'
 
 Facter.add(:letsencrypt_directory) do
+  confine :kernel => [:Linux, :FreeBSD, :OpenBSD]
   setcode do
     certs = {}
 
