@@ -365,7 +365,7 @@ facter -p letsencrypt_directory
 
 ## Puppet Functions
 
-This module profiles a custom puppet function `letsencrypt_lookup` which allows you to load information about your certificates into puppet.
+This module profiles a custom puppet function `letsencrypt::letsencrypt_lookup` which allows you to load information about your certificates into puppet.
 This returns the same information as in the facts but for a particular domain. It accepts a single argument for your domain or wildcard domain.
 
 ## Development

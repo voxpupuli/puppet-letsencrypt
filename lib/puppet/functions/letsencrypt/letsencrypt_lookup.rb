@@ -1,4 +1,4 @@
-Puppet::Functions.create_function(:letsencrypt_lookup) do
+Puppet::Functions.create_function(:'letsencrypt::letsencrypt_lookup') do
   def letsencrypt_lookup(cn)
     domain = cn.split('.', 2)[1]
     wildcard = "*.#{domain}"
