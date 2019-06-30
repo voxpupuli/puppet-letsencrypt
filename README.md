@@ -305,7 +305,7 @@ letsencrypt::certonly { 'foo':
   domains               => ['foo.example.com', 'bar.example.com'],
   pre_hook_commands     => ['...'],
   post_hook_commands    => ['...'],
-  deploy_hooks_commands => ['...'],
+  deploy_hook_commands  => ['...'],
 }
 ```
 
