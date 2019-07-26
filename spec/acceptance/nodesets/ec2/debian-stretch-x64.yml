@@ -9,7 +9,7 @@
 # see: https://github.com/puppetlabs/beaker/blob/master/docs/how_to/hypervisors/ec2.md
 #
 HOSTS:
-  ubuntu-stretch-x64:
+  debian-stretch-x64:
     roles:
       - master
     platform: debian-stretch-amd64
