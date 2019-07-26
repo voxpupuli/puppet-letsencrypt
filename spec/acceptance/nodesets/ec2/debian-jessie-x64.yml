@@ -9,7 +9,7 @@
 # see: https://github.com/puppetlabs/beaker/blob/master/docs/how_to/hypervisors/ec2.md
 #
 HOSTS:
-  ubuntu-jessie-x64:
+  debian-jessie-x64:
     roles:
       - master
     platform: debian-jessie-amd64
