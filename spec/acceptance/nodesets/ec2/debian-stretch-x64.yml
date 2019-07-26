@@ -9,10 +9,10 @@
 # see: https://github.com/puppetlabs/beaker/blob/master/docs/how_to/hypervisors/ec2.md
 #
 HOSTS:
-  ubuntu-jessie-x64:
+  ubuntu-stretch-x64:
     roles:
       - master
-    platform: debian-jessie-amd64
+    platform: debian-stretch-amd64
     hypervisor: ec2
     # refers to image_tempaltes.yaml AMI[vmname] entry:
     vmname: debian-jessie-eu-central-1
