@@ -27,6 +27,11 @@ AMI:
     :image:
       :aio: ami-fe408091
     :region: eu-central-1
+  # Debian 8.7 (HVM),
+  ubuntu-jessie-eu-central-1:
+    :image:
+      :aio: ami-5900cc36
+    :region: eu-central-1
   # Microsoft Windows Server 2016 Base
   windows-2016-base-eu-central-1:
     :image:
