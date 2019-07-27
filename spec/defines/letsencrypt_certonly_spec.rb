@@ -23,16 +23,15 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_class('Letsencrypt::Config') }
         it { is_expected.to contain_class('Letsencrypt::Params') }
 
-        case facts[:kernel]
-        when 'Linux'
+        if facts[:osfamily] == 'FreeBSD'
+          it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }
+          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
+          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
+        else
           it { is_expected.to contain_file('/etc/letsencrypt') }
           it { is_expected.to contain_package('letsencrypt') } unless facts[:os]['release']['full'] == '14.04'
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
-        else
-          it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }
-          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
-          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
         end
         it { is_expected.to contain_exec('initialize letsencrypt') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com') }
