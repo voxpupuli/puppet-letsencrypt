@@ -105,23 +105,20 @@ describe 'letsencrypt::certonly' do
 
       context 'with dns-rfc2136 plugin' do
         let(:title) { 'foo.example.com' }
-        let(:params) { { plugin: 'dns-rfc2136', letsencrypt_command: "letsencrypt" } }
+        let(:params) { { plugin: 'dns-rfc2136', letsencrypt_command: 'letsencrypt' } }
         let(:pre_condition) do
-          "class { 'letsencrypt':
+          <<-PUPPET
+          class { 'letsencrypt':
             email      => 'foo@example.com',
             config_dir => '/etc/letsencrypt',
-            venv_path  => '/opt/letsencrypt/.venv',
           }
           class { 'letsencrypt::plugin::dns_rfc2136':
-            server              => '1.2.3.4',
-            key_name            => 'certbot',
-            key_secret          => 'secret',
-            key_algorithm       => 'HMAC-SHA512',
-            port                => 53,
-            manage_package      => true,
-            config_dir          => '/etc/letsencrypt',
-            propagation_seconds => 10,
-          }"
+            server         => '192.0.2.1',
+            key_name       => 'certbot',
+            key_secret     => 'secret',
+            package_name   => 'irrelevant',
+          }
+          PUPPET
         end
 
         it { is_expected.to compile.with_all_deps }

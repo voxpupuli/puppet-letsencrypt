@@ -21,31 +21,41 @@ class letsencrypt::params {
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
   } elsif $facts['osfamily'] == 'RedHat' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
+    if $facts['operatingsystemmajrelease'] == '7' {
+      $dns_rfc2136_package_name = 'python2-certbot-dns-rfc2136'
+    } else {
+      $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
+    }
   } elsif $facts['osfamily'] == 'Gentoo' {
     $install_method = 'package'
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } elsif $facts['osfamily'] == 'OpenBSD' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } elsif $facts['osfamily'] == 'FreeBSD' {
     $install_method = 'package'
     $package_name = 'py27-certbot'
     $package_command = 'certbot'
     $config_dir = '/usr/local/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   }
 
   $config_file = "${config_dir}/cli.ini"

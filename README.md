@@ -156,7 +156,7 @@ Example:
 
 ```puppet
 class { 'letsencrypt::plugin::dns_rfc2136':
-  server     => '1.2.3.4',
+  server     => '192.0.2.1',
   key_name   => 'certbot',
   key_secret => '[...]==',
 }
