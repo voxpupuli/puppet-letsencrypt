@@ -15,7 +15,7 @@ describe 'letsencrypt' do
         describe 'with defaults' do
           it { is_expected.to compile }
 
-          epel = facts[:osfamily] == 'RedHat'
+          epel = facts[:osfamily] == 'RedHat' && facts[:operatingsystem] != 'Fedora'
 
           it 'contains File[/usr/local/sbin/letsencrypt-domain-validation]' do
             is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
@@ -46,8 +46,7 @@ describe 'letsencrypt' do
                    cron_monthday: ['*'])
             is_expected.to contain_cron('letsencrypt-renew').with_ensure('absent')
 
-            case facts[:operatingsystem]
-            when 'FreeBSD'
+            if facts[:osfamily] == 'FreeBSD'
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com')
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
               is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').
@@ -64,8 +63,12 @@ describe 'letsencrypt' do
               is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').with_path('/etc/letsencrypt/renewal-hooks-puppet')
             end
 
-            if facts[:osfamily] == 'RedHat' && facts[:operatingsystemmajrelease] == '7'
-              is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
+            if facts[:osfamily] == 'RedHat'
+              if facts[:operatingsystem] == 'Fedora'
+                is_expected.not_to contain_class('epel')
+              else
+                is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
+              end
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'certbot')
