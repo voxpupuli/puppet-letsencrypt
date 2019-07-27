@@ -64,23 +64,17 @@ describe 'letsencrypt' do
             end
 
             if facts[:osfamily] == 'RedHat'
-              if facts[:operatingsystem] == 'Fedora'
-                is_expected.not_to contain_class('epel')
-              else
+              if epel
                 is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
+              else
+                is_expected.not_to contain_class('epel')
               end
-              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'certbot')
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'certbot')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Debian'
-              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
-              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Ubuntu' && facts[:operatingsystemmajrelease] == '14.04'
-              is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
-              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Ubuntu'
-              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
+            elsif facts[:osfamily] == 'Debian'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'certbot')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             elsif facts[:operatingsystem] == 'Gentoo'
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'package').with(package_name: 'app-crypt/certbot')

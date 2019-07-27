@@ -29,13 +29,13 @@
     {
       "operatingsystem": "Fedora",
       "operatingsystemrelease": [
-        "29"
+        "29",
+        "30"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "14.04",
         "16.04",
         "18.04"
       ]
@@ -43,7 +43,8 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "8"
+        "9",
+        "10"
       ]
     },
     {
