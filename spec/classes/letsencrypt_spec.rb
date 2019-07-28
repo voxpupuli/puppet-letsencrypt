@@ -70,7 +70,10 @@ describe 'letsencrypt' do
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'certbot')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Debian'
+            elsif facts[:operatingsystem] == 'Debian' && facts[:operatingsystemmajrelease] <= '8'
+              is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs')
+              is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
+            elsif facts[:operatingsystem] == 'Debian' && facts[:operatingsystemmajrelease] >= '9'
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'package')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             elsif facts[:operatingsystem] == 'Ubuntu' && facts[:operatingsystemmajrelease] == '14.04'
