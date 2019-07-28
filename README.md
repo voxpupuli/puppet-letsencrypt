@@ -24,21 +24,6 @@ The module can integrate with [stahnma/epel](https://forge.puppetlabs.com/stahnm
 to set up the repo by setting the `configure_epel` parameter to `true` (the default for RedHat) and
 installing the module.
 
-On Debian Jessie the module assumes the package certbot is available. This
-package can be found in jessie-backports. When using
-[puppetlabs/apt](https://forge.puppet.com/puppetlabs/apt) the following code
-can be used:
-
-```puppet
-include apt
-include apt::backports
-apt::pin { 'jessie-backports-letsencrypt':
-  release  => 'jessie-backports',
-  packages => prefix(['acme', 'cryptography', 'openssl', 'psutil', 'setuptools', 'pyasn1', 'pkg-resources'], 'python-'),
-  priority => 700,
-}
-```
-
 ## Usage
 
 ### Setting up the Let's Encrypt client
@@ -171,7 +156,7 @@ Example:
 
 ```puppet
 class { 'letsencrypt::plugin::dns_rfc2136':
-  server     => '1.2.3.4',
+  server     => '192.0.2.1',
   key_name   => 'certbot',
   key_secret => '[...]==',
 }

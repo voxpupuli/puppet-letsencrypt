@@ -11,10 +11,12 @@ RSpec.configure do |c|
   # Configure all nodes in nodeset
   c.before :suite do
     hosts.each do |host|
+      # docker image does not provide cron in all cases
       case fact('os.family')
       when 'Debian'
-        # docker image does not provide cron
         host.install_package('cron')
+      when 'RedHat'
+        host.install_package('crontabs')
       end
     end
   end

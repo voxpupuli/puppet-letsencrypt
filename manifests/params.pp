@@ -1,3 +1,5 @@
+# @summary Default parameters
+# @api private
 class letsencrypt::params {
   $agree_tos           = true
   $unsafe_registration = false
@@ -14,55 +16,51 @@ class letsencrypt::params {
     'server' => 'https://acme-v01.api.letsencrypt.org/directory',
   }
 
-  if $facts['operatingsystem'] == 'Debian' and versioncmp($facts['operatingsystemrelease'], '8') >= 0 {
+  if $facts['osfamily'] == 'Debian' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $facts['operatingsystem'] == 'Ubuntu' and versioncmp($facts['operatingsystemrelease'], '16.04') == 0 {
-    $install_method = 'package'
-    $package_name = 'letsencrypt'
-    $package_command = 'letsencrypt'
-    $config_dir = '/etc/letsencrypt'
-  } elsif $facts['operatingsystem'] == 'Ubuntu' and versioncmp($facts['operatingsystemrelease'], '18.04') >= 0 {
+    $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
+  } elsif $facts['osfamily'] == 'RedHat' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
-  } elsif $facts['osfamily'] == 'RedHat' and versioncmp($facts['operatingsystemmajrelease'], '7') >= 0 {
-    $install_method = 'package'
-    $package_name = 'certbot'
-    $package_command = 'certbot'
-    $config_dir = '/etc/letsencrypt'
+    if $facts['operatingsystemmajrelease'] == '7' {
+      $dns_rfc2136_package_name = 'python2-certbot-dns-rfc2136'
+    } else {
+      $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
+    }
   } elsif $facts['osfamily'] == 'Gentoo' {
     $install_method = 'package'
     $package_name = 'app-crypt/certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } elsif $facts['osfamily'] == 'OpenBSD' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } elsif $facts['osfamily'] == 'FreeBSD' {
     $install_method = 'package'
     $package_name = 'py27-certbot'
     $package_command = 'certbot'
     $config_dir = '/usr/local/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
     $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   }
 
   $config_file = "${config_dir}/cli.ini"
 
-  if $facts['osfamily'] == 'RedHat' {
-    $configure_epel = $facts['os']['name'] != 'Fedora'
-  } else {
-    $configure_epel = false
-  }
+  $configure_epel = $facts['osfamily'] == 'RedHat' and $facts['os']['name'] != 'Fedora'
 
   $cron_owner_group = $facts['osfamily'] ? {
     'OpenBSD' =>  'wheel',
