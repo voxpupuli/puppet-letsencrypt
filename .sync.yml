@@ -3,6 +3,7 @@
   docker_sets:
     - set: centos7-64
     - set: debian9-64
+    - set: debian10-64
     - set: fedora29-64
     - set: fedora30-64
     - set: ubuntu1604-64
