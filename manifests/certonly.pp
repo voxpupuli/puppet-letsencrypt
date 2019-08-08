@@ -124,7 +124,7 @@ define letsencrypt::certonly (
       $plugin_args = [
         "--cert-name '${title}' -d",
         "'${_domains}'",
-        "--dns-ovh-credentials ${letsencrypt::plugin::dns_ovh::config_dir}/dns-ovh.ini",
+        "--dns-ovh-credentials ${letsencrypt::plugin::dns_ovh::config_file}",
         "--dns-ovh-propagation-seconds ${letsencrypt::plugin::dns_ovh::propagation_seconds}",
       ]
     }
