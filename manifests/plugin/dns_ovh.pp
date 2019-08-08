@@ -1,23 +1,36 @@
-# == Class: letsencrypt::plugin::dns_ovh
+# @summary This class installs and configures the Let's Encrypt dns-ovh plugin.
 #
-#   This class installs and configures the Let's Encrypt dns-ovh plugin.
-#   https://certbot-dns-ovh.readthedocs.io
+# @example Basic usage
+#  class { 'letsencrypt::plugin::dns_ovh':
+#    endpoint           => 'ovh-eu',
+#    application_key    => 'MDAwMDAwMDAwMDAw',
+#    application_secret => 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+#    consumer_key       => 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+#  }
+#  letsencrypt::certonly { 'foo':
+#    domains       => ['foo.example.com', 'bar.example.com'],
+#    plugin        => 'dns-ovh',
+#  }
+#
+# @see https://certbot-dns-ovh.readthedocs.io
 #
 # === Parameters:
 #
-# [*endpoint*]
+# @param endpoint
 #   Target OVH DNS endpoint.
-# [*application_key*]
+# @param application_key
 #   OVH application key.
-# [*application_secret*]
+# @param application_secret
 #   DNS OVH application secret.
-# [*consumer_key*]
+# @param consumer_key
 #   DNS OVH consumer key.
-# [*manage_package*]
+# @param propagation_seconds
+#   DNS OVH propagation seconds (default: 30s)
+# @param manage_package
 #   Manage the plugin package.
-# [*package_name*]
+# @param package_name
 #   The name of the package to install when $manage_package is true.
-# [*config_dir*]
+# @param config_dir
 #   The path to the configuration directory.
 #
 class letsencrypt::plugin::dns_ovh (
