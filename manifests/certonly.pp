@@ -108,6 +108,17 @@ define letsencrypt::certonly (
       ]
     }
 
+    dns-ovh': {
+      require letsencrypt::plugin::dns_ovh
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args = [
+        "--cert-name '${cert_name}' -d",
+        "'${_domains}'",
+        "--dns-ovh-credentials ${letsencrypt::plugin::dns_ovh::config_file}",
+        "--dns-ovh-propagation-seconds ${letsencrypt::plugin::dns_ovh::propagation_seconds}",
+      ]
+    }
+
     'dns-route53': {
       require letsencrypt::plugin::dns_route53
       $_domains = join($domains, '\' -d \'')
