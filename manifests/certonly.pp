@@ -118,6 +118,17 @@ define letsencrypt::certonly (
       ]
     }
 
+    'dns-ovh': {
+      require letsencrypt::plugin::dns_ovh
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args = [
+        "--cert-name '${title}' -d",
+        "'${_domains}'",
+        "--dns-ovh-credentials ${letsencrypt::plugin::dns_ovh::config_dir}/dns-ovh.ini",
+        "--dns-ovh-propagation-seconds ${letsencrypt::plugin::dns_ovh::propagation_seconds}",
+      ]
+    }
+
     default: {
       if $ensure == 'present' {
         $_domains = join($domains, '\' -d \'')

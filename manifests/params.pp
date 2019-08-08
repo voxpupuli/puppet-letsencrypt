@@ -22,6 +22,7 @@ class letsencrypt::params {
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
     $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
+    $dns_ovh_package_name = 'python3-certbot-dns-ovh'
   } elsif $facts['osfamily'] == 'RedHat' {
     $install_method = 'package'
     $package_name = 'certbot'
@@ -29,8 +30,10 @@ class letsencrypt::params {
     $config_dir = '/etc/letsencrypt'
     if $facts['operatingsystemmajrelease'] == '7' {
       $dns_rfc2136_package_name = 'python2-certbot-dns-rfc2136'
+      $dns_ovh_package_name = 'python2-certbot-dns-ovh'
     } else {
       $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
+      $dns_ovh_package_name = 'python3-certbot-dns-ovh'
     }
   } elsif $facts['osfamily'] == 'Gentoo' {
     $install_method = 'package'
@@ -38,24 +41,28 @@ class letsencrypt::params {
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
     $dns_rfc2136_package_name = undef
+    $dns_ovh_package_name = undef
   } elsif $facts['osfamily'] == 'OpenBSD' {
     $install_method = 'package'
     $package_name = 'certbot'
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
     $dns_rfc2136_package_name = undef
+    $dns_ovh_package_name = undef
   } elsif $facts['osfamily'] == 'FreeBSD' {
     $install_method = 'package'
     $package_name = 'py27-certbot'
     $package_command = 'certbot'
     $config_dir = '/usr/local/etc/letsencrypt'
     $dns_rfc2136_package_name = undef
+    $dns_ovh_package_name = undef
   } else {
     $install_method = 'vcs'
     $package_name = 'letsencrypt'
     $package_command = 'letsencrypt'
     $config_dir = '/etc/letsencrypt'
     $dns_rfc2136_package_name = undef
+    $dns_ovh_package_name = undef
   }
 
   $config_file = "${config_dir}/cli.ini"
@@ -81,5 +88,8 @@ class letsencrypt::params {
   $dns_rfc2136_port                = 53
   $dns_rfc2136_algorithm           = 'HMAC-SHA512'
   $dns_rfc2136_propagation_seconds = 10
+
+  $dns_ovh_manage_package      = true
+  $dns_ovh_propagation_seconds = 30
 
 }
