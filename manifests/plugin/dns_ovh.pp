@@ -1,7 +1,18 @@
 # @summary Installs and configures the dns-ovh plugin
 #
-#   This class installs and configures the Let's Encrypt dns-ovh plugin.
-#   https://certbot-dns-ovh.readthedocs.io
+# @example Basic usage
+#  class { 'letsencrypt::plugin::dns_ovh':
+#    endpoint           => 'ovh-eu',
+#    application_key    => 'MDAwMDAwMDAwMDAw',
+#    application_secret => 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+#    consumer_key       => 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+#  }
+#  letsencrypt::certonly { 'foo':
+#    domains       => ['foo.example.com', 'bar.example.com'],
+#    plugin        => 'dns-ovh',
+#  }
+#
+# @see https://certbot-dns-ovh.readthedocs.io
 #
 # @param endpoint Target OVH DNS endpoint.
 # @param application_key OVH application key.
