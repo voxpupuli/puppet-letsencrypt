@@ -28,10 +28,10 @@ class letsencrypt::plugin::dns_ovh (
   String[1] $application_key,
   String[1] $application_secret,
   String[1] $consumer_key,
-  Integer $propagation_seconds     = $letsencrypt::dns_ovh_propagation_seconds,
-  Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
-  Boolean $manage_package          = $letsencrypt::dns_ovh_manage_package,
-  String $package_name             = $letsencrypt::dns_ovh_package_name,
+  Integer $propagation_seconds      = $letsencrypt::dns_ovh_propagation_seconds,
+  Boolean $manage_package           = $letsencrypt::dns_ovh_manage_package,
+  String $package_name              = $letsencrypt::dns_ovh_package_name,
+  Stdlib::Absolutepath $config_file = "${letsencrypt::config_dir}/dns-ovh.ini",
 ) {
   require letsencrypt
 
@@ -49,7 +49,7 @@ class letsencrypt::plugin::dns_ovh (
     dns_ovh_propagation_seconds => $propagation_seconds,
   }
 
-  file { "${config_dir}/dns-ovh.ini":
+  file { $config_file:
     ensure  => file,
     owner   => 'root',
     group   => 'root',
