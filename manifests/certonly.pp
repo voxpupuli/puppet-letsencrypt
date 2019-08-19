@@ -107,6 +107,7 @@ define letsencrypt::certonly (
 
     default: {
       # nothing to do, but needed to pass tests
+    }
   }
 
   case $plugin {
