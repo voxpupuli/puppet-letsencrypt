@@ -104,6 +104,9 @@ define letsencrypt::certonly (
     'nginx': {
       require letsencrypt::plugin::nginx
     }
+
+    default: {
+      # nothing to do, but needed to pass tests
   }
 
   case $plugin {
