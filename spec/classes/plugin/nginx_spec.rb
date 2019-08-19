@@ -14,8 +14,6 @@ describe 'letsencrypt::plugin::nginx' do
       end
       let(:package_name) do
         case facts[:osfamily]
-        when 'Debian'
-          'python3-certbot-nginx'
         when 'RedHat'
           facts[:operatingsystem] == 'Fedora' ? 'python3-certbot-nginx' : 'python2-certbot-nginx'
         end

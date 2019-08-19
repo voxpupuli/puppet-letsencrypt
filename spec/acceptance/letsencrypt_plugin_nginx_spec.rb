@@ -2,8 +2,6 @@ require 'spec_helper_acceptance'
 
 describe 'letsencrypt::plugin::nginx' do
   supported = case fact('os.family')
-              when 'Debian'
-                true
               when 'RedHat'
                 true
               else
