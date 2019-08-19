@@ -3,8 +3,7 @@ require 'spec_helper_acceptance'
 describe 'letsencrypt::plugin::nginx' do
   supported = case fact('os.family')
               when 'Debian'
-                # Debian 9 has it in backports, Ubuntu started shipping in Bionic
-                fact('os.release.major') != '9' && fact('os.release.major') != '16.04'
+                true
               when 'RedHat'
                 true
               else
