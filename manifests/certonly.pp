@@ -94,6 +94,18 @@ define letsencrypt::certonly (
     $default_args = '--text --agree-tos --non-interactive delete'
   }
 
+  # Plugin requirements
+  case $plugin {
+
+    'dns-rfc2136': {
+      require letsencrypt::plugin::dns_rfc2136
+    }
+
+    'nginx': {
+      require letsencrypt::plugin::nginx
+    }
+  }
+
   case $plugin {
 
     'webroot': {
@@ -108,7 +120,6 @@ define letsencrypt::certonly (
     }
 
     'dns-rfc2136': {
-      require letsencrypt::plugin::dns_rfc2136
       $_domains = join($domains, '\' -d \'')
       $plugin_args = [
         "--cert-name '${title}' -d",
@@ -118,7 +129,7 @@ define letsencrypt::certonly (
       ]
     }
 
-    default: {
+    'nginx', default: {
       if $ensure == 'present' {
         $_domains = join($domains, '\' -d \'')
         $plugin_args  = "--cert-name '${title}' -d '${_domains}'"
