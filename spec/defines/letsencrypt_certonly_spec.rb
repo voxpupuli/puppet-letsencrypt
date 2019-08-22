@@ -136,6 +136,9 @@ describe 'letsencrypt::certonly' do
       context 'with dns-route53 plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'dns-route53', letsencrypt_command: 'letsencrypt' } }
+      context 'with dns-ovh plugin' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'dns-ovh', letsencrypt_command: 'letsencrypt' } }
         let(:pre_condition) do
           <<-PUPPET
           class { 'letsencrypt':
@@ -144,6 +147,12 @@ describe 'letsencrypt::certonly' do
           }
           class { 'letsencrypt::plugin::dns_route53':
             package_name   => 'irrelevant',
+          class { 'letsencrypt::plugin::dns_ovh':
+            endpoint           => 'ovh-eu',
+            application_key    => 'MDAwMDAwMDAwMDAw',
+            application_secret => 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+            consumer_key       => 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+            package_name       => 'irrelevant',
           }
           PUPPET
         end
@@ -151,6 +160,8 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('letsencrypt::plugin::dns_route53') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-route53 --cert-name 'foo.example.com' -d 'foo.example.com' --dns-route53-propagation-seconds 10" }
+        it { is_expected.to contain_class('letsencrypt::plugin::dns_ovh') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-ovh --cert-name 'foo.example.com' -d 'foo.example.com' --dns-ovh-credentials /etc/letsencrypt/dns-ovh.ini --dns-ovh-propagation-seconds 30" }
       end
 
       context 'with custom plugin' do
