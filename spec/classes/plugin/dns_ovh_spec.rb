@@ -28,7 +28,7 @@ describe 'letsencrypt::plugin::dns_ovh' do
       context 'with required parameters' do
         let(:params) do
           super().merge(
-            endpoint: 'ovh-eu'
+            endpoint: 'ovh-eu',
             application_key: 'MDAwMDAwMDAwMDAw',
             application_secret: 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
             consumer_key: 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw'
