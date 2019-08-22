@@ -44,6 +44,19 @@ class letsencrypt::plugin::dns_ovh (
   Stdlib::Absolutepath $config_file = "${letsencrypt::config_dir}/dns-ovh.ini",
 ) {
 
+  case $::operatingsystem {
+    'Debian': {
+      if $::operatingsystemrelease < '10' {
+        fail("The dns-ovh plugin is not compatible with $::operatingsystem $::operatingsystemrelease. See README.")
+      }
+    }
+    'Ubuntu': {
+      if $::operatingsystemrelease < '19' {
+        fail("The dns-ovh plugin is not compatible with $::operatingsystem $::operatingsystemrelease. See README.")
+      }
+    }
+  }
+
   if $manage_package {
     package { $package_name:
       ensure => installed,

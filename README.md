@@ -176,6 +176,11 @@ Ideally keys and secret should be encrypted, eg. with eyaml if using Hiera.
 Plugin documentation and it's parameters can be found here:
 https://certbot-dns-ovh.readthedocs.io
 
+Note:
+
+For Debian based OS, this plugin is compatible from Debian 10
+and Ubuntu 19. Older OS are not supported.
+
 Parameter defaults:
 
 - `propagation_seconds` 30 (the plugin defaults to 30)
