@@ -38,13 +38,15 @@ class letsencrypt::plugin::dns_ovh (
   case $::operatingsystem {
     'Debian': {
       if versioncmp($::operatingsystemrelease, '10') < 0 {
-        fail("The dns-ovh plugin is not compatible with $::operatingsystem $::operatingsystemrelease. See README.")
+        fail("The dns-ovh plugin is not compatible with ${::operatingsystem} ${::operatingsystemrelease}. See README.")
       }
     }
     'Ubuntu': {
       if versioncmp($::operatingsystemrelease, '19') < 0 {
-        fail("The dns-ovh plugin is not compatible with $::operatingsystem $::operatingsystemrelease. See README.")
+        fail("The dns-ovh plugin is not compatible with ${::operatingsystem} ${::operatingsystemrelease}. See README.")
       }
+    }
+    default: {
     }
   }
 
