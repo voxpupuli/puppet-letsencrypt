@@ -8,4 +8,5 @@ configure_beaker do |host|
   when 'RedHat'
     host.install_package('crontabs')
   end
+  install_module_from_forge('puppet-systemd', '>= 2.6.0')
 end

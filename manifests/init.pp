@@ -78,6 +78,10 @@ class letsencrypt (
   $renew_cron_hour                       = fqdn_rand(24),
   $renew_cron_minute                     = fqdn_rand(60, fqdn_rand_string(10)),
   $renew_cron_monthday                   = '*',
+  String[1] $renew_systemd_datespec      = 'daily',
+  Enum['cron', 'systemd'] $timer_type    = 'cron',
+  Boolean          $manage_firewalld     = false,
+  Array[String[1]] $manage_services      = [],
 ) {
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion

@@ -24,6 +24,8 @@ The module can integrate with [puppet/epel](https://forge.puppetlabs.com/puppet/
 to set up the repo by setting the `configure_epel` parameter to `true` (the default for RedHat) and
 installing the module.
 
+For systemd support, [puppet/systemd](https://forge.puppet.com/modules/puppet/systemd) is required.
+
 ## Usage
 
 ### Setting up the Let's Encrypt client
