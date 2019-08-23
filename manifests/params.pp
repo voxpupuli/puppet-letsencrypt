@@ -2,6 +2,7 @@
 # @api private
 class letsencrypt::params {
   $agree_tos           = true
+  $email               = undef
   $unsafe_registration = false
   $manage_config       = true
   $manage_install      = true

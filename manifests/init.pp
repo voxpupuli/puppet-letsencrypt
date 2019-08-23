@@ -52,7 +52,7 @@
 #   The path to put the script we'll call with cron. Defaults to $puppet_vardir/letsencrypt.
 #
 class letsencrypt (
-  Optional[String] $email                = undef,
+  Optional[String] $email                = $letsencrypt::params::email,
   String $path                           = $letsencrypt::params::path,
   $venv_path                             = $letsencrypt::params::venv_path,
   Array $environment                     = [],

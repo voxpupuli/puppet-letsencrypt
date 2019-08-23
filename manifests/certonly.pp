@@ -75,6 +75,7 @@ define letsencrypt::certonly (
   Variant[String[1], Array[String[1]]]      $pre_hook_commands    = [],
   Variant[String[1], Array[String[1]]]      $post_hook_commands   = [],
   Variant[String[1], Array[String[1]]]      $deploy_hook_commands = [],
+  Optional[String[1]]                       $email                = $letsencrypt::email,
 ) {
 
   if $plugin == 'webroot' and empty($webroot_paths) {
@@ -126,6 +127,21 @@ define letsencrypt::certonly (
         $plugin_args = "--cert-name '${title}'"
       }
     }
+  }
+
+  if empty($additional_args) {
+    if $email {
+      $command_end = " -m ${email}"
+    } else {
+      $command_end = ''
+    }
+  } else {
+    if $email {
+      $command_end = " -m ${email} " + join(['',] + $additional_args, ' ')
+    } else {
+      $command_end = join(['',] + $additional_args, ' ')
+    }
+    # ['',] adds an additional whitespace in the front
   }
 
   $hook_args = ['pre', 'post', 'deploy'].map | String $type | {
