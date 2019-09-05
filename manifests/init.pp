@@ -115,6 +115,16 @@ class letsencrypt (
     refreshonly => true,
   }
 
+  file{[
+    '/usr/local',
+    '/usr/local/sbin',
+  ]:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
   # Used in letsencrypt::certonly Exec["letsencrypt certonly ${title}"]
   file { '/usr/local/sbin/letsencrypt-domain-validation':
     ensure => file,
@@ -122,5 +132,6 @@ class letsencrypt (
     group  => 'root',
     mode   => '0500',
     source => "puppet:///modules/${module_name}/domain-validation.sh",
+    require=> File['/usr/local/sbin'],
   }
 }

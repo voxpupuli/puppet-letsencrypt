@@ -22,6 +22,12 @@ class letsencrypt::params {
     $package_command = 'certbot'
     $config_dir = '/etc/letsencrypt'
     $dns_rfc2136_package_name = 'python3-certbot-dns-rfc2136'
+  } elsif $facts['osfamily'] == 'Linux' {
+    $install_method = 'package'
+    $package_name = 'certbot'
+    $package_command = 'certbot'
+    $config_dir = '/etc/letsencrypt'
+    $dns_rfc2136_package_name = undef
   } elsif $facts['osfamily'] == 'RedHat' {
     $install_method = 'package'
     $package_name = 'certbot'
