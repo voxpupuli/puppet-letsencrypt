@@ -7,6 +7,7 @@
     - set: fedora30-64
     - set: ubuntu1604-64
     - set: ubuntu1804-64
+  extras:
     - rvm: 2.5.3
       services: docker
       env: PUPPET_INSTALL_TYPE=agent BEAKER_IS_PE=no BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_debug=true BEAKER_setfile=debian10-64 BEAKER_HYPERVISOR=docker CHECK=beaker
