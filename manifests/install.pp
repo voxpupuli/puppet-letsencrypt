@@ -60,7 +60,7 @@ class letsencrypt::install (
     }
 
     if $configure_epel {
-      include ::epel
+      include epel
       Class['epel'] -> Package['letsencrypt']
     }
   }

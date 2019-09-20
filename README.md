@@ -11,8 +11,9 @@ This module installs the Let's Encrypt client from source and allows you to requ
 
 ## Support
 
-This module requires Puppet >= 4.7.0. and is currently only written to work on
-Debian and RedHat based operating systems, although it may work on others.
+This module is currently only written to work on Debian and RedHat based
+operating systems, although it may work on others. The supported Puppet
+versions are defined in the [metadata.json](metadata.json)
 
 ## Dependencies
 
@@ -23,36 +24,32 @@ The module can integrate with [stahnma/epel](https://forge.puppetlabs.com/stahnm
 to set up the repo by setting the `configure_epel` parameter to `true` (the default for RedHat) and
 installing the module.
 
-On Debian Jessie the module assumes the package certbot is available. This
-package can be found in jessie-backports. When using
-[puppetlabs/apt](https://forge.puppet.com/puppetlabs/apt) the following code
-can be used:
-
-```puppet
-include ::apt
-include ::apt::backports
-apt::pin { 'jessie-backports-letsencrypt':
-  release  => 'jessie-backports',
-  packages => prefix(['acme', 'cryptography', 'openssl', 'psutil', 'setuptools', 'pyasn1', 'pkg-resources'], 'python-'),
-  priority => 700,
-}
-```
-
 ## Usage
+
+### Setting up the Let's Encrypt client
 
 To install the Let's Encrypt client with the default configuration settings you
 must provide your email address to register with the Let's Encrypt servers:
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   email => 'foo@example.com',
+}
+```
+
+If using Ubuntu16.04 with `install_method` to default `package`, you can enforce upgrade of package from 0.4 to 0.7 with :
+
+```puppet
+class { letsencrypt:
+  email          => 'foo@example.com',
+  package_ensure => 'latest',
 }
 ```
 
 If using EL7 without EPEL-preconfigured, add `configure_epel`:
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   configure_epel => true,
   email          => 'foo@example.com',
 }
@@ -67,7 +64,7 @@ the client.
 Alternatively, you can specify your email address in the $config hash:
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   config => {
     email  => 'foo@example.com',
     server => 'https://acme-v01.api.letsencrypt.org/directory',
@@ -82,10 +79,27 @@ If you don't wish to provide your email address, you can set the
 `unsafe_registration` parameter to `true` (this is not recommended):
 
 ```puppet
-class { ::letsencrypt:
+class { letsencrypt:
   unsafe_registration => true,
 }
 ```
+
+To request a wildcard certificate, you must use the ACME v2 endpoint and use
+a DNS-01 challenge. See
+https://community.letsencrypt.org/t/acme-v2-production-environment-wildcards/55578
+
+```puppet
+class { 'letsencrypt':
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v02.api.letsencrypt.org/directory',
+  }
+}
+```
+
+### Issuing certificates
+
+#### Standalone authenticator
 
 To request a certificate for `foo.example.com` using the `certonly` installer
 and the `standalone` authenticator:
@@ -93,6 +107,8 @@ and the `standalone` authenticator:
 ```puppet
 letsencrypt::certonly { 'foo.example.com': }
 ```
+
+#### Apache authenticator
 
 To request a certificate for `foo.example.com` and `bar.example.com` with the
 `certonly` installer and the `apache` authenticator:
@@ -103,6 +119,8 @@ letsencrypt::certonly { 'foo':
   plugin  => 'apache',
 }
 ```
+
+#### Webroot plugin
 
 To request a certificate using the `webroot` plugin, the paths to the webroots
 for all domains must be given through `webroot_paths`. If `domains` and
@@ -117,6 +135,40 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
+#### dns-rfc2136 plugin
+
+To request a certificate using the `dns-rfc2136` plugin, you will at a minimum
+need to pass `server`, `key_name` and `key_secret` to the class
+`letsencrypt::plugin::dns_rfc2136`. Ideally the key secret should be encrypted,
+eg. with eyaml if using Hiera. It's also recommended to only enable access to
+the specific DNS records needed by the Let's Encrypt client.
+
+Plugin documentation and it's parameters can be found here:
+https://certbot-dns-rfc2136.readthedocs.io
+
+Parameter defaults:
+
+- `key_algorithm` HMAC-SHA512
+- `port` 53
+- `propagation_seconds` 10 (the plugin defaults to 60)
+
+Example:
+
+```puppet
+class { 'letsencrypt::plugin::dns_rfc2136':
+  server     => '192.0.2.1',
+  key_name   => 'certbot',
+  key_secret => '[...]==',
+}
+
+letsencrypt::certonly { 'foo':
+  domains       => ['foo.example.com', 'bar.example.com'],
+  plugin        => 'dns-rfc2136',
+}
+```
+
+#### Additional arguments
+
 If you need to pass a command line flag to the `letsencrypt-auto` command that
 is not supported natively by this module, you can use the `additional_args`
 parameter to pass those arguments:
@@ -129,20 +181,177 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
-To automatically renew a certificate, you can pass the `manage_cron` parameter.
-You can optionally add a shell command to be run on success using the `cron_success_command` parameter.
-You can optionally add a shell command to be run on before using the `cron_before_command` parameter.
-You can disable output (and resulting emails) generated by the cron command using the `suppress_cron_output` parameter.
+### Renewing certificates
+
+There are two ways to automatically renew certificates with cron using this module.
+
+#### cron using certbot renew
+
+All installed certificates will be renewed using `certbot renew` using their
+original settings, including any not managed by Puppet.
+
+* `renew_cron_ensure` manages the cron resource. Set to `present` to enable. Default: `absent`
+* `renew_cron_minute` sets minute(s) to run the cron job. Default: Seeded random minute
+* `renew_cron_hour` sets hour(s) to run the cron job. Default: Seeded random hour
+* `renew_cron_monthday` sets month day(s) to run the cron job. Default: Every day
+
+```puppet
+class { 'letsencrypt':
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v01.api.letsencrypt.org/directory',
+  },
+  renew_cron_ensure: 'present',
+}
+```
+
+With Hiera, at 6 AM (roughly) every other day:
+
+```yaml
+---
+letsencrypt::renew_cron_ensure: 'present'
+letsencrypt::renew_cron_minute: 0
+letsencrypt::renew_cron_hour: 6
+letsencrypt::renew_cron_monthday: '1-31/2'
+```
+
+#### cron using certbot certonly
+
+Only specific certificates will be renewed using `certbot certonly`.
+
+* `manage_cron` can be used to automatically renew the certificate
+* `cron_success_command` can be used to run a shell command on a successful renewal
+* `cron_before_command` can be used to run a shell command before a renewal
+* `cron_monthday` can be used to specify one or multiple days of the month to run the cron job (defaults to every day)
+* `cron_hour` can be used to specify hour(s) to run the cron job (defaults to a seeded random hour)
+* `cron_minute` can be used to specify minute(s) to run the cron job (defaults to a seeded random minute)
+* `suppress_cron_output` can be used to disable output (and resulting emails) generated by the cron command
 
 ```puppet
 letsencrypt::certonly { 'foo':
-  domains => ['foo.example.com', 'bar.example.com'],
-  manage_cron => true,
-  cron_before_command => 'service nginx stop',
+  domains              => ['foo.example.com', 'bar.example.com'],
+  manage_cron          => true,
+  cron_hour            => [0,12],
+  cron_minute          => '30',
+  cron_before_command  => 'service nginx stop',
   cron_success_command => '/bin/systemctl reload nginx.service',
   suppress_cron_output => true,
 }
 ```
+
+#### Deprovisioning
+
+If a domain needs to be removed for any reason this can be done by setting
+`ensure` to 'absent', this will remove the certificates for this domain from
+the server. If `manage_cron` is set to true, the certificate renewal cronjob
+and shell scripts for the domain will also be removed.
+
+```puppet
+letsencrypt::certonly { 'foo':
+  ensure      => 'absent',
+  domains     => ['foo.example.com', 'bar.example.com'],
+  manage_cron => true,
+}
+```
+
+## Hooks
+
+Certbot supports hooks since certbot v0.5.0, however this module uses the newer
+`--deploy-hook` replacing the deprecated `--renew-hook`. Because of this the
+minimum version you will need to manage hooks with this module is v0.17.0.
+
+All hook command parameters support both string and array.
+
+**Note on certbot hook behavior:** Hooks created by `letsencrypt::certonly` will be
+configured in the renewal config file of the certificate by certbot (stored in
+CONFIG_DIR/renewal/), which means all hooks created this way are used when running
+`certbot renew` without hook arguments. This allows you to easily create individual
+hooks for each certificate with just one cron job for renewal. HOWEVER, when running
+`certbot renew` with any of the hook arguments (setting any of the
+`letsencrypt::renew_*_hook_commands` parameters), hooks of the corresponding
+types in all renewal configs will be ignored by certbot. It's recommended to keep
+these two ways of using hooks mutually exclusive to avoid confusion. Cron jobs
+created by `letsencrypt::certonly` are unaffected as they renew certificates
+directly using `certbot certonly`.
+
+### certbot certonly
+
+Hooks created with `letsencrypt::certonly` will behave the following way:
+
+* `pre` hooks will be run before each certificate is attempted issued or renewed,
+even if the action fails.
+* `post` hooks will be run after each certificate is attempted issued or renewed,
+even if the action fails.
+* `deploy` hooks will be run after successfully issuing or renewing each certificate.
+It will not be run if no action is taken or if the action fails.
+
+```puppet
+letsencrypt::certonly { 'foo':
+  domains               => ['foo.example.com', 'bar.example.com'],
+  pre_hook_commands     => ['...'],
+  post_hook_commands    => ['...'],
+  deploy_hook_commands  => ['...'],
+}
+```
+
+### certbot renew
+
+Hooks passed to `certbot renew` will behave the following way:
+
+* `pre` hook will be run once total before any certificates are attempted issued
+or renewed. It will not be run if no actions are taken. Overrides all pre hooks
+created by `letsencrypt::certonly`.
+* `post` hook will be run once total after all certificates are issued or renewed.
+It will not be run if no actions are taken. Overrides all post hooks created by
+`letsencrypt::certonly`.
+* `deploy` hook will be run once for each successfully issued or renewed certificate.
+It will not be run otherwise. Overrides all deploy hooks created by
+`letsencrypt::certonly`.
+
+```puppet
+class { 'letsencrypt':
+  config => {
+    email  => 'foo@example.com',
+    server => 'https://acme-v01.api.letsencrypt.org/directory',
+  },
+  renew_pre_hook_commands: [...],
+  renew_post_hook_commands: [...],
+  renew_deploy_hook_commands: [...],
+}
+```
+
+With Hiera:
+
+```yaml
+---
+letsencrypt::renew_pre_hook_commands:
+  - '...'
+letsencrypt::renew_post_hook_commands:
+  - '...'
+letsencrypt::renew_deploy_hook_commands:
+  - '...'
+```
+
+## Facts
+
+Facts about your live certificates are available through facter. You can query the list of live certificates from puppet using `$::letsencrypt_directory` in your puppet code, hiera data or from the command line.
+
+```
+facter -p letsencrypt_directory
+{
+  legacyfiles.ijc.org => "/etc/letsencrypt/live/legacyfiles.ijc.org",
+  static.ijc.org => "/etc/letsencrypt/live/static.ijc.org",
+  ijc.org => "/etc/letsencrypt/live/ijc.org",
+  new.ijc.org => "/etc/letsencrypt/live/new.ijc.org",
+  www.ijc.org => "/etc/letsencrypt/live/ijc.org",
+  training.ijc.org => "/etc/letsencrypt/live/training.ijc.org"
+}
+```
+
+## Puppet Functions
+
+This module profiles a custom puppet function `letsencrypt::letsencrypt_lookup` which allows you to load information about your certificates into puppet.
+This returns the same information as in the facts but for a particular domain. It accepts a single argument for your domain or wildcard domain.
 
 ## Development
 
