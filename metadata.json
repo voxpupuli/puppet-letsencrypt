@@ -70,7 +70,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.13.1 < 6.0.0"
+      "version_requirement": ">= 4.13.1 < 7.0.0"
     },
     {
       "name": "puppetlabs/inifile",
@@ -78,7 +78,7 @@
     },
     {
       "name": "puppetlabs/vcsrepo",
-      "version_requirement": ">= 2.0.0 < 3.0.0"
+      "version_requirement": ">= 2.0.0 < 4.0.0"
     },
     {
       "name": "stahnma/epel",
