@@ -1,38 +1,30 @@
-# == Class: letsencrypt::renew
+
+# @summary Configures renewal of Let's Encrypt certificates using Certbot
 #
-#   This class configures renewal of Let's Encrypt certificates using the
-#   certbot renew command.
+# Configures renewal of Let's Encrypt certificates using the certbot renew command.
 #
-#   Note: Hooks set here will run before/after/for ALL certificates, including
-#   any not managed by Puppet. If you want to create hooks for specific
-#   certificates only, create them using letsencrypt::certonly.
+# Note: Hooks set here will run before/after/for ALL certificates, including
+# any not managed by Puppet. If you want to create hooks for specific
+# certificates only, create them using letsencrypt::certonly.
 #
-# === Parameters:
-#
-# [*pre_hook_commands*]
-#   Array of commands to run in a shell before obtaining/renewing any certificates.
-# [*post_hook_commands*]
-#   Array of commands to run in a shell after attempting to obtain/renew certificates.
-# [*deploy_hook_commands*]
+# @param pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
+# @param post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
+# @param deploy_hook_commands
 #   Array of commands to run in a shell once for each successfully issued/renewed
 #   certificate. Two environmental variables are supplied by certbot:
 #   - $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
 #                       Example: /etc/letsencrypt/live/example.com
 #   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
 #                       Example: "example.com www.example.com"
-# [*additional_args*]
-#   Array of additional command line arguments to pass to 'certbot renew'.
-# [*cron_ensure*]
-#   Intended state of the cron resource running certbot renew. Accepts 'present'
-#   or 'absent'. Default: 'absent'
-# [*cron_hour*]
+# @param additional_args Array of additional command line arguments to pass to 'certbot renew'.
+# @param cron_ensure Intended state of the cron resource running certbot renew
+# @param cron_hour
 #   Optional string, integer or array of hour(s) the renewal command should run.
-#   E.g. '[0,12]' to execute at midnight and midday. Default: fqdn-seeded random
-#   hour.
-# [*cron_minute*]
+#   E.g. '[0,12]' to execute at midnight and midday. Default: fqdn-seeded random hour.
+# @param cron_minute
 #   Optional string, integer or array of minute(s) the renewal command should
 #   run. E.g. 0 or '00' or [0,30]. Default: fqdn-seeded random minute.
-# [*cron_monthday*]
+# @param cron_monthday
 #   Optional string, integer or array of monthday(s) the renewal command should
 #   run. E.g. '2-30/2' to run on even days. Default: Every day.
 #
