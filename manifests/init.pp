@@ -1,55 +1,59 @@
-# == Class: letsencrypt
+# @summary Install and configure Certbot, the LetsEncrypt client
 #
-#   This class installs and configures the Let's Encrypt client.
+# Install and configure Certbot, the LetsEncrypt client
 #
-# === Parameters:
+# @example
+#  class { 'letsencrypt' :
+#    email  => 'letsregister@example.com',
+#    config => {
+#      'server' => 'https://acme-staging.api.letsencrypt.org/directory',
+#    },
+#  }
 #
-# [*email*]
+# @param email
 #   The email address to use to register with Let's Encrypt. This takes
 #   precedence over an 'email' setting defined in $config.
-# [*path*]
-#   The path to the letsencrypt installation.
-# [*environment*]
-#   An optional array of environment variables (in addition to VENV_PATH)
-# [*repo*]
-#   A Git URL to install the Let's encrypt client from.
-# [*version*]
-#   The Git ref (tag, sha, branch) to check out when installing the client with
-#   the `vcs` method.
-# [*package_ensure*]
-#   The value passed to `ensure` when installing the client with the `package`
-#   method.
-# [*package_name*]
-#   Name of package and command to use when installing the client with the
-#   `package` method.
-# [*package_command*]
-#   Path or name for letsencrypt executable when installing the client with
-#   the `package` method.
-# [*config_dir*]
-#   The path to the configuration directory.
-# [*config_file*]
-#   The path to the configuration file for the letsencrypt cli.
-# [*config*]
-#   A hash representation of the letsencrypt configuration file.
-# [*manage_config*]
-#   A feature flag to toggle the management of the letsencrypt configuration
-#   file.
-# [*manage_install*]
-#   A feature flag to toggle the management of the letsencrypt client
-#   installation.
-# [*manage_dependencies*]
-#   A feature flag to toggle the management of the letsencrypt dependencies.
-# [*configure_epel*]
-#   A feature flag to include the 'epel' class and depend on it for package
-#   installation.
-# [*install_method*]
-#   Method to install the letsencrypt client, either package or vcs.
-# [*agree_tos*]
-#   A flag to agree to the Let's Encrypt Terms of Service.
-# [*unsafe_registration*]
-#   A flag to allow using the 'register-unsafely-without-email' flag.
-# [*cron_scripts_path*]
-#   The path to put the script we'll call with cron. Defaults to $puppet_vardir/letsencrypt.
+# @param path The path to the letsencrypt installation.
+# @param venv_path virtualenv path for vcs-installed Certbot
+# @param environment An optional array of environment variables (in addition to VENV_PATH)
+# @param repo A Git URL to install the Let's encrypt client from.
+# @param version The Git ref (tag, sha, branch) to check out when installing the client with the `vcs` method.
+# @param package_name Name of package and command to use when installing the client with the `package` method.
+# @param package_ensure The value passed to `ensure` when installing the client with the `package` method.
+# @param package_command Path or name for letsencrypt executable when installing the client with the `package` method.
+# @param config_file The path to the configuration file for the letsencrypt cli.
+# @param config A hash representation of the letsencrypt configuration file.
+# @param cron_scripts_path The path to put the script we'll call with cron. Defaults to $puppet_vardir/letsencrypt.
+# @param manage_config A feature flag to toggle the management of the letsencrypt configuration file.
+# @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
+# @param manage_dependencies A feature flag to toggle the management of the letsencrypt dependencies.
+# @param configure_epel A feature flag to include the 'epel' class and depend on it for package installation.
+# @param install_method Method to install the letsencrypt client, either package or vcs.
+# @param agree_tos A flag to agree to the Let's Encrypt Terms of Service.
+# @param unsafe_registration A flag to allow using the 'register-unsafely-without-email' flag.
+# @param config_dir The path to the configuration directory.
+# @param key_size Size for the RSA public key
+# @param renew_pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
+# @param renew_post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
+# @param renew_deploy_hook_commands
+#   Array of commands to run in a shell once for each successfully issued/renewed
+#   certificate. Two environmental variables are supplied by certbot:
+#   - $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
+#                       Example: /etc/letsencrypt/live/example.com
+#   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
+#                       Example: "example.com www.example.com"
+# @param renew_additional_args Array of additional command line arguments to pass to 'certbot renew'.
+# @param renew_cron_ensure Intended state of the cron resource running certbot renew.
+# @param renew_cron_hour
+#   Optional string, integer or array of hour(s) the renewal command should run.
+#   E.g. '[0,12]' to execute at midnight and midday. Default: fqdn-seeded random
+#   hour.
+# @param renew_cron_minute
+#   Optional string, integer or array of minute(s) the renewal command should
+#   run. E.g. 0 or '00' or [0,30]. Default: fqdn-seeded random minute.
+# @param renew_cron_monthday
+#   Optional string, integer or array of monthday(s) the renewal command should
+#   run. E.g. '2-30/2' to run on even days. Default: Every day.
 #
 class letsencrypt (
   Optional[String] $email                = undef,
