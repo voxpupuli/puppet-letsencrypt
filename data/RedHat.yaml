@@ -1,0 +1,3 @@
+---
+letsencrypt::configure_epel: true
+letsencrypt::plugin::dns_rfc2136::package_name: 'python2-certbot-dns-rfc2136'

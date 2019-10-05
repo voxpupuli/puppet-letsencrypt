@@ -1,0 +1,5 @@
+---
+letsencrypt::package_name: 'certbot'
+letsencrypt::package_command: 'certbot'
+letsencrypt::configure_epel: false
+letsencrypt::plugin::dns_rfc2136::package_name: 'python3-certbot-dns-rfc2136'

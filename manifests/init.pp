@@ -23,7 +23,8 @@
 # @param package_command Path or name for letsencrypt executable when installing the client with the `package` method.
 # @param config_file The path to the configuration file for the letsencrypt cli.
 # @param config A hash representation of the letsencrypt configuration file.
-# @param cron_scripts_path The path to put the script we'll call with cron. Defaults to $puppet_vardir/letsencrypt.
+# @param cron_scripts_path The path for renewal scripts called by cron
+# @param cron_owner_group Group owner of cron renew scripts.
 # @param manage_config A feature flag to toggle the management of the letsencrypt configuration file.
 # @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
 # @param manage_dependencies A feature flag to toggle the management of the letsencrypt dependencies.
@@ -46,47 +47,48 @@
 # @param renew_cron_ensure Intended state of the cron resource running certbot renew.
 # @param renew_cron_hour
 #   Optional string, integer or array of hour(s) the renewal command should run.
-#   E.g. '[0,12]' to execute at midnight and midday. Default: fqdn-seeded random
+#   E.g. '[0,12]' to execute at midnight and midday.
 #   hour.
 # @param renew_cron_minute
 #   Optional string, integer or array of minute(s) the renewal command should
-#   run. E.g. 0 or '00' or [0,30]. Default: fqdn-seeded random minute.
+#   run. E.g. 0 or '00' or [0,30].
 # @param renew_cron_monthday
 #   Optional string, integer or array of monthday(s) the renewal command should
-#   run. E.g. '2-30/2' to run on even days. Default: Every day.
+#   run. E.g. '2-30/2' to run on even days.
 #
 class letsencrypt (
   Optional[String] $email                = undef,
-  String $path                           = $letsencrypt::params::path,
-  $venv_path                             = $letsencrypt::params::venv_path,
+  String $path                           = '/opt/letsencrypt',
+  $venv_path                             = '/opt/letsencrypt/.venv',
   Array $environment                     = [],
-  String $repo                           = $letsencrypt::params::repo,
-  String $version                        = $letsencrypt::params::version,
-  String $package_name                   = $letsencrypt::params::package_name,
-  $package_ensure                        = $letsencrypt::params::package_ensure,
-  String $package_command                = $letsencrypt::params::package_command,
-  String $config_file                    = $letsencrypt::params::config_file,
-  Hash $config                           = $letsencrypt::params::config,
-  String $cron_scripts_path              = $letsencrypt::params::cron_scripts_path,
-  Boolean $manage_config                 = $letsencrypt::params::manage_config,
-  Boolean $manage_install                = $letsencrypt::params::manage_install,
-  Boolean $manage_dependencies           = $letsencrypt::params::manage_dependencies,
-  Boolean $configure_epel                = $letsencrypt::params::configure_epel,
-  Enum['package', 'vcs'] $install_method = $letsencrypt::params::install_method,
-  Boolean $agree_tos                     = $letsencrypt::params::agree_tos,
-  Boolean $unsafe_registration           = $letsencrypt::params::unsafe_registration,
-  Stdlib::Unixpath $config_dir           = $letsencrypt::params::config_dir,
+  String $repo                           = 'https://github.com/certbot/certbot.git',
+  String $version                        = 'v0.30.2',
+  String $package_name                   = 'certbot',
+  $package_ensure                        = 'installed',
+  String $package_command                = 'certbot',
+  Stdlib::Unixpath $config_dir           = '/etc/letsencrypt',
+  String $config_file                    = "${config_dir}/cli.ini",
+  Hash $config                           = {'server' => 'https://acme-v01.api.letsencrypt.org/directory'},
+  String $cron_scripts_path              = "${facts['puppet_vardir']}/letsencrypt",
+  String $cron_owner_group               = 'root',
+  Boolean $manage_config                 = true,
+  Boolean $manage_install                = true,
+  Boolean $manage_dependencies           = true,
+  Boolean $configure_epel                = undef,
+  Enum['package', 'vcs'] $install_method = 'package',
+  Boolean $agree_tos                     = true,
+  Boolean $unsafe_registration           = false,
   Integer[2048] $key_size                = 4096,
   # $renew_* should only be used in letsencrypt::renew (blame rspec)
-  $renew_pre_hook_commands               = $letsencrypt::params::renew_pre_hook_commands,
-  $renew_post_hook_commands              = $letsencrypt::params::renew_post_hook_commands,
-  $renew_deploy_hook_commands            = $letsencrypt::params::renew_deploy_hook_commands,
-  $renew_additional_args                 = $letsencrypt::params::renew_additional_args,
-  $renew_cron_ensure                     = $letsencrypt::params::renew_cron_ensure,
-  $renew_cron_hour                       = $letsencrypt::params::renew_cron_hour,
-  $renew_cron_minute                     = $letsencrypt::params::renew_cron_minute,
-  $renew_cron_monthday                   = $letsencrypt::params::renew_cron_monthday,
-) inherits letsencrypt::params {
+  $renew_pre_hook_commands               = [],
+  $renew_post_hook_commands              = [],
+  $renew_deploy_hook_commands            = [],
+  $renew_additional_args                 = [],
+  $renew_cron_ensure                     = 'absent',
+  $renew_cron_hour                       = fqdn_rand(24),
+  $renew_cron_minute                     = fqdn_rand(60, fqdn_rand_string(10)),
+  $renew_cron_monthday                   = '*',
+) {
 
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion

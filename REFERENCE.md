@@ -15,7 +15,6 @@ _Public Classes_
 _Private Classes_
 
 * `letsencrypt::config`: Configures the Let's Encrypt client.
-* `letsencrypt::params`: Default parameters
 
 **Defined types**
 
@@ -71,7 +70,7 @@ Data type: `String`
 
 The path to the letsencrypt installation.
 
-Default value: $letsencrypt::params::path
+Default value: '/opt/letsencrypt'
 
 ##### `venv_path`
 
@@ -79,7 +78,7 @@ Data type: `Any`
 
 virtualenv path for vcs-installed Certbot
 
-Default value: $letsencrypt::params::venv_path
+Default value: '/opt/letsencrypt/.venv'
 
 ##### `environment`
 
@@ -95,7 +94,7 @@ Data type: `String`
 
 A Git URL to install the Let's encrypt client from.
 
-Default value: $letsencrypt::params::repo
+Default value: 'https://github.com/certbot/certbot.git'
 
 ##### `version`
 
@@ -103,7 +102,7 @@ Data type: `String`
 
 The Git ref (tag, sha, branch) to check out when installing the client with the `vcs` method.
 
-Default value: $letsencrypt::params::version
+Default value: 'v0.30.2'
 
 ##### `package_name`
 
@@ -111,7 +110,7 @@ Data type: `String`
 
 Name of package and command to use when installing the client with the `package` method.
 
-Default value: $letsencrypt::params::package_name
+Default value: 'certbot'
 
 ##### `package_ensure`
 
@@ -119,7 +118,7 @@ Data type: `Any`
 
 The value passed to `ensure` when installing the client with the `package` method.
 
-Default value: $letsencrypt::params::package_ensure
+Default value: 'installed'
 
 ##### `package_command`
 
@@ -127,7 +126,7 @@ Data type: `String`
 
 Path or name for letsencrypt executable when installing the client with the `package` method.
 
-Default value: $letsencrypt::params::package_command
+Default value: 'certbot'
 
 ##### `config_file`
 
@@ -135,7 +134,7 @@ Data type: `String`
 
 The path to the configuration file for the letsencrypt cli.
 
-Default value: $letsencrypt::params::config_file
+Default value: "${config_dir}/cli.ini"
 
 ##### `config`
 
@@ -143,15 +142,23 @@ Data type: `Hash`
 
 A hash representation of the letsencrypt configuration file.
 
-Default value: $letsencrypt::params::config
+Default value: {'server' => 'https://acme-v01.api.letsencrypt.org/directory'}
 
 ##### `cron_scripts_path`
 
 Data type: `String`
 
-The path to put the script we'll call with cron. Defaults to $puppet_vardir/letsencrypt.
+The path for renewal scripts called by cron
 
-Default value: $letsencrypt::params::cron_scripts_path
+Default value: "${facts['puppet_vardir']}/letsencrypt"
+
+##### `cron_owner_group`
+
+Data type: `String`
+
+Group owner of cron renew scripts.
+
+Default value: 'root'
 
 ##### `manage_config`
 
@@ -159,7 +166,7 @@ Data type: `Boolean`
 
 A feature flag to toggle the management of the letsencrypt configuration file.
 
-Default value: $letsencrypt::params::manage_config
+Default value: `true`
 
 ##### `manage_install`
 
@@ -167,7 +174,7 @@ Data type: `Boolean`
 
 A feature flag to toggle the management of the letsencrypt client installation.
 
-Default value: $letsencrypt::params::manage_install
+Default value: `true`
 
 ##### `manage_dependencies`
 
@@ -175,7 +182,7 @@ Data type: `Boolean`
 
 A feature flag to toggle the management of the letsencrypt dependencies.
 
-Default value: $letsencrypt::params::manage_dependencies
+Default value: `true`
 
 ##### `configure_epel`
 
@@ -183,7 +190,7 @@ Data type: `Boolean`
 
 A feature flag to include the 'epel' class and depend on it for package installation.
 
-Default value: $letsencrypt::params::configure_epel
+Default value: `undef`
 
 ##### `install_method`
 
@@ -191,7 +198,7 @@ Data type: `Enum['package', 'vcs']`
 
 Method to install the letsencrypt client, either package or vcs.
 
-Default value: $letsencrypt::params::install_method
+Default value: 'package'
 
 ##### `agree_tos`
 
@@ -199,7 +206,7 @@ Data type: `Boolean`
 
 A flag to agree to the Let's Encrypt Terms of Service.
 
-Default value: $letsencrypt::params::agree_tos
+Default value: `true`
 
 ##### `unsafe_registration`
 
@@ -207,7 +214,7 @@ Data type: `Boolean`
 
 A flag to allow using the 'register-unsafely-without-email' flag.
 
-Default value: $letsencrypt::params::unsafe_registration
+Default value: `false`
 
 ##### `config_dir`
 
@@ -215,7 +222,7 @@ Data type: `Stdlib::Unixpath`
 
 The path to the configuration directory.
 
-Default value: $letsencrypt::params::config_dir
+Default value: '/etc/letsencrypt'
 
 ##### `key_size`
 
@@ -231,7 +238,7 @@ Data type: `Any`
 
 Array of commands to run in a shell before obtaining/renewing any certificates.
 
-Default value: $letsencrypt::params::renew_pre_hook_commands
+Default value: []
 
 ##### `renew_post_hook_commands`
 
@@ -239,7 +246,7 @@ Data type: `Any`
 
 Array of commands to run in a shell after attempting to obtain/renew certificates.
 
-Default value: $letsencrypt::params::renew_post_hook_commands
+Default value: []
 
 ##### `renew_deploy_hook_commands`
 
@@ -252,7 +259,7 @@ certificate. Two environmental variables are supplied by certbot:
 - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
                     Example: "example.com www.example.com"
 
-Default value: $letsencrypt::params::renew_deploy_hook_commands
+Default value: []
 
 ##### `renew_additional_args`
 
@@ -260,7 +267,7 @@ Data type: `Any`
 
 Array of additional command line arguments to pass to 'certbot renew'.
 
-Default value: $letsencrypt::params::renew_additional_args
+Default value: []
 
 ##### `renew_cron_ensure`
 
@@ -268,35 +275,35 @@ Data type: `Any`
 
 Intended state of the cron resource running certbot renew.
 
-Default value: $letsencrypt::params::renew_cron_ensure
+Default value: 'absent'
 
 ##### `renew_cron_hour`
 
 Data type: `Any`
 
 Optional string, integer or array of hour(s) the renewal command should run.
-E.g. '[0,12]' to execute at midnight and midday. Default: fqdn-seeded random
+E.g. '[0,12]' to execute at midnight and midday.
 hour.
 
-Default value: $letsencrypt::params::renew_cron_hour
+Default value: fqdn_rand(24)
 
 ##### `renew_cron_minute`
 
 Data type: `Any`
 
 Optional string, integer or array of minute(s) the renewal command should
-run. E.g. 0 or '00' or [0,30]. Default: fqdn-seeded random minute.
+run. E.g. 0 or '00' or [0,30].
 
-Default value: $letsencrypt::params::renew_cron_minute
+Default value: fqdn_rand(60, fqdn_rand_string(10))
 
 ##### `renew_cron_monthday`
 
 Data type: `Any`
 
 Optional string, integer or array of monthday(s) the renewal command should
-run. E.g. '2-30/2' to run on even days. Default: Every day.
+run. E.g. '2-30/2' to run on even days.
 
-Default value: $letsencrypt::params::renew_cron_monthday
+Default value: '*'
 
 ### letsencrypt::install
 
@@ -411,7 +418,7 @@ Data type: `String[1]`
 
 TSIG key algorithm.
 
-Default value: $letsencrypt::dns_rfc2136_algorithm
+Default value: 'HMAC-SHA512'
 
 ##### `port`
 
@@ -419,7 +426,7 @@ Data type: `Stdlib::Port`
 
 Target DNS port.
 
-Default value: $letsencrypt::dns_rfc2136_port
+Default value: 53
 
 ##### `propagation_seconds`
 
@@ -427,7 +434,7 @@ Data type: `Integer`
 
 Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
-Default value: $letsencrypt::dns_rfc2136_propagation_seconds
+Default value: 10
 
 ##### `manage_package`
 
@@ -435,7 +442,7 @@ Data type: `Boolean`
 
 Manage the plugin package.
 
-Default value: $letsencrypt::dns_rfc2136_manage_package
+Default value: `true`
 
 ##### `package_name`
 
@@ -443,7 +450,7 @@ Data type: `String`
 
 The name of the package to install when $manage_package is true.
 
-Default value: $letsencrypt::dns_rfc2136_package_name
+Default value: `undef`
 
 ##### `config_dir`
 

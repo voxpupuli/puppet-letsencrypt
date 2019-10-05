@@ -17,12 +17,12 @@ class letsencrypt::plugin::dns_rfc2136 (
   Stdlib::Host $server,
   String[1] $key_name,
   String[1] $key_secret,
-  String[1] $key_algorithm         = $letsencrypt::dns_rfc2136_algorithm,
-  Stdlib::Port $port               = $letsencrypt::dns_rfc2136_port,
-  Integer $propagation_seconds     = $letsencrypt::dns_rfc2136_propagation_seconds,
+  String[1] $key_algorithm         = 'HMAC-SHA512',
+  Stdlib::Port $port               = 53,
+  Integer $propagation_seconds     = 10,
   Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
-  Boolean $manage_package          = $letsencrypt::dns_rfc2136_manage_package,
-  String $package_name             = $letsencrypt::dns_rfc2136_package_name,
+  Boolean $manage_package          = true,
+  String $package_name             = undef,
 ) {
 
   if $manage_package {
