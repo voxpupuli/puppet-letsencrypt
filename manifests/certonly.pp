@@ -1,52 +1,43 @@
-# == Defined Type: letsencrypt::certonly
+# @summary Request a certificate using the `certonly` installer
 #
-#   This type can be used to request a certificate using the `certonly`
-#   installer.
+# This type can be used to request a certificate using the `certonly` installer.
 #
-# === Parameters:
-#
-# [*ensure*]
-#   Intended state of the resource. Accepts either 'present' or 'absent'.
-#   Default: 'present'.
+# @param ensure
+#   Intended state of the resource
 #   Will remove certificates for specified domains if set to 'absent'. Will
 #   also remove cronjobs and renewal scripts if `manage_cron` is set to 'true'.
-# [*domains*]
-#   Namevar. An array of domains to include in the CSR.
-# [*custom_plugin*]
-#   Whether to use a custom plugin in additional_args and disable -a flag.
-# [*plugin*]
-#   The authenticator plugin to use when requesting the certificate.
-# [*webroot_paths*]
+# @param domains
+#   An array of domains to include in the CSR.
+# @param custom_plugin Whether to use a custom plugin in additional_args and disable -a flag.
+# @param plugin The authenticator plugin to use when requesting the certificate.
+# @param webroot_paths
 #   An array of webroot paths for the domains in `domains`.
 #   Required if using `plugin => 'webroot'`. If `domains` and
 #   `webroot_paths` are not the same length, the last `webroot_paths`
 #   element will be used for all subsequent domains.
-# [*letsencrypt_command*]
-#   Command to run letsencrypt
-# [*additional_args*]
-#   An array of additional command line arguments to pass to the
-#   `letsencrypt-auto` command.
-# [*environment*]
-#   An optional array of environment variables (in addition to VENV_PATH).
-# [*manage_cron*]
-#   Boolean indicating whether or not to schedule cron job for renewal. Default: 'false'.
+# @param letsencrypt_command Command to run letsencrypt
+# @param additional_args An array of additional command line arguments to pass to the `letsencrypt-auto` command.
+# @param environment  An optional array of environment variables (in addition to VENV_PATH).
+# @param key_size Size for the RSA public key
+# @param manage_cron
+#   Indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
-# [*cron_before_command*]
-#   String representation of a command that should be run before renewal command
-# [*cron_success_command*]
-#   String representation of a command that should be run if the renewal command
-#   succeeds.
-# [*cron_hour*]
-#   Optional string, integer or array, hour(s) that the renewal command should execute.
+# @param suppress_cron_output Redirect cron output to devnull
+# @param cron_before_command Representation of a command that should be run before renewal command
+# @param cron_success_command Representation of a command that should be run if the renewal command succeeds.
+# @param cron_hour
+#   Optional hour(s) that the renewal command should execute.
 #   e.g. '[0,12]' execute at midnight and midday.  Default - seeded random hour.
-# [*cron_minute*]
-#   Optional string, integer or array, minute(s) that the renewal command should execute.
+# @param cron_minute
+#   Optional minute(s) that the renewal command should execute.
 #   e.g. 0 or '00' or [0,30].  Default - seeded random minute.
-# [*pre_hook_commands*]
-#   Array of commands to run in a shell before attempting to obtain/renew the certificate.
-# [*post_hook_commands*]
-#   Array of command(s) to run in a shell after attempting to obtain/renew the certificate.
-# [*deploy_hook_commands*]
+# @param cron_monthday
+#   Optional string, integer or array of monthday(s) the renewal command should
+#   run. E.g. '2-30/2' to run on even days. Default: Every day.
+# @param config_dir The path to the configuration directory.
+# @param pre_hook_commands Array of commands to run in a shell before attempting to obtain/renew the certificate.
+# @param post_hook_commands Array of command(s) to run in a shell after attempting to obtain/renew the certificate.
+# @param deploy_hook_commands
 #   Array of command(s) to run in a shell once if the certificate is successfully issued.
 #   Two environmental variables are supplied by certbot:
 #   - $RENEWED_LINEAGE: Points to the live directory with the cert files and key.

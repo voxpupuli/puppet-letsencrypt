@@ -1,28 +1,17 @@
-# == Class: letsencrypt::plugin::dns_rfc2136
+# @summary Installs and configures the dns-rfc2136 plugin
 #
-#   This class installs and configures the Let's Encrypt dns-rfc2136 plugin.
-#   https://certbot-dns-rfc2136.readthedocs.io
+# This class installs and configures the Let's Encrypt dns-rfc2136 plugin.
+# https://certbot-dns-rfc2136.readthedocs.io
 #
-# === Parameters:
-#
-# [*server*]
-#   Target DNS server.
-# [*key_name*]
-#   TSIG key name.
-# [*key_secret*]
-#   TSIG key secret.
-# [*key_algorithm*]
-#   TSIG key algorithm.
-# [*port*]
-#   Target DNS port.
-# [*propagation_seconds*]
-#   Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
-# [*manage_package*]
-#   Manage the plugin package.
-# [*package_name*]
-#   The name of the package to install when $manage_package is true.
-# [*config_dir*]
-#   The path to the configuration directory.
+# @param server Target DNS server.
+# @param key_name TSIG key name.
+# @param key_secret TSIG key secret.
+# @param key_algorithm TSIG key algorithm.
+# @param port Target DNS port.
+# @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+# @param manage_package Manage the plugin package.
+# @param package_name The name of the package to install when $manage_package is true.
+# @param config_dir The path to the configuration directory.
 #
 class letsencrypt::plugin::dns_rfc2136 (
   Stdlib::Host $server,

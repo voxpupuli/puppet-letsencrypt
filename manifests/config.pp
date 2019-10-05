@@ -1,6 +1,6 @@
-# == Class: letsencrypt
+# @summary Configures the Let's Encrypt client.
 #
-#   This class configures the Let's Encrypt client. This is a private class.
+# @api private
 #
 class letsencrypt::config (
   $config_dir          = $letsencrypt::config_dir,

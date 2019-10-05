@@ -1,32 +1,14 @@
-# == Class: letsencrypt::install
+# @summary Installs the Let's Encrypt client.
 #
-#   This class installs the Let's Encrypt client.  This is a private class.
-#
-# === Parameters:
-#
-# [*manage_install*]
-#   A feature flag to toggle the management of the letsencrypt client
-#   installation.
-# [*manage_dependencies*]
-#   A feature flag to toggle the management of the letsencrypt dependencies.
-# [*configure_epel*]
-#   A feature flag to include the 'epel' class and depend on it for package
-#   installation.
-# [*install_method*]
-#   Method to install the letsencrypt client, either package or vcs.
-# [*path*]
-#   The path to the letsencrypt installation.
-# [*repo*]
-#   A Git URL to install the Let's encrypt client from.
-# [*version*]
-#   The Git ref (tag, sha, branch) to check out when installing the client with
-#   the `vcs` method.
-# [*package_ensure*]
-#   The value passed to `ensure` when installing the client with the `package`
-#   method.
-# [*package_name*]
-#   Name of package to use when installing the client with the `package`
-#   method.
+# @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
+# @param manage_dependencies  A feature flag to toggle the management of the letsencrypt dependencies.
+# @param configure_epel  A feature flag to include the 'epel' class and depend on it for package installation.
+# @param install_method Method to install the letsencrypt client
+# @param path The path to the letsencrypt installation.
+# @param repo A Git URL to install the Let's encrypt client from.
+# @param version The Git ref (tag, sha, branch) to check out when installing the client with the `vcs` method.
+# @param package_ensure The value passed to `ensure` when installing the client with the `package` method.
+# @param package_name Name of package to use when installing the client with the `package` method.
 #
 class letsencrypt::install (
   Boolean $manage_install                = $letsencrypt::manage_install,
