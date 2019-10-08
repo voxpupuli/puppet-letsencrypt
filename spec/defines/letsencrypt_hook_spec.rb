@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'letsencrypt::hook' do
-  on_supported_os.each do |os, _facts|
+  on_supported_os.each do |os, facts|
     let(:title) { 'foo.example.com' }
 
     let(:pre_condition) { ["class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }"] }
@@ -9,6 +9,10 @@ describe 'letsencrypt::hook' do
     let(:default_params) { {} }
     let(:required_params) { {} }
     let(:additional_params) { {} }
+
+    let :facts do
+      facts
+    end
 
     context 'without required parameters' do
       it { is_expected.not_to compile }
