@@ -57,6 +57,7 @@
 #   run. E.g. '2-30/2' to run on even days.
 #
 class letsencrypt (
+  Boolean $configure_epel,
   Optional[String] $email                = undef,
   String $path                           = '/opt/letsencrypt',
   $venv_path                             = '/opt/letsencrypt/.venv',
@@ -74,7 +75,6 @@ class letsencrypt (
   Boolean $manage_config                 = true,
   Boolean $manage_install                = true,
   Boolean $manage_dependencies           = true,
-  Boolean $configure_epel                = undef,
   Enum['package', 'vcs'] $install_method = 'package',
   Boolean $agree_tos                     = true,
   Boolean $unsafe_registration           = false,
