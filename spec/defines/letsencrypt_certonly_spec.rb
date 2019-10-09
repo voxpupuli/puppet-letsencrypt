@@ -23,12 +23,12 @@ describe 'letsencrypt::certonly' do
         if facts[:osfamily] == 'FreeBSD'
           it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
-          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
+          it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         else
           it { is_expected.to contain_file('/etc/letsencrypt') }
           it { is_expected.to contain_package('letsencrypt') } unless facts[:os]['release']['full'] == '14.04'
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
+          it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
         it { is_expected.to contain_exec('initialize letsencrypt') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com') }
@@ -425,7 +425,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command %r{^certbot} }
         it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
-        it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory') }
+        it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         it { is_expected.to contain_file('/usr/local/etc/letsencrypt').with_ensure('directory') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless '/usr/local/sbin/letsencrypt-domain-validation /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem \'foo.example.com\'' }
       end

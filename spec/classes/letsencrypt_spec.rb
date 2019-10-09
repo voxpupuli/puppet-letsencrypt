@@ -48,7 +48,7 @@ describe 'letsencrypt' do
 
             if facts[:osfamily] == 'FreeBSD'
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com')
-              is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+              is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory')
               is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').
                 with(ensure: 'directory',
                      path: '/usr/local/etc/letsencrypt/renewal-hooks-puppet',
@@ -59,7 +59,7 @@ describe 'letsencrypt' do
                      purge: true)
             else
               is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com')
-              is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v01.api.letsencrypt.org/directory')
+              is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory')
               is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').with_path('/etc/letsencrypt/renewal-hooks-puppet')
             end
 
@@ -132,7 +132,7 @@ describe 'letsencrypt' do
         describe 'with custom config file' do
           let(:additional_params) { { config_file: '/etc/letsencrypt/custom_config.ini' } }
 
-          it { is_expected.to contain_ini_setting('/etc/letsencrypt/custom_config.ini server https://acme-v01.api.letsencrypt.org/directory') }
+          it { is_expected.to contain_ini_setting('/etc/letsencrypt/custom_config.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
 
         describe 'with custom config' do

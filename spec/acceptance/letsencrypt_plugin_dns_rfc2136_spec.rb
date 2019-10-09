@@ -16,7 +16,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
       class { 'letsencrypt' :
         email  => 'letsregister@example.com',
         config => {
-          'server' => 'https://acme-staging.api.letsencrypt.org/directory',
+          'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
         },
       }
       class { 'letsencrypt::plugin::dns_rfc2136':
