@@ -13,7 +13,7 @@ class letsencrypt::params {
   $cron_scripts_path   = "${facts['puppet_vardir']}/letsencrypt" # path for renewal scripts called by cron
   $version             = 'v0.30.2'
   $config              = {
-    'server' => 'https://acme-v01.api.letsencrypt.org/directory',
+    'server' => 'https://acme-v02.api.letsencrypt.org/directory',
   }
 
   if $facts['osfamily'] == 'Debian' {

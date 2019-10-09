@@ -6,7 +6,7 @@ describe 'letsencrypt' do
       class { 'letsencrypt' :
         email  => 'letsregister@example.com',
         config => {
-          'server' => 'https://acme-staging.api.letsencrypt.org/directory',
+          'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
         },
       }
     )
@@ -23,7 +23,7 @@ describe 'letsencrypt' do
       it { is_expected.to be_owned_by 'root' }
       it { is_expected.to be_grouped_into 'root' }
       it { is_expected.to be_mode 644 }
-      its(:content) { is_expected.to match %r{server = https://acme-staging.api.letsencrypt.org/directory} }
+      its(:content) { is_expected.to match %r{server = https://acme-staging-v02.api.letsencrypt.org/directory} }
       its(:content) { is_expected.to match %r{email = letsregister@example.com} }
     end
   end
@@ -34,7 +34,7 @@ describe 'letsencrypt' do
         install_method => 'vcs',
         email          => 'letsregister@example.com',
         config         => {
-          'server' => 'https://acme-staging.api.letsencrypt.org/directory',
+          'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
         },
       }
     )
@@ -51,7 +51,7 @@ describe 'letsencrypt' do
       it { is_expected.to be_owned_by 'root' }
       it { is_expected.to be_grouped_into 'root' }
       it { is_expected.to be_mode 644 }
-      its(:content) { is_expected.to match %r{server = https://acme-staging.api.letsencrypt.org/directory} }
+      its(:content) { is_expected.to match %r{server = https://acme-staging-v02.api.letsencrypt.org/directory} }
       its(:content) { is_expected.to match %r{email = letsregister@example.com} }
     end
 
