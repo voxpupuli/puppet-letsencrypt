@@ -13,11 +13,14 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         PUPPET
       end
       let(:package_name) do
-        case facts[:osfamily]
-        when 'Debian'
+        osname = facts[:os]['name']
+        osrelease = facts[:os]['release']['major']
+        osfull = "#{osname}-#{osrelease}"
+        case osfull
+        when 'Debian-10', 'Ubuntu-18.04', 'Fedora-29', 'Fedora-30'
           'python3-certbot-dns-rfc2136'
-        when 'RedHat'
-          facts[:operatingsystem] == 'Fedora' ? 'python3-certbot-dns-rfc2136' : 'python2-certbot-dns-rfc2136'
+        when 'RedHat-7', 'CentOS-7'
+          'python2-certbot-dns-rfc2136'
         end
       end
 

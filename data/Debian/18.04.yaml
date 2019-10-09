@@ -1,4 +1,0 @@
----
-letsencrypt::package_name: 'certbot'
-letsencrypt::package_command: 'certbot'
-letsencrypt::configure_epel: false

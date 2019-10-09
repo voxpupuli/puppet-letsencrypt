@@ -1,3 +1,2 @@
 ---
 letsencrypt::cron_owner_group: 'wheel'
-letsencrypt::configure_epel: false
