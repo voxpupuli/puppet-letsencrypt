@@ -63,7 +63,7 @@ class letsencrypt (
   $venv_path                             = '/opt/letsencrypt/.venv',
   Array $environment                     = [],
   String $repo                           = 'https://github.com/certbot/certbot.git',
-  String $version                        = 'v0.30.2',
+  String $version                        = 'v0.39.0',
   String $package_name                   = 'certbot',
   $package_ensure                        = 'installed',
   String $package_command                = 'certbot',
