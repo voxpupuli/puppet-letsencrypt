@@ -32,7 +32,7 @@ describe 'letsencrypt' do
                    manage_install: true,
                    manage_dependencies: true,
                    repo: 'https://github.com/certbot/certbot.git',
-                   version: 'v0.30.2').
+                   version: 'v0.39.0').
               that_notifies('Exec[initialize letsencrypt]').
               that_comes_before('Class[letsencrypt::renew]')
             is_expected.to contain_exec('initialize letsencrypt')

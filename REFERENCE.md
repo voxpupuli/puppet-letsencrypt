@@ -102,7 +102,7 @@ Data type: `String`
 
 The Git ref (tag, sha, branch) to check out when installing the client with the `vcs` method.
 
-Default value: 'v0.30.2'
+Default value: 'v0.39.0'
 
 ##### `package_name`
 
