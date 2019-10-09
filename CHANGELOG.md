@@ -4,7 +4,41 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v4.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v4.0.0) (2019-03-27)
+## [v5.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v5.0.0) (2019-10-09)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v4.0.0...v5.0.0)
+
+**Breaking changes:**
+
+- remove params.pp and change some defaults values [\#205](https://github.com/voxpupuli/puppet-letsencrypt/pull/205) ([Dan33l](https://github.com/Dan33l))
+- Drop Ubuntu 14.04 & add Debian 9/10 / Fedora 29/30 support [\#193](https://github.com/voxpupuli/puppet-letsencrypt/pull/193) ([ekohl](https://github.com/ekohl))
+
+**Implemented enhancements:**
+
+- replace server urls with v2 urls [\#196](https://github.com/voxpupuli/puppet-letsencrypt/issues/196)
+- Option to clean up cronjobs for removed domains [\#175](https://github.com/voxpupuli/puppet-letsencrypt/issues/175)
+- update version shiped with vcs method to 0.39.0 [\#207](https://github.com/voxpupuli/puppet-letsencrypt/pull/207) ([Dan33l](https://github.com/Dan33l))
+- use ACME API v2 [\#206](https://github.com/voxpupuli/puppet-letsencrypt/pull/206) ([Dan33l](https://github.com/Dan33l))
+- feat\(facts\): add facts about certificates [\#187](https://github.com/voxpupuli/puppet-letsencrypt/pull/187) ([minorOffense](https://github.com/minorOffense))
+
+**Fixed bugs:**
+
+- fix modulesync config file [\#201](https://github.com/voxpupuli/puppet-letsencrypt/pull/201) ([bastelfreak](https://github.com/bastelfreak))
+
+**Closed issues:**
+
+- python2-certbot-dns-rfc2136 doesn't exist in debian buster [\#191](https://github.com/voxpupuli/puppet-letsencrypt/issues/191)
+- letsencrypt failed to generate certificate [\#184](https://github.com/voxpupuli/puppet-letsencrypt/issues/184)
+- `$letsencrypt::venv\_path` is undocumented [\#21](https://github.com/voxpupuli/puppet-letsencrypt/issues/21)
+
+**Merged pull requests:**
+
+- use puppet strings [\#204](https://github.com/voxpupuli/puppet-letsencrypt/pull/204) ([Dan33l](https://github.com/Dan33l))
+- Raise upper bound version of stdlib & vcsrepo [\#202](https://github.com/voxpupuli/puppet-letsencrypt/pull/202) ([mfaure](https://github.com/mfaure))
+- Fix type in readme: deploy\_hooks\_commands -\> deploy\_hook\_commands [\#188](https://github.com/voxpupuli/puppet-letsencrypt/pull/188) ([2ZZ](https://github.com/2ZZ))
+- Allow puppetlabs/inifile 3.x [\#186](https://github.com/voxpupuli/puppet-letsencrypt/pull/186) ([dhoppe](https://github.com/dhoppe))
+
+## [v4.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v4.0.0) (2019-03-29)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v3.0.0...v4.0.0)
 
