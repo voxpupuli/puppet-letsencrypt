@@ -18,7 +18,6 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('Letsencrypt::Install') }
         it { is_expected.to contain_class('Letsencrypt::Config') }
-        it { is_expected.to contain_class('Letsencrypt::Params') }
 
         if facts[:osfamily] == 'FreeBSD'
           it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }

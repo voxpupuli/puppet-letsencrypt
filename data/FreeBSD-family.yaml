@@ -1,0 +1,4 @@
+---
+letsencrypt::package_name: 'py27-certbot'
+letsencrypt::config_dir: '/usr/local/etc/letsencrypt'
+letsencrypt::cron_owner_group: 'wheel'
