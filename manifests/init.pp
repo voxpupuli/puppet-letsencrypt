@@ -6,7 +6,7 @@
 #  class { 'letsencrypt' :
 #    email  => 'letsregister@example.com',
 #    config => {
-#      'server' => 'https://acme-staging.api.letsencrypt.org/directory',
+#      'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
 #    },
 #  }
 #
@@ -69,7 +69,7 @@ class letsencrypt (
   String $package_command                = 'certbot',
   Stdlib::Unixpath $config_dir           = '/etc/letsencrypt',
   String $config_file                    = "${config_dir}/cli.ini",
-  Hash $config                           = {'server' => 'https://acme-v01.api.letsencrypt.org/directory'},
+  Hash $config                           = {'server' => 'https://acme-v02.api.letsencrypt.org/directory'},
   String $cron_scripts_path              = "${facts['puppet_vardir']}/letsencrypt",
   String $cron_owner_group               = 'root',
   Boolean $manage_config                 = true,

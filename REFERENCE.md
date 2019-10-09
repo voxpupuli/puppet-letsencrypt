@@ -46,7 +46,7 @@ Install and configure Certbot, the LetsEncrypt client
 class { 'letsencrypt' :
   email  => 'letsregister@example.com',
   config => {
-    'server' => 'https://acme-staging.api.letsencrypt.org/directory',
+    'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
   },
 }
 ```
@@ -142,7 +142,7 @@ Data type: `Hash`
 
 A hash representation of the letsencrypt configuration file.
 
-Default value: {'server' => 'https://acme-v01.api.letsencrypt.org/directory'}
+Default value: {'server' => 'https://acme-v02.api.letsencrypt.org/directory'}
 
 ##### `cron_scripts_path`
 
@@ -189,8 +189,6 @@ Default value: `true`
 Data type: `Boolean`
 
 A feature flag to include the 'epel' class and depend on it for package installation.
-
-Default value: `undef`
 
 ##### `install_method`
 
@@ -446,11 +444,9 @@ Default value: `true`
 
 ##### `package_name`
 
-Data type: `String`
+Data type: `String[1]`
 
 The name of the package to install when $manage_package is true.
-
-Default value: `undef`
 
 ##### `config_dir`
 
