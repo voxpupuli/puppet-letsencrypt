@@ -171,7 +171,7 @@ define letsencrypt::certonly (
   }
 
   if $manage_cron {
-    $maincommand = join($_command + ['--keep-until-expiring'], ' ')
+    $maincommand = join(["${letsencrypt_command} --keep-until-expiring"] + $_command[1,-1], ' ')
     $cron_script_ensure = $ensure ? { 'present' => 'file', default => 'absent' }
     $cron_ensure = $ensure
 
