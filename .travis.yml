@@ -84,6 +84,7 @@ branches:
   - /^v\d/
 notifications:
   email: false
+  webhooks: https://voxpupu.li/incoming/travis
   irc:
     on_success: always
     on_failure: always
