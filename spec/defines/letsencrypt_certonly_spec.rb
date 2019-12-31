@@ -25,7 +25,7 @@ describe 'letsencrypt::certonly' do
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         else
           it { is_expected.to contain_file('/etc/letsencrypt') }
-          it { is_expected.to contain_package('letsencrypt') } unless facts[:os]['release']['full'] == '14.04'
+          it { is_expected.to contain_package('letsencrypt') }
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
