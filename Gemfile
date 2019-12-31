@@ -32,6 +32,9 @@ group :test do
   gem 'coveralls',                                                  :require => false
   gem 'simplecov-console',                                          :require => false
   gem 'parallel_tests',                                             :require => false
+  # we require unreleased Fedora 30 fact sets
+  # https://github.com/camptocamp/facterdb/commit/1bc038fd42aac53344ac1ee9c129cbccf5b5c0aa
+  gem 'facterdb',                                                   :require => false, :git => 'https://github.com/camptocamp/facterdb.git', :branch => 'master'
 end
 
 group :development do
