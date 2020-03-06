@@ -949,7 +949,7 @@ Data type: `String[1]`
 
 the common name used for the certificate
 
-Default value: `$title`
+Default value: `$domains[0]`
 
 ### <a name="letsencrypt--hook"></a>`letsencrypt::hook`
 
