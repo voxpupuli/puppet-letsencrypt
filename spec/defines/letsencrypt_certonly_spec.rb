@@ -51,6 +51,14 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo' -d 'foo.example.com' -d 'bar.example.com' -d '*.example.com'" }
       end
 
+      context 'with custom cert-name' do
+        let(:title) { 'foo' }
+        let(:params) { { cert_name: 'bar.example.com' } }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'bar.example.com' -d 'foo'" }
+      end
+
       context 'with custom command' do
         let(:title) { 'foo.example.com' }
         let(:params) { { letsencrypt_command: '/usr/lib/letsencrypt/letsencrypt-auto' } }
