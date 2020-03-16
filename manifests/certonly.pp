@@ -66,6 +66,7 @@ define letsencrypt::certonly (
   Array[String[1]]                          $environment          = [],
   Boolean                                   $manage_cron          = false,
   Boolean                                   $suppress_cron_output = false,
+  Optional[String]                          $cron_output_mailto   = undef,
   Optional[String[1]]                       $cron_before_command  = undef,
   Optional[String[1]]                       $cron_success_command = undef,
   Array[Variant[Integer[0, 59], String[1]]] $cron_monthday        = ['*'],
@@ -201,6 +202,8 @@ define letsencrypt::certonly (
 
     if $suppress_cron_output {
       $croncommand = "${maincommand} > /dev/null 2>&1"
+    } elsif $cron_output_mailto {
+      $croncommand = "${maincommand} 2>&1 |mail -s 'Letsencrypt cron job' '${cron_output_mailto}'"
     } else {
       $croncommand = $maincommand
     }
