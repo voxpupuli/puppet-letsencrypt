@@ -61,6 +61,7 @@ class letsencrypt (
   String $package_name                   = $letsencrypt::params::package_name,
   $package_ensure                        = $letsencrypt::params::package_ensure,
   String $package_command                = $letsencrypt::params::package_command,
+  Boolean $nginx_manage_package          = $letsencrypt::params::nginx_manage_package,
   String $config_file                    = $letsencrypt::params::config_file,
   Hash $config                           = $letsencrypt::params::config,
   String $cron_scripts_path              = $letsencrypt::params::cron_scripts_path,
