@@ -23,7 +23,7 @@ _Private Classes_
 
 **Functions**
 
-* [`letsencrypt::letsencrypt_lookup`](#letsencryptletsencrypt_lookup): 
+* [`letsencrypt::letsencrypt_lookup`](#letsencryptletsencrypt_lookup):
 
 **Data types**
 
@@ -39,8 +39,6 @@ _Private Classes_
 Install and configure Certbot, the LetsEncrypt client
 
 #### Examples
-
-##### 
 
 ```puppet
 class { 'letsencrypt' :

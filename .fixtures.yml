@@ -1,6 +1,6 @@
 fixtures:
   repositories:
-    epel: 'https://github.com/stahnma/puppet-module-epel.git'
+    epel: 'https://github.com/voxpupuli/puppet-epel.git'
     inifile: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
     stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
     vcsrepo: 'https://github.com/puppetlabs/puppetlabs-vcsrepo.git'
