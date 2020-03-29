@@ -24,6 +24,7 @@ class letsencrypt::plugin::dns_rfc2136 (
   Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
   Boolean $manage_package          = true,
 ) {
+  require letsencrypt
 
   if $manage_package {
     package { $package_name:
@@ -47,7 +48,6 @@ class letsencrypt::plugin::dns_rfc2136 (
     content => epp('letsencrypt/ini.epp', {
       vars => { '' => $ini_vars },
     }),
-    require => Class['letsencrypt'],
   }
 
 }
