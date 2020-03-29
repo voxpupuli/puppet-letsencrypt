@@ -20,7 +20,7 @@ versions are defined in the [metadata.json](metadata.json)
 On EL (Red Hat, CentOS etc.) systems, the EPEL repository needs to be enabled
 for the Let's Encrypt client package.
 
-The module can integrate with [stahnma/epel](https://forge.puppetlabs.com/stahnma/epel)
+The module can integrate with [puppet/epel](https://forge.puppetlabs.com/puppet/epel)
 to set up the repo by setting the `configure_epel` parameter to `true` (the default for RedHat) and
 installing the module.
 
