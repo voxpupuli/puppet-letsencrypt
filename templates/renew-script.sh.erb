@@ -2,4 +2,5 @@
 <%- @execution_environment.each do |environment| -%>
 export <%= environment %>
 <%- end -%>
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 <%= @cron_cmd %>
