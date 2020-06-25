@@ -201,7 +201,7 @@ class { 'letsencrypt':
     email  => 'foo@example.com',
     server => 'https://acme-v01.api.letsencrypt.org/directory',
   },
-  renew_cron_ensure: 'present',
+  renew_cron_ensure => 'present',
 }
 ```
 
