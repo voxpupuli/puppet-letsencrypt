@@ -68,7 +68,6 @@ define letsencrypt::certonly (
   Variant[String[1], Array[String[1]]]      $post_hook_commands   = [],
   Variant[String[1], Array[String[1]]]      $deploy_hook_commands = [],
 ) {
-
   if $plugin == 'webroot' and empty($webroot_paths) {
     fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
   }
@@ -87,7 +86,6 @@ define letsencrypt::certonly (
   }
 
   case $plugin {
-
     'webroot': {
       $_plugin_args = zip($domains, $webroot_paths).map |$domain| {
         if $domain[1] {
@@ -111,12 +109,12 @@ define letsencrypt::certonly (
     }
 
     'dns-route53': {
-        require letsencrypt::plugin::dns_route53
-        $_domains = join($domains, '\' -d \'')
-        $plugin_args  = [
-            "--cert-name '${cert_name}' -d '${_domains}'",
-            "--dns-route53-propagation-seconds ${letsencrypt::plugin::dns_route53::propagation_seconds}",
-        ]
+      require letsencrypt::plugin::dns_route53
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args  = [
+        "--cert-name '${cert_name}' -d '${_domains}'",
+        "--dns-route53-propagation-seconds ${letsencrypt::plugin::dns_route53::propagation_seconds}",
+      ]
     }
 
     default: {
@@ -151,15 +149,15 @@ define letsencrypt::certonly (
   $live_path = "${config_dir}/live/${live_path_certname}/cert.pem"
 
   $_command = flatten([
-    $letsencrypt_command,
-    $default_args,
-    $plugin_args,
-    $hook_args,
-    $additional_args,
+      $letsencrypt_command,
+      $default_args,
+      $plugin_args,
+      $hook_args,
+      $additional_args,
   ]).filter | $arg | { $arg =~ NotUndef and $arg != [] }
   $command = join($_command, ' ')
 
-  $execution_environment = [ "VENV_PATH=${letsencrypt::venv_path}", ] + $environment
+  $execution_environment = ["VENV_PATH=${letsencrypt::venv_path}",] + $environment
   $verify_domains = join(unique($domains), '\' \'')
 
   if $ensure == 'present' {

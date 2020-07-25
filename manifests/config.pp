@@ -10,7 +10,6 @@ class letsencrypt::config (
   $unsafe_registration = $letsencrypt::unsafe_registration,
   $agree_tos           = $letsencrypt::agree_tos,
 ) {
-
   assert_private()
 
   unless $agree_tos {
@@ -25,7 +24,7 @@ class letsencrypt::config (
   }
 
   if $email {
-    $_config = merge($config, {'email' => $email})
+    $_config = merge($config, { 'email' => $email })
   } else {
     $_config = $config
   }
