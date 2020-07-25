@@ -21,7 +21,6 @@ class letsencrypt::install (
   String $repo                           = $letsencrypt::repo,
   String $version                        = $letsencrypt::version,
 ) {
-
   if $install_method == 'vcs' {
     if $manage_dependencies {
       $dependencies = ['python', 'git']
