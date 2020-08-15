@@ -12,7 +12,6 @@ define letsencrypt::hook (
   # hook.sh.epp will validate this
   Variant[String[1],Array[String[1]]] $commands,
 ) {
-
   $validate_env = $type ? {
     'deploy' => true,
     default  => false,
@@ -24,11 +23,10 @@ define letsencrypt::hook (
     group   => 'root',
     mode    => '0755',
     content => epp('letsencrypt/hook.sh.epp', {
-      commands     => $commands,
-      validate_env => $validate_env,
+        commands     => $commands,
+        validate_env => $validate_env,
     }),
     # Defined in letsencrypt::config
     require => File['letsencrypt-renewal-hooks-puppet'],
   }
-
 }

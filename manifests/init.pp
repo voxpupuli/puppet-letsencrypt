@@ -69,7 +69,7 @@ class letsencrypt (
   String $package_command                = 'certbot',
   Stdlib::Unixpath $config_dir           = '/etc/letsencrypt',
   String $config_file                    = "${config_dir}/cli.ini",
-  Hash $config                           = {'server' => 'https://acme-v02.api.letsencrypt.org/directory'},
+  Hash $config                           = { 'server' => 'https://acme-v02.api.letsencrypt.org/directory' },
   String $cron_scripts_path              = "${facts['puppet_vardir']}/letsencrypt",
   String $cron_owner_group               = 'root',
   Boolean $manage_config                 = true,
@@ -89,7 +89,6 @@ class letsencrypt (
   $renew_cron_minute                     = fqdn_rand(60, fqdn_rand_string(10)),
   $renew_cron_monthday                   = '*',
 ) {
-
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
     Class['letsencrypt::install'] ~> Exec['initialize letsencrypt']
@@ -117,7 +116,7 @@ class letsencrypt (
   exec { 'initialize letsencrypt':
     command     => "${command_init} -h",
     path        => $facts['path'],
-    environment => concat([ "VENV_PATH=${venv_path}" ], $environment),
+    environment => concat(["VENV_PATH=${venv_path}"], $environment),
     refreshonly => true,
   }
 

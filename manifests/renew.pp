@@ -1,4 +1,3 @@
-
 # @summary Configures renewal of Let's Encrypt certificates using Certbot
 #
 # Configures renewal of Let's Encrypt certificates using the certbot renew command.
@@ -38,7 +37,6 @@ class letsencrypt::renew (
   Letsencrypt::Cron::Minute            $cron_minute          = $letsencrypt::renew_cron_minute,
   Letsencrypt::Cron::Monthday          $cron_monthday        = $letsencrypt::renew_cron_monthday,
 ) {
-
   # Directory used for Puppet-managed renewal hooks. Make sure old unmanaged
   # hooks in this directory are purged. Leave custom hooks in the default
   # renewal-hooks directory alone.
@@ -71,10 +69,10 @@ class letsencrypt::renew (
   }
 
   $_command = flatten([
-    $letsencrypt::command,
-    $default_args,
-    $hook_args,
-    $additional_args,
+      $letsencrypt::command,
+      $default_args,
+      $hook_args,
+      $additional_args,
   ]).filter | $arg | { $arg =~ NotUndef and $arg != [] }
   $command = join($_command, ' ')
 
@@ -86,5 +84,4 @@ class letsencrypt::renew (
     minute   => $cron_minute,
     monthday => $cron_monthday,
   }
-
 }
