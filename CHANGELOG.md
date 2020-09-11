@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v6.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v6.0.0) (2020-09-11)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v5.0.0...v6.0.0)
+
+**Breaking changes:**
+
+- modulesync 2.10.0 / Drop FreeBSD 10 / Add FreeBSD 12 [\#213](https://github.com/voxpupuli/puppet-letsencrypt/pull/213) ([dhoppe](https://github.com/dhoppe))
+
+**Implemented enhancements:**
+
+- add manifest to install dns-route53 plugin, along with tests [\#225](https://github.com/voxpupuli/puppet-letsencrypt/pull/225) ([aripringle](https://github.com/aripringle))
+- Add `cert_name` parameter to `letsencrypt::certonly` [\#219](https://github.com/voxpupuli/puppet-letsencrypt/pull/219) ([saimonn](https://github.com/saimonn))
+
+**Closed issues:**
+
+- typo in example [\#227](https://github.com/voxpupuli/puppet-letsencrypt/issues/227)
+- update metadata.json [\#218](https://github.com/voxpupuli/puppet-letsencrypt/issues/218)
+
+**Merged pull requests:**
+
+- modulesync 3.0.0 & puppet-lint updates [\#229](https://github.com/voxpupuli/puppet-letsencrypt/pull/229) ([bastelfreak](https://github.com/bastelfreak))
+- fix typo in renew example [\#228](https://github.com/voxpupuli/puppet-letsencrypt/pull/228) ([milesstoetzner](https://github.com/milesstoetzner))
+- Use voxpupuli-acceptance [\#224](https://github.com/voxpupuli/puppet-letsencrypt/pull/224) ([ekohl](https://github.com/ekohl))
+- Ensure EPEL is configured before installing plugin [\#222](https://github.com/voxpupuli/puppet-letsencrypt/pull/222) ([alexjfisher](https://github.com/alexjfisher))
+- \#218 Switch to puppet-epel [\#221](https://github.com/voxpupuli/puppet-letsencrypt/pull/221) ([kallies](https://github.com/kallies))
+- Add Fedora 31, drop Fedora 29 [\#216](https://github.com/voxpupuli/puppet-letsencrypt/pull/216) ([ekohl](https://github.com/ekohl))
+- delete legacy travis directory [\#214](https://github.com/voxpupuli/puppet-letsencrypt/pull/214) ([bastelfreak](https://github.com/bastelfreak))
+- add --keep-until-expiring closer to letsencrypt command in cron [\#211](https://github.com/voxpupuli/puppet-letsencrypt/pull/211) ([pulecp](https://github.com/pulecp))
+- allow puppetlabs/inifile 4.x [\#210](https://github.com/voxpupuli/puppet-letsencrypt/pull/210) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v5.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v5.0.0) (2019-10-09)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v4.0.0...v5.0.0)
@@ -29,10 +59,11 @@ These should not affect the functionality of the module.
 
 - python2-certbot-dns-rfc2136 doesn't exist in debian buster [\#191](https://github.com/voxpupuli/puppet-letsencrypt/issues/191)
 - letsencrypt failed to generate certificate [\#184](https://github.com/voxpupuli/puppet-letsencrypt/issues/184)
-- `$letsencrypt::venv\_path` is undocumented [\#21](https://github.com/voxpupuli/puppet-letsencrypt/issues/21)
+- `$letsencrypt::venv_path` is undocumented [\#21](https://github.com/voxpupuli/puppet-letsencrypt/issues/21)
 
 **Merged pull requests:**
 
+- release 5.0.0 [\#208](https://github.com/voxpupuli/puppet-letsencrypt/pull/208) ([Dan33l](https://github.com/Dan33l))
 - use puppet strings [\#204](https://github.com/voxpupuli/puppet-letsencrypt/pull/204) ([Dan33l](https://github.com/Dan33l))
 - Raise upper bound version of stdlib & vcsrepo [\#202](https://github.com/voxpupuli/puppet-letsencrypt/pull/202) ([mfaure](https://github.com/mfaure))
 - Fix type in readme: deploy\_hooks\_commands -\> deploy\_hook\_commands [\#188](https://github.com/voxpupuli/puppet-letsencrypt/pull/188) ([2ZZ](https://github.com/2ZZ))
