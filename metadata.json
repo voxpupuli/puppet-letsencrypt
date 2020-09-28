@@ -7,7 +7,12 @@
   "source": "https://github.com/voxpupuli/puppet-letsencrypt",
   "project_page": "https://github.com/voxpupuli/puppet-letsencrypt",
   "issues_url": "https://github.com/voxpupuli/puppet-letsencrypt/issues",
-  "tags": ["letsencrypt", "let's encrypt", "certbot", "acme"],
+  "tags": [
+    "letsencrypt",
+    "let's encrypt",
+    "certbot",
+    "acme"
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
