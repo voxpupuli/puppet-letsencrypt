@@ -18,9 +18,15 @@ class letsencrypt::plugin::nginx (
     package { $package_name:
       ensure => installed,
       install_options => $operatingsystemmajrelease ? {
-        '8'     => '--enablerepo=PowerTools',
+        '8'     => '--enablerepo=powertools',
         default => undef,
       },
+    }
+
+    file { '/etc/letsencrypt/options-ssl-nginx.conf':
+      ensure  => link,
+      target  => '/usr/lib/python3.6/site-packages/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf',
+      require => Package[$package_name],
     }
   }
 
