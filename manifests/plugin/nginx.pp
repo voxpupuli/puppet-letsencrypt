@@ -18,7 +18,7 @@ class letsencrypt::plugin::nginx (
     package { $package_name:
       ensure => installed,
       install_options => $operatingsystemmajrelease ? {
-        '8'     => '--enablerepo=powertools',
+        '8'     => '--enablerepo=PowerTools',
         default => undef,
       },
     }
