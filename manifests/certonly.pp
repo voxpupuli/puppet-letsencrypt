@@ -168,6 +168,17 @@ define letsencrypt::certonly (
       $plugin_args = ["--cert-name '${cert_name}'"] + $_plugin_args
     }
 
+    'dns-cloudflare': {
+      require letsencrypt::plugin::dns_cloudflare
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args  = [
+        "--cert-name '${cert_name}' -d '${_domains}'",
+        '--dns-cloudflare',
+        "--dns-cloudflare-credentials ${letsencrypt::plugin::dns_cloudflare::config_path}",
+        "--dns-cloudflare-propagation-seconds ${letsencrypt::plugin::dns_cloudflare::propagation_seconds}",
+      ]
+    }
+
     'dns-rfc2136': {
       require letsencrypt::plugin::dns_rfc2136
       $_domains = join($domains, '\' -d \'')
