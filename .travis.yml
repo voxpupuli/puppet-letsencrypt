@@ -80,6 +80,14 @@ jobs:
       bundler_args: --without development release
       env: BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_setfile=ubuntu1804-64 CHECK=beaker
       services: docker
+    - rvm: 2.5.3
+      bundler_args: --without development release
+      env: BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_setfile=ubuntu2004-64 CHECK=beaker
+      services: docker
+    - rvm: 2.5.3
+      bundler_args: --without development release
+      env: BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_setfile=ubuntu2004-64 CHECK=beaker
+      services: docker
 branches:
   only:
     - master
