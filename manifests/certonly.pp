@@ -108,7 +108,7 @@ define letsencrypt::certonly (
       ]
     }
 
-    'dns-ovh': {
+    dns-ovh': {
       require letsencrypt::plugin::dns_ovh
       $_domains = join($domains, '\' -d \'')
       $plugin_args = [

@@ -27,13 +27,13 @@ describe 'letsencrypt::hook' do
         end
 
         it do
-          is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-pre.sh')
-            .with(ensure: 'file',
+          is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-pre.sh').
+            with(ensure: 'file',
                  owner: 'root',
                  group: 'root',
                  mode: '0755',
-                 content: %r{^.*validate_env=0.*FooBar.*$}m)
-            .that_requires('File[letsencrypt-renewal-hooks-puppet]')
+                 content: %r{^.*validate_env=0.*FooBar.*$}m).
+            that_requires('File[letsencrypt-renewal-hooks-puppet]')
         end
       end
 
@@ -45,8 +45,8 @@ describe 'letsencrypt::hook' do
         end
 
         it do
-          is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-post.sh')
-            .with_content(%r{^.*validate_env=0.*FooBar.*$}m)
+          is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-post.sh').
+            with_content(%r{^.*validate_env=0.*FooBar.*$}m)
         end
       end
 
@@ -58,8 +58,8 @@ describe 'letsencrypt::hook' do
         end
 
         it do
-          is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-deploy.sh')
-            .with_content(%r{^.*validate_env=1.*FooBar.*$}m)
+          is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-deploy.sh').
+            with_content(%r{^.*validate_env=1.*FooBar.*$}m)
         end
       end
     end

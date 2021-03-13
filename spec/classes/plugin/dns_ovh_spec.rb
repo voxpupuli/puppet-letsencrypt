@@ -31,7 +31,7 @@ describe 'letsencrypt::plugin::dns_ovh' do
             endpoint: 'ovh-eu',
             application_key: 'MDAwMDAwMDAwMDAw',
             application_secret: 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
-            consumer_key: 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw',
+            consumer_key: 'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw'
           )
         end
 
@@ -41,12 +41,12 @@ describe 'letsencrypt::plugin::dns_ovh' do
           else
             is_expected.to compile.with_all_deps
 
-            is_expected.to contain_file('/etc/letsencrypt/dns-ovh.ini')
-              .with_ensure('file')
-              .with_owner('root')
-              .with_group('root')
-              .with_mode('0400')
-              .with_content(%r{^.*dns_ovh_endpoint.*$})
+            is_expected.to contain_file('/etc/letsencrypt/dns-ovh.ini').
+              with_ensure('file').
+              with_owner('root').
+              with_group('root').
+              with_mode('0400').
+              with_content(%r{^.*dns_ovh_endpoint.*$})
           end
         end
 
