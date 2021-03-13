@@ -28,22 +28,22 @@ class letsencrypt::plugin::dns_ovh (
   String[1] $application_key,
   String[1] $application_secret,
   String[1] $consumer_key,
-  Integer $propagation_seconds      = $letsencrypt::dns_ovh_propagation_seconds,
-  Boolean $manage_package           = $letsencrypt::dns_ovh_manage_package,
-  String $package_name              = $letsencrypt::dns_ovh_package_name,
+  Integer $propagation_seconds      = $letsencrypt::plugin::dns_ovh_propagation_seconds,
+  Boolean $manage_package           = $letsencrypt::plugin::dns_ovh_manage_package,
+  String $package_name              = $letsencrypt::plugin::dns_ovh_package_name,
   Stdlib::Absolutepath $config_file = "${letsencrypt::config_dir}/dns-ovh.ini",
 ) {
   require letsencrypt
 
-  case $::operatingsystem {
+  case $::facts['os']['id'] {
     'Debian': {
-      if versioncmp($::operatingsystemrelease, '10') < 0 {
-        fail("The dns-ovh plugin is not compatible with ${::operatingsystem} ${::operatingsystemrelease}. See README.")
+      if versioncmp($::facts['os']['release']['major'], '10') < 0 {
+        fail("The dns-ovh plugin is not compatible with ${$::facts['os']['id']} ${$::facts['os']['release']['major']}. See README.")
       }
     }
     'Ubuntu': {
-      if versioncmp($::operatingsystemrelease, '19') < 0 {
-        fail("The dns-ovh plugin is not compatible with ${::operatingsystem} ${::operatingsystemrelease}. See README.")
+      if versioncmp($::facts['os']['release']['major'], '19') < 0 {
+        fail("The dns-ovh plugin is not compatible with ${$::facts['os']['id']} ${$::facts['os']['release']['major']}. See README.")
       }
     }
     default: {
