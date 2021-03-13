@@ -70,7 +70,7 @@ class letsencrypt::plugin::dns_ovh (
     group   => 'root',
     mode    => '0400',
     content => epp('letsencrypt/ini.epp', {
-      vars => { '' => $ini_vars },
+        vars => { '' => $ini_vars },
     }),
   }
 
