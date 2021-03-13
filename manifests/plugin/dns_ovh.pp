@@ -73,5 +73,4 @@ class letsencrypt::plugin::dns_ovh (
         vars => { '' => $ini_vars },
     }),
   }
-
 }
