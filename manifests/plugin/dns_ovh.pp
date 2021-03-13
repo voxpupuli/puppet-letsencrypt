@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # @summary Installs and configures the dns-ovh plugin
+=======
+# @summary This class installs and configures the Let's Encrypt dns-ovh plugin.
+>>>>>>> a49673696f6c43101af8f0419634eb53cd923f1f
 #
 # @example Basic usage
 #  class { 'letsencrypt::plugin::dns_ovh':
@@ -14,6 +18,7 @@
 #
 # @see https://certbot-dns-ovh.readthedocs.io
 #
+<<<<<<< HEAD
 # @param endpoint Target OVH DNS endpoint.
 # @param application_key OVH application key.
 # @param application_secret OVH application secret.
@@ -22,6 +27,26 @@
 # @param manage_package Manage the plugin.
 # @param package_name The name of the package to install when $manage_package is true.
 # @param config_dir The path to the configuration directory.
+=======
+# === Parameters:
+#
+# @param endpoint
+#   Target OVH DNS endpoint.
+# @param application_key
+#   OVH application key.
+# @param application_secret
+#   DNS OVH application secret.
+# @param consumer_key
+#   DNS OVH consumer key.
+# @param propagation_seconds
+#   DNS OVH propagation seconds (default: 30s)
+# @param manage_package
+#   Manage the plugin package.
+# @param package_name
+#   The name of the package to install when $manage_package is true.
+# @param config_file
+#   The name, with full abolute path, of the configuration file containing OVH credentials.
+>>>>>>> a49673696f6c43101af8f0419634eb53cd923f1f
 #
 class letsencrypt::plugin::dns_ovh (
   Enum['ovh-eu', 'ovh-ca'] $endpoint,
@@ -33,7 +58,10 @@ class letsencrypt::plugin::dns_ovh (
   String $package_name              = $letsencrypt::dns_ovh_package_name,
   Stdlib::Absolutepath $config_file = "${letsencrypt::config_dir}/dns-ovh.ini",
 ) {
+<<<<<<< HEAD
   require letsencrypt
+=======
+>>>>>>> a49673696f6c43101af8f0419634eb53cd923f1f
 
   case $::operatingsystem {
     'Debian': {
@@ -72,6 +100,10 @@ class letsencrypt::plugin::dns_ovh (
     content => epp('letsencrypt/ini.epp', {
       vars => { '' => $ini_vars },
     }),
+<<<<<<< HEAD
+=======
+    require => Class['letsencrypt'],
+>>>>>>> a49673696f6c43101af8f0419634eb53cd923f1f
   }
 
 }
