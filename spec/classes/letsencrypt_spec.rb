@@ -18,27 +18,27 @@ describe 'letsencrypt' do
           epel = facts[:osfamily] == 'RedHat' && facts[:operatingsystem] != 'Fedora'
 
           it 'contains File[/usr/local/sbin/letsencrypt-domain-validation]' do
-            is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
-              with_ensure('file').
-              with_owner('root').
-              with_group('root').
-              with_mode('0500').
-              with_source('puppet:///modules/letsencrypt/domain-validation.sh')
+            is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('root')
+              .with_mode('0500')
+              .with_source('puppet:///modules/letsencrypt/domain-validation.sh')
           end
 
           it 'contains the correct resources' do
-            is_expected.to contain_class('letsencrypt::install').
-              with(configure_epel: epel,
+            is_expected.to contain_class('letsencrypt::install')
+              .with(configure_epel: epel,
                    manage_install: true,
                    manage_dependencies: true,
                    repo: 'https://github.com/certbot/certbot.git',
-                   version: 'v0.39.0').
-              that_notifies('Exec[initialize letsencrypt]').
-              that_comes_before('Class[letsencrypt::renew]')
+                   version: 'v0.39.0')
+              .that_notifies('Exec[initialize letsencrypt]')
+              .that_comes_before('Class[letsencrypt::renew]')
             is_expected.to contain_exec('initialize letsencrypt')
             is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
-            is_expected.to contain_class('letsencrypt::renew').
-              with(pre_hook_commands: [],
+            is_expected.to contain_class('letsencrypt::renew')
+              .with(pre_hook_commands: [],
                    post_hook_commands: [],
                    deploy_hook_commands: [],
                    additional_args: [],
@@ -49,8 +49,8 @@ describe 'letsencrypt' do
             if facts[:osfamily] == 'FreeBSD'
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com')
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory')
-              is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').
-                with(ensure: 'directory',
+              is_expected.to contain_file('letsencrypt-renewal-hooks-puppet')
+                .with(ensure: 'directory',
                      path: '/usr/local/etc/letsencrypt/renewal-hooks-puppet',
                      owner: 'root',
                      group: 'root',
@@ -213,8 +213,8 @@ describe 'letsencrypt' do
             end
 
             it do
-              is_expected.to contain_cron('letsencrypt-renew').
-                with(ensure: 'present',
+              is_expected.to contain_cron('letsencrypt-renew')
+                .with(ensure: 'present',
                      command: 'certbot renew -q',
                      hour: 0,
                      minute: 0,
@@ -240,8 +240,8 @@ describe 'letsencrypt' do
             end
 
             it do
-              is_expected.to contain_cron('letsencrypt-renew').
-                with(ensure: 'present',
+              is_expected.to contain_cron('letsencrypt-renew')
+                .with(ensure: 'present',
                      command: 'certbot renew -q --pre-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-pre.sh" --post-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-post.sh" --deploy-hook "/etc/letsencrypt/renewal-hooks-puppet/renew-deploy.sh"')
             end
           end
@@ -255,8 +255,8 @@ describe 'letsencrypt' do
             end
 
             it do
-              is_expected.to contain_cron('letsencrypt-renew').
-                with(ensure: 'present',
+              is_expected.to contain_cron('letsencrypt-renew')
+                .with(ensure: 'present',
                      command: 'certbot renew -q AdditionalBar')
             end
           end
