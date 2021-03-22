@@ -105,17 +105,22 @@ class letsencrypt (
 
   if $manage_config {
     contain letsencrypt::config # lint:ignore:relative_classname_inclusion
-    Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
+
+    if $install_method == 'vcs' {
+      Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
+    }
   }
 
   contain letsencrypt::renew
 
-  exec { 'initialize letsencrypt':
-    command     => 'python3 tools/venv3.py',
-    cwd         => $path,
-    path        => $facts['path'],
-    environment => $environment,
-    refreshonly => true,
+  if $install_method == 'vcs' {
+    exec { 'initialize letsencrypt':
+      command     => 'python3 tools/venv3.py',
+      cwd         => $path,
+      path        => $facts['path'],
+      environment => $environment,
+      refreshonly => true,
+    }
   }
 
   # Used in letsencrypt::certonly Exec["letsencrypt certonly ${title}"]

@@ -34,8 +34,7 @@ describe 'letsencrypt' do
                    repo: 'https://github.com/certbot/certbot.git',
                    version: 'v1.7.0').
               that_comes_before('Class[letsencrypt::renew]')
-            is_expected.to contain_exec('initialize letsencrypt')
-            is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
+            is_expected.to contain_class('letsencrypt::config')
             is_expected.to contain_class('letsencrypt::renew').
               with(pre_hook_commands: [],
                    post_hook_commands: [],
@@ -94,6 +93,8 @@ describe 'letsencrypt' do
               is_expected.to contain_class('letsencrypt::install').with(install_method: 'vcs').
                 that_notifies('Exec[initialize letsencrypt]').
                 that_comes_before('Class[letsencrypt::renew]')
+              is_expected.to contain_exec('initialize letsencrypt')
+              is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             end
           end
@@ -107,7 +108,7 @@ describe 'letsencrypt' do
         end
 
         describe 'with custom environment variables' do
-          let(:additional_params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
+          let(:additional_params) { { install_method: 'vcs', environment: ['FOO=bar', 'FIZZ=buzz'] } }
 
           it { is_expected.to contain_exec('initialize letsencrypt').with_environment(['FOO=bar', 'FIZZ=buzz']) }
         end
