@@ -21,7 +21,7 @@ class letsencrypt::install (
   String $path                           = $letsencrypt::path,
   String $repo                           = $letsencrypt::repo,
   String $version                        = $letsencrypt::version,
-  Array[String] $vcs_dependencies        = $letsencrypt::vcs_dependencies,
+  Array[String[1]] $vcs_dependencies     = $letsencrypt::vcs_dependencies,
 ) {
   if $install_method == 'vcs' {
     if $manage_dependencies {

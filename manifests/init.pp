@@ -74,7 +74,7 @@ class letsencrypt (
   Boolean $manage_config                 = true,
   Boolean $manage_install                = true,
   Boolean $manage_dependencies           = true,
-  Array[String] $vcs_dependencies        = [],
+  Array[String[1]] $vcs_dependencies     = [],
   Enum['package', 'vcs'] $install_method = 'package',
   Boolean $agree_tos                     = true,
   Boolean $unsafe_registration           = false,
