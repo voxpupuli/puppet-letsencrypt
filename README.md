@@ -37,7 +37,7 @@ class { 'letsencrypt':
 }
 ```
 
-If using Ubuntu16.04 with `install_method` to default `package`, you can enforce upgrade of package from 0.4 to 0.7 with :
+You can enforce upgrade of package to the latest available version (in your repositories):
 
 ```puppet
 class { 'letsencrypt':
