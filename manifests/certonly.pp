@@ -16,8 +16,8 @@
 #   `webroot_paths` are not the same length, the last `webroot_paths`
 #   element will be used for all subsequent domains.
 # @param letsencrypt_command Command to run letsencrypt
-# @param additional_args An array of additional command line arguments to pass to the `letsencrypt-auto` command.
-# @param environment  An optional array of environment variables (in addition to VENV_PATH).
+# @param additional_args An array of additional command line arguments to pass to the `letsencrypt` command.
+# @param environment  An optional array of environment variables
 # @param key_size Size for the RSA public key
 # @param manage_cron
 #   Indicating whether or not to schedule cron job for renewal.
@@ -157,7 +157,6 @@ define letsencrypt::certonly (
   ]).filter | $arg | { $arg =~ NotUndef and $arg != [] }
   $command = join($_command, ' ')
 
-  $execution_environment = ["VENV_PATH=${letsencrypt::venv_path}",] + $environment
   $verify_domains = join(unique($domains), '\' \'')
 
   if $ensure == 'present' {
@@ -170,7 +169,7 @@ define letsencrypt::certonly (
     command     => $command,
     *           => $exec_ensure,
     path        => $facts['path'],
-    environment => $execution_environment,
+    environment => $environment,
     provider    => 'shell',
     require     => [
       Class['letsencrypt'],
