@@ -13,11 +13,7 @@
 # @param email
 #   The email address to use to register with Let's Encrypt. This takes
 #   precedence over an 'email' setting defined in $config.
-# @param path The path to the letsencrypt installation.
-# @param venv_path virtualenv path for vcs-installed Certbot
-# @param environment An optional array of environment variables (in addition to VENV_PATH)
-# @param repo A Git URL to install the Let's encrypt client from.
-# @param version The Git ref (tag, sha, branch) to check out when installing the client with the `vcs` method.
+# @param environment An optional array of environment variables
 # @param package_name Name of package and command to use when installing the client with the `package` method.
 # @param package_ensure The value passed to `ensure` when installing the client with the `package` method.
 # @param package_command Path or name for letsencrypt executable when installing the client with the `package` method.
@@ -29,7 +25,6 @@
 # @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
 # @param manage_dependencies A feature flag to toggle the management of the letsencrypt dependencies.
 # @param configure_epel A feature flag to include the 'epel' class and depend on it for package installation.
-# @param install_method Method to install the letsencrypt client, either package or vcs.
 # @param agree_tos A flag to agree to the Let's Encrypt Terms of Service.
 # @param unsafe_registration A flag to allow using the 'register-unsafely-without-email' flag.
 # @param config_dir The path to the configuration directory.
@@ -59,11 +54,7 @@
 class letsencrypt (
   Boolean $configure_epel,
   Optional[String] $email                = undef,
-  String $path                           = '/opt/letsencrypt',
-  $venv_path                             = '/opt/letsencrypt/.venv',
   Array $environment                     = [],
-  String $repo                           = 'https://github.com/certbot/certbot.git',
-  String $version                        = 'v0.39.0',
   String $package_name                   = 'certbot',
   $package_ensure                        = 'installed',
   String $package_command                = 'certbot',
@@ -75,7 +66,6 @@ class letsencrypt (
   Boolean $manage_config                 = true,
   Boolean $manage_install                = true,
   Boolean $manage_dependencies           = true,
-  Enum['package', 'vcs'] $install_method = 'package',
   Boolean $agree_tos                     = true,
   Boolean $unsafe_registration           = false,
   Integer[2048] $key_size                = 4096,
@@ -95,15 +85,7 @@ class letsencrypt (
     Class['letsencrypt::install'] -> Class['letsencrypt::renew']
   }
 
-  $command = $install_method ? {
-    'package' => $package_command,
-    'vcs'     => "${venv_path}/bin/letsencrypt",
-  }
-
-  $command_init = $install_method ? {
-    'package' => $package_command,
-    'vcs'     => "${path}/letsencrypt-auto",
-  }
+  $command = $package_command
 
   if $manage_config {
     contain letsencrypt::config # lint:ignore:relative_classname_inclusion
@@ -114,9 +96,9 @@ class letsencrypt (
 
   # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
-    command     => "${command_init} -h",
+    command     => "${package_command} -h",
     path        => $facts['path'],
-    environment => concat(["VENV_PATH=${venv_path}"], $environment),
+    environment => $environment,
     refreshonly => true,
   }
 
