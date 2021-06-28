@@ -38,9 +38,9 @@ class letsencrypt::plugin::dns_rfc2136 (
 
   if $manage_package {
     package { $package_name:
-      ensure => installed,
+      ensure          => installed,
       install_options => $operatingsystemmajrelease ? {
-        '8'     => '--enablerepo=PowerTools',
+        '8'     => '--enablerepo=powertools',
         default => undef,
       },
     }
