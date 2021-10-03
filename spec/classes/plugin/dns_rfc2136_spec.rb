@@ -17,7 +17,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         osrelease = facts[:os]['release']['major']
         osfull = "#{osname}-#{osrelease}"
         case osfull
-        when 'Debian-10', 'Ubuntu-20.04', 'Ubuntu-18.04', 'Fedora-30', 'Fedora-31'
+        when 'Debian-10', 'Debian-11', 'Ubuntu-20.04', 'Ubuntu-18.04', 'Fedora-30', 'Fedora-31'
           'python3-certbot-dns-rfc2136'
         when 'RedHat-7', 'CentOS-7'
           'python2-certbot-dns-rfc2136'
