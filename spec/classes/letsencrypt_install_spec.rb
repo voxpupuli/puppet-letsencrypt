@@ -9,7 +9,8 @@ describe 'letsencrypt::install' do
       {
         configure_epel: false,
         package_ensure: 'installed',
-        package_name: 'letsencrypt'
+        package_name: 'letsencrypt',
+        dnfmodule_version: 'python36'
       }
     end
     let(:additional_params) { {} }
@@ -43,6 +44,13 @@ describe 'letsencrypt::install' do
             is_expected.to contain_class('epel')
             is_expected.to contain_package('letsencrypt').that_requires('Class[epel]')
           end
+        end
+
+        case facts[:operatingsystemmajrelease]
+        when '7'
+          it { is_expected.not_to contain_package('enable python module stream').with_name('python36') }
+        when '8'
+          it { is_expected.to contain_package('enable python module stream').with_name('python36').with_enable_only('true').with_provider('dnfmodule') }
         end
       end
     end

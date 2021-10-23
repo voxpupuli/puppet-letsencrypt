@@ -64,6 +64,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`environment`](#environment)
 * [`package_name`](#package_name)
 * [`package_ensure`](#package_ensure)
+* [`dnfmodule_version`](#dnfmodule_version)
 * [`package_command`](#package_command)
 * [`config_file`](#config_file)
 * [`config`](#config)
@@ -118,6 +119,14 @@ Data type: `Any`
 The value passed to `ensure` when installing the client package.
 
 Default value: `'installed'`
+
+##### <a name="dnfmodule_version"></a>`dnfmodule_version`
+
+Data type: `String`
+
+The yum module stream version to enable on EL8 and greater variants using the `package` method with the `dnfmodule` provider.
+
+Default value: `'python36'`
 
 ##### <a name="package_command"></a>`package_command`
 
@@ -305,6 +314,7 @@ The following parameters are available in the `letsencrypt::install` class:
 * [`configure_epel`](#configure_epel)
 * [`package_ensure`](#package_ensure)
 * [`package_name`](#package_name)
+* [`dnfmodule_version`](#dnfmodule_version)
 
 ##### <a name="configure_epel"></a>`configure_epel`
 
@@ -329,6 +339,14 @@ Data type: `String`
 Name of package to use when installing the client package.
 
 Default value: `$letsencrypt::package_name`
+
+##### <a name="dnfmodule_version"></a>`dnfmodule_version`
+
+Data type: `String`
+
+The yum module stream version to enable on EL8 and greater variants using the `package` method with the `dnfmodule` provider.
+
+Default value: `$letsencrypt::dnfmodule_version`
 
 ### <a name="letsencryptplugindns_cloudflare"></a>`letsencrypt::plugin::dns_cloudflare`
 

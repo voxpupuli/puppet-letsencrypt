@@ -16,6 +16,7 @@
 # @param environment An optional array of environment variables
 # @param package_name Name of package and command to use when installing the client package.
 # @param package_ensure The value passed to `ensure` when installing the client package.
+# @param dnfmodule_version The yum module stream version to enable on EL8 and greater variants using the `package` method with the `dnfmodule` provider.
 # @param package_command Path or name for letsencrypt executable.
 # @param config_file The path to the configuration file for the letsencrypt cli.
 # @param config A hash representation of the letsencrypt configuration file.
@@ -57,6 +58,7 @@ class letsencrypt (
   Array $environment                 = [],
   String $package_name               = 'certbot',
   $package_ensure                    = 'installed',
+  String[1] $dnfmodule_version           = 'python36',
   String $package_command            = 'certbot',
   Stdlib::Unixpath $config_dir       = '/etc/letsencrypt',
   String $config_file                = "${config_dir}/cli.ini",
