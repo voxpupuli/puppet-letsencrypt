@@ -72,7 +72,7 @@ class { 'letsencrypt':
 }
 ```
 During testing, you probably want to direct to the staging server instead with
-`server => 'https://acme-staging.api.letsencrypt.org/directory'`
+`server => 'https://acme-staging-v02.api.letsencrypt.org/directory'`
 
 
 If you don't wish to provide your email address, you can set the
