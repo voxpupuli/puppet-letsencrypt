@@ -23,7 +23,6 @@
 # @param cron_owner_group Group owner of cron renew scripts.
 # @param manage_config A feature flag to toggle the management of the letsencrypt configuration file.
 # @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
-# @param manage_dependencies A feature flag to toggle the management of the letsencrypt dependencies.
 # @param configure_epel A feature flag to include the 'epel' class and depend on it for package installation.
 # @param agree_tos A flag to agree to the Let's Encrypt Terms of Service.
 # @param unsafe_registration A flag to allow using the 'register-unsafely-without-email' flag.
@@ -65,7 +64,6 @@ class letsencrypt (
   String $cron_owner_group               = 'root',
   Boolean $manage_config                 = true,
   Boolean $manage_install                = true,
-  Boolean $manage_dependencies           = true,
   Boolean $agree_tos                     = true,
   Boolean $unsafe_registration           = false,
   Integer[2048] $key_size                = 4096,
