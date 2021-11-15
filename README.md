@@ -7,7 +7,7 @@
 [![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/letsencrypt.svg)](https://forge.puppetlabs.com/puppet/letsencrypt)
 [![Documentation Status](http://img.shields.io/badge/docs-puppet--strings-ff69b4.svg?style=flat)](http://voxpupuli.github.io/puppet-letsencrypt)
 
-This module installs the Let's Encrypt client from source and allows you to request certificates.
+This module installs the Let's Encrypt client (certbot) and allows you to request certificates.
 
 ## Support
 
@@ -72,7 +72,7 @@ class { 'letsencrypt':
 }
 ```
 During testing, you probably want to direct to the staging server instead with
-`server => 'https://acme-staging.api.letsencrypt.org/directory'`
+`server => 'https://acme-staging-v02.api.letsencrypt.org/directory'`
 
 
 If you don't wish to provide your email address, you can set the
