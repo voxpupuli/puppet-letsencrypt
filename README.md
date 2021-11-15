@@ -7,7 +7,7 @@
 [![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/letsencrypt.svg)](https://forge.puppetlabs.com/puppet/letsencrypt)
 [![Documentation Status](http://img.shields.io/badge/docs-puppet--strings-ff69b4.svg?style=flat)](http://voxpupuli.github.io/puppet-letsencrypt)
 
-This module installs the Let's Encrypt client from source and allows you to request certificates.
+This module installs the Let's Encrypt client (certbot) and allows you to request certificates.
 
 ## Support
 
