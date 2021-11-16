@@ -14,9 +14,9 @@
 #   The email address to use to register with Let's Encrypt. This takes
 #   precedence over an 'email' setting defined in $config.
 # @param environment An optional array of environment variables
-# @param package_name Name of package and command to use when installing the client with the `package` method.
-# @param package_ensure The value passed to `ensure` when installing the client with the `package` method.
-# @param package_command Path or name for letsencrypt executable when installing the client with the `package` method.
+# @param package_name Name of package and command to use when installing the client package.
+# @param package_ensure The value passed to `ensure` when installing the client package.
+# @param package_command Path or name for letsencrypt executable.
 # @param config_file The path to the configuration file for the letsencrypt cli.
 # @param config A hash representation of the letsencrypt configuration file.
 # @param cron_scripts_path The path for renewal scripts called by cron

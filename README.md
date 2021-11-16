@@ -71,9 +71,9 @@ class { 'letsencrypt':
   }
 }
 ```
+
 During testing, you probably want to direct to the staging server instead with
 `server => 'https://acme-staging-v02.api.letsencrypt.org/directory'`
-
 
 If you don't wish to provide your email address, you can set the
 `unsafe_registration` parameter to `true` (this is not recommended):
@@ -169,7 +169,7 @@ letsencrypt::certonly { 'foo':
 
 #### Additional arguments
 
-If you need to pass a command line flag to the `letsencrypt-auto` command that
+If you need to pass a command line flag to the `certbot` command that
 is not supported natively by this module, you can use the `additional_args`
 parameter to pass those arguments:
 
