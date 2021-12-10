@@ -21,6 +21,7 @@
 # @param config A hash representation of the letsencrypt configuration file.
 # @param cron_scripts_path The path for renewal scripts called by cron
 # @param cron_owner_group Group owner of cron renew scripts.
+# @param root_file_owner_group Group owner for the shipped files
 # @param manage_config A feature flag to toggle the management of the letsencrypt configuration file.
 # @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
 # @param configure_epel A feature flag to include the 'epel' class and depend on it for package installation.
@@ -62,6 +63,7 @@ class letsencrypt (
   Hash $config                           = { 'server' => 'https://acme-v02.api.letsencrypt.org/directory' },
   String $cron_scripts_path              = "${facts['puppet_vardir']}/letsencrypt",
   String $cron_owner_group               = 'root',
+  String $root_file_owner_group          = 'root',
   Boolean $manage_config                 = true,
   Boolean $manage_install                = true,
   Boolean $agree_tos                     = true,
@@ -104,7 +106,7 @@ class letsencrypt (
   file { '/usr/local/sbin/letsencrypt-domain-validation':
     ensure => file,
     owner  => 'root',
-    group  => 'root',
+    group  => $root_file_owner_group,
     mode   => '0500',
     source => "puppet:///modules/${module_name}/domain-validation.sh",
   }
