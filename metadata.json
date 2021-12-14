@@ -85,6 +85,10 @@
     {
       "name": "puppet/epel",
       "version_requirement": ">= 3.0.1 < 5.0.0"
+    },
+    {
+      "name": "puppetlabs/cron_core",
+      "version_requirement": ">= 1.1.0 < 2.0.0"
     }
   ]
 }
