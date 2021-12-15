@@ -1,16 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'letsencrypt::plugin::dns_route53' do
-  supported = case fact('os.family')
-              when 'Debian'
-                # Debian 9 has it in backports, Ubuntu started shipping in Bionic
-                fact('os.release.major') != '9' && fact('os.release.major') != '16.04'
-              when 'RedHat'
-                true
-              else
-                false
-              end
-
   context 'with defaults values' do
     pp = <<-PUPPET
       class { 'letsencrypt' :
@@ -23,18 +13,11 @@ describe 'letsencrypt::plugin::dns_route53' do
       }
     PUPPET
 
-    if supported
-      it 'installs letsencrypt and dns route53 plugin without error' do
-        apply_manifest(pp, catch_failures: true)
-      end
-      it 'installs letsencrypt and dns route53 idempotently' do
-        apply_manifest(pp, catch_changes: true)
-      end
-
-    else
-      it 'fails to install' do
-        apply_manifest(pp, expect_failures: true)
-      end
+    it 'installs letsencrypt and dns route53 plugin without error' do
+      apply_manifest(pp, catch_failures: true)
+    end
+    it 'installs letsencrypt and dns route53 idempotently' do
+      apply_manifest(pp, catch_changes: true)
     end
   end
 end
