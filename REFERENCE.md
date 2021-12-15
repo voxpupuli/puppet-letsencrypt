@@ -376,7 +376,7 @@ Default value: `53`
 
 Data type: `Integer`
 
-Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+Number of seconds to wait for the DNS server to propagate the DNS-01 challenge. (the plugin defaults to 60)
 
 Default value: `10`
 
@@ -458,7 +458,7 @@ Default value: ``true``
 
 ##### <a name="package_name"></a>`package_name`
 
-Data type: `String`
+Data type: `String[1]`
 
 The name of the package to install when $manage_package is true.
 
@@ -562,6 +562,101 @@ Default value: `$letsencrypt::renew_cron_monthday`
 ### <a name="letsencryptcertonly"></a>`letsencrypt::certonly`
 
 This type can be used to request a certificate using the `certonly` installer.
+
+#### Examples
+
+##### standalone authenticator
+
+```puppet
+# Request a certificate for `foo.example.com` using the `certonly`
+# installer and the `standalone` authenticator.
+letsencrypt::certonly { 'foo.example.com': }
+```
+
+##### Multiple domains
+
+```puppet
+# Request a certificate for `foo.example.com` and `bar.example.com` using
+# the `certonly` installer and the `standalone` authenticator.
+letsencrypt::certonly { 'foo':
+  domains => ['foo.example.com', 'bar.example.com'],
+}
+```
+
+##### Apache authenticator
+
+```puppet
+# Request a certificate for `foo.example.com` with the `certonly` installer
+# and the `apache` authenticator.
+letsencrypt::certonly { 'foo.example.com':
+  plugin  => 'apache',
+}
+```
+
+##### Nginx authenticator
+
+```puppet
+# Request a certificate for `foo.example.com` with the `certonly` installer
+# and the `nginx` authenticator.
+letsencrypt::certonly { 'foo.example.com':
+  plugin  => 'nginx',
+}
+```
+
+##### webroot authenticator
+
+```puppet
+# Request a certificate using the `webroot` authenticator. The paths to the
+# webroots for all domains must be given through `webroot_paths`. If
+# `domains` and `webroot_paths` are not the same length, the last
+# `webroot_paths` element will be used for all subsequent domains.
+letsencrypt::certonly { 'foo':
+  domains       => ['foo.example.com', 'bar.example.com'],
+  plugin        => 'webroot',
+  webroot_paths => ['/var/www/foo', '/var/www/bar'],
+}
+```
+
+##### dns-rfc2136 authenticator
+
+```puppet
+# Request a certificate using the `dns-rfc2136` authenticator. Ideally the
+# key `secret` should be encrypted, eg. with eyaml if using Hiera. It's
+# also recommended to only enable access to the specific DNS records needed
+# by the Let's Encrypt client.
+#
+# [Plugin documentation](https://certbot-dns-rfc2136.readthedocs.io)
+class { 'letsencrypt::plugin::dns_rfc2136':
+  server     => '192.0.2.1',
+  key_name   => 'certbot',
+  key_secret => '[...]==',
+}
+
+letsencrypt::certonly { 'foo.example.com':
+  plugin        => 'dns-rfc2136',
+}
+```
+
+##### dns-route53 authenticator
+
+```puppet
+# Request a certificate for `foo.example.com` with the `certonly` installer
+# and the `dns-route53` authenticator.
+letsencrypt::certonly { 'foo.example.com':
+  plugin  => 'dns-route53',
+}
+```
+
+##### Additional arguments
+
+```puppet
+# If you need to pass a command line flag to the `certbot` command that
+# is not supported natively by this module, you can use the
+# `additional_args` parameter to pass those arguments.
+letsencrypt::certonly { 'foo.example.com':
+  additional_args => ['--foo bar', '--baz quuz'],
+}
+```
 
 #### Parameters
 
