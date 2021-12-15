@@ -12,6 +12,7 @@
 * [`letsencrypt::install`](#letsencryptinstall): Installs the Let's Encrypt client.
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencryptplugindns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencryptplugindns_route53): Installs and configures the dns-route53 plugin
+* [`letsencrypt::plugin::nginx`](#letsencryptpluginnginx): install and configure the Let's Encrypt nginx plugin
 * [`letsencrypt::renew`](#letsencryptrenew): Configures renewal of Let's Encrypt certificates using Certbot
 
 #### Private Classes
@@ -435,6 +436,33 @@ Default value: ``true``
 Data type: `String[1]`
 
 The name of the package to install when $manage_package is true.
+
+### <a name="letsencryptpluginnginx"></a>`letsencrypt::plugin::nginx`
+
+install and configure the Let's Encrypt nginx plugin
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::nginx` class:
+
+* [`manage_package`](#manage_package)
+* [`package_name`](#package_name)
+
+##### <a name="manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: ``true``
+
+##### <a name="package_name"></a>`package_name`
+
+Data type: `String`
+
+The name of the package to install when $manage_package is true.
+
+Default value: `'python3-certbot-nginx'`
 
 ### <a name="letsencryptrenew"></a>`letsencrypt::renew`
 

@@ -117,6 +117,17 @@ define letsencrypt::certonly (
       ]
     }
 
+    'nginx': {
+      require letsencrypt::plugin::nginx
+
+      if $ensure == 'present' {
+        $_domains = join($domains, '\' -d \'')
+        $plugin_args  = "--cert-name '${cert_name}' -d '${_domains}'"
+      } else {
+        $plugin_args = "--cert-name '${cert_name}'"
+      }
+    }
+
     default: {
       if $ensure == 'present' {
         $_domains = join($domains, '\' -d \'')

@@ -120,6 +120,18 @@ letsencrypt::certonly { 'foo':
 }
 ```
 
+#### Nginx authenticator
+
+To request a certificate for `foo.example.com` and `bar.example.com` with the
+`certonly` installer and the `nginx` authenticator:
+
+```puppet
+letsencrypt::certonly { 'foo':
+  domains => ['foo.example.com', 'bar.example.com'],
+  plugin  => 'nginx',
+}
+```
+
 #### Webroot plugin
 
 To request a certificate using the `webroot` plugin, the paths to the webroots
