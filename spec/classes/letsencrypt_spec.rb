@@ -141,6 +141,18 @@ describe 'letsencrypt' do
           it { is_expected.to contain_file('/foo/bar/baz').with(ensure: 'directory') }
         end
 
+        describe 'with list of certificates' do
+          let(:additional_params) do
+            { certificates: {
+              'foo' => { 'domains' => %w[lth0edae4nzfq895 nsgqqm4mbw257t9i] },
+              'a' => { 'environment' => %w[ABC=y9jby5nmfgmstnbk DFE=y00lt0fh1vj2amjx] }
+            } }
+          end
+
+          it { is_expected.to contain_letsencrypt__certonly('foo').with_domains(%w[lth0edae4nzfq895 nsgqqm4mbw257t9i]) }
+          it { is_expected.to contain_letsencrypt__certonly('a').with_environment(%w[ABC=y9jby5nmfgmstnbk DFE=y00lt0fh1vj2amjx]) }
+        end
+
         context 'when not agreeing to the TOS' do
           let(:params) { { agree_tos: false } }
 
