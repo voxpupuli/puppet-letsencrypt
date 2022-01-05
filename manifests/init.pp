@@ -28,6 +28,7 @@
 # @param unsafe_registration A flag to allow using the 'register-unsafely-without-email' flag.
 # @param config_dir The path to the configuration directory.
 # @param key_size Size for the RSA public key
+# @param certificates A hash containing certificates. Each key is the title and each value is a hash, both passed to letsencrypt::certonly.
 # @param renew_pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
 # @param renew_post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
 # @param renew_deploy_hook_commands
@@ -52,30 +53,31 @@
 #
 class letsencrypt (
   Boolean $configure_epel,
-  Optional[String] $email                = undef,
-  Array $environment                     = [],
-  String $package_name                   = 'certbot',
-  $package_ensure                        = 'installed',
-  String $package_command                = 'certbot',
-  Stdlib::Unixpath $config_dir           = '/etc/letsencrypt',
-  String $config_file                    = "${config_dir}/cli.ini",
-  Hash $config                           = { 'server' => 'https://acme-v02.api.letsencrypt.org/directory' },
-  String $cron_scripts_path              = "${facts['puppet_vardir']}/letsencrypt",
-  String $cron_owner_group               = 'root',
-  Boolean $manage_config                 = true,
-  Boolean $manage_install                = true,
-  Boolean $agree_tos                     = true,
-  Boolean $unsafe_registration           = false,
-  Integer[2048] $key_size                = 4096,
+  Optional[String] $email            = undef,
+  Array $environment                 = [],
+  String $package_name               = 'certbot',
+  $package_ensure                    = 'installed',
+  String $package_command            = 'certbot',
+  Stdlib::Unixpath $config_dir       = '/etc/letsencrypt',
+  String $config_file                = "${config_dir}/cli.ini",
+  Hash $config                       = { 'server' => 'https://acme-v02.api.letsencrypt.org/directory' },
+  String $cron_scripts_path          = "${facts['puppet_vardir']}/letsencrypt",
+  String $cron_owner_group           = 'root',
+  Boolean $manage_config             = true,
+  Boolean $manage_install            = true,
+  Boolean $agree_tos                 = true,
+  Boolean $unsafe_registration       = false,
+  Integer[2048] $key_size            = 4096,
+  Hash[String[1],Hash] $certificates = {},
   # $renew_* should only be used in letsencrypt::renew (blame rspec)
-  $renew_pre_hook_commands               = [],
-  $renew_post_hook_commands              = [],
-  $renew_deploy_hook_commands            = [],
-  $renew_additional_args                 = [],
-  $renew_cron_ensure                     = 'absent',
-  $renew_cron_hour                       = fqdn_rand(24),
-  $renew_cron_minute                     = fqdn_rand(60, fqdn_rand_string(10)),
-  $renew_cron_monthday                   = '*',
+  $renew_pre_hook_commands           = [],
+  $renew_post_hook_commands          = [],
+  $renew_deploy_hook_commands        = [],
+  $renew_additional_args             = [],
+  $renew_cron_ensure                 = 'absent',
+  $renew_cron_hour                   = fqdn_rand(24),
+  $renew_cron_minute                 = fqdn_rand(60, fqdn_rand_string(10)),
+  $renew_cron_monthday               = '*',
 ) {
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
@@ -107,5 +109,9 @@ class letsencrypt (
     group  => 'root',
     mode   => '0500',
     source => "puppet:///modules/${module_name}/domain-validation.sh",
+  }
+
+  $certificates.each |$title, $properties| {
+    letsencrypt::certonly { $title: * => $properties }
   }
 }

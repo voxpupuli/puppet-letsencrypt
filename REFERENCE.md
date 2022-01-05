@@ -73,6 +73,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`unsafe_registration`](#unsafe_registration)
 * [`config_dir`](#config_dir)
 * [`key_size`](#key_size)
+* [`certificates`](#certificates)
 * [`renew_pre_hook_commands`](#renew_pre_hook_commands)
 * [`renew_post_hook_commands`](#renew_post_hook_commands)
 * [`renew_deploy_hook_commands`](#renew_deploy_hook_commands)
@@ -208,6 +209,14 @@ Data type: `Integer[2048]`
 Size for the RSA public key
 
 Default value: `4096`
+
+##### <a name="certificates"></a>`certificates`
+
+Data type: `Hash[String[1],Hash]`
+
+A hash containing certificates. Each key is the title and each value is a hash, both passed to letsencrypt::certonly.
+
+Default value: `{}`
 
 ##### <a name="renew_pre_hook_commands"></a>`renew_pre_hook_commands`
 
