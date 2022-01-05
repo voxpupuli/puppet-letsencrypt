@@ -39,13 +39,16 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
           )
         end
 
+        # FreeBSD uses a different filesystem path
+        let(:pathprefix) { facts[:kernel] == 'FreeBSD' ? '/usr/local' : '' }
+
         it do
           if package_name.nil?
             is_expected.not_to compile
           else
             is_expected.to compile.with_all_deps
 
-            is_expected.to contain_file('/etc/letsencrypt/dns-rfc2136.ini').
+            is_expected.to contain_file("#{pathprefix}/etc/letsencrypt/dns-rfc2136.ini").
               with_ensure('file').
               with_owner('root').
               with_group('root').
