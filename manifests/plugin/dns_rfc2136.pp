@@ -8,7 +8,7 @@
 # @param key_secret TSIG key secret.
 # @param key_algorithm TSIG key algorithm.
 # @param port Target DNS port.
-# @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+# @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge. (the plugin defaults to 60)
 # @param manage_package Manage the plugin package.
 # @param package_name The name of the package to install when $manage_package is true.
 # @param config_dir The path to the configuration directory.
