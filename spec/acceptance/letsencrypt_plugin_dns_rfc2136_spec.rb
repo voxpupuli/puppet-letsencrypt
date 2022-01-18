@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'letsencrypt::plugin::dns_rfc2136' do
@@ -19,6 +21,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
     it 'installs letsencrypt and dns rfc2136 plugin without error' do
       apply_manifest(pp, catch_failures: true)
     end
+
     it 'installs letsencrypt and dns rfc2136 idempotently' do
       apply_manifest(pp, catch_changes: true)
     end

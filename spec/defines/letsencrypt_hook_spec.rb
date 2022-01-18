@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 describe 'letsencrypt::hook' do
   on_supported_os.each do |os, facts|
     let(:title) { 'foo.example.com' }
@@ -65,3 +68,4 @@ describe 'letsencrypt::hook' do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'letsencrypt::plugin::nginx' do
@@ -22,6 +24,7 @@ describe 'letsencrypt::plugin::nginx' do
 
       context 'with default parameters' do
         it { is_expected.to compile.with_all_deps }
+
         it 'installs the certbot nginx plugin' do
           is_expected.to contain_class('letsencrypt::plugin::nginx')
           is_expected.to contain_package(package_name).with_ensure('installed')

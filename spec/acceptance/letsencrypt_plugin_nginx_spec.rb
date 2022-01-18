@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'letsencrypt::plugin::nginx' do
@@ -16,6 +18,7 @@ describe 'letsencrypt::plugin::nginx' do
     it 'installs letsencrypt and nginx plugin without error' do
       apply_manifest(pp, catch_failures: true)
     end
+
     it 'installs letsencrypt and nginx idempotently' do
       apply_manifest(pp, catch_changes: true)
     end

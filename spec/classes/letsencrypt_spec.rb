@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'letsencrypt' do
@@ -92,7 +94,7 @@ describe 'letsencrypt' do
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             end
           end
-        end # describe 'with defaults'
+        end
 
         describe 'with custom environment variables' do
           let(:additional_params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
@@ -112,7 +114,7 @@ describe 'letsencrypt' do
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/custom_config.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
 
-        describe 'with custom config' do
+        describe 'with custom config' do # rubocop:disable RSpec/EmptyExampleGroup
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
 
           case facts[:operatingsystem]
@@ -229,13 +231,14 @@ describe 'letsencrypt' do
                      command: 'certbot renew -q AdditionalBar')
             end
           end
-        end # context 'with renew'
-      end # context 'when specifying an email address with the email parameter'
+        end
+      end
 
       context 'when specifying an email in $config' do
         let(:params) { { config: { 'email' => 'foo@example.com' } } }
 
         it { is_expected.to compile.with_all_deps }
+
         case facts[:operatingsystem]
         when 'FreeBSD'
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
@@ -249,7 +252,7 @@ describe 'letsencrypt' do
           it { is_expected.to raise_error Puppet::Error, %r{Please specify an email address} }
         end
 
-        context 'with unsafe_registration set to true' do
+        context 'with unsafe_registration set to true' do # rubocop:disable RSpec/EmptyExampleGroup
           let(:params) { { unsafe_registration: true } }
 
           case facts[:operatingsystem]

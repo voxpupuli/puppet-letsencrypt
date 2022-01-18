@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'letsencrypt::plugin::dns_rfc2136' do
