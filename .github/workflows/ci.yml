@@ -30,7 +30,7 @@ jobs:
       - name: Run static validations
         run: bundle exec rake validate lint check
       - name: Run rake rubocop
-        run: bundle exec rake rubocop
+        run: bundle exec rubocop --format github
       - name: Setup Test Matrix
         id: get-outputs
         run: bundle exec metadata2gha --use-fqdn --pidfile-workaround false
