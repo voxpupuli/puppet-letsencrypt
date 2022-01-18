@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'letsencrypt' do
@@ -14,6 +16,7 @@ describe 'letsencrypt' do
     it 'installs letsencrypt without error' do
       apply_manifest(pp, catch_failures: true)
     end
+
     it 'installs letsencrypt idempotently' do
       apply_manifest(pp, catch_changes: true)
     end

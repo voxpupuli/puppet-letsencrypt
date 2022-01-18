@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'letsencrypt::certonly' do
@@ -235,7 +237,7 @@ describe 'letsencrypt::certonly' do
             is_expected.to contain_letsencrypt__hook('foo.example.com-deploy').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-deploy.sh')
           end
         end
-      end # context 'with hook'
+      end
 
       context 'with manage_cron and defined cron_hour (integer)' do
         let(:title) { 'foo.example.com' }
@@ -304,19 +306,6 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_minute(15).with_ensure('present') }
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com'\n") }
-      end
-
-      context 'with manage_cron and out of range defined cron_hour (integer)' do
-        let(:title) { 'foo.example.com' }
-        let(:params) do
-          {
-            cron_hour: 66,
-            manage_cron: true
-          }
-        end
-
-        it { is_expected.not_to compile.with_all_deps }
-        it { is_expected.to raise_error Puppet::Error }
       end
 
       context 'with manage_cron and defined cron_minute (string)' do
