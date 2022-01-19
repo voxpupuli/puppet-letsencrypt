@@ -111,7 +111,7 @@ class letsencrypt (
     source => "puppet:///modules/${module_name}/domain-validation.sh",
   }
 
-  $certificates.each |$title, $properties| {
-    letsencrypt::certonly { $title: * => $properties }
+  $certificates.each |$certificate, $properties| {
+    letsencrypt::certonly { $certificate: * => $properties }
   }
 }
