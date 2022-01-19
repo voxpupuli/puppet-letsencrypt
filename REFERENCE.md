@@ -913,13 +913,13 @@ Type: Ruby 4.x API
 
 The letsencrypt::letsencrypt_lookup function.
 
-#### `letsencrypt::letsencrypt_lookup(Any $cn)`
+#### `letsencrypt::letsencrypt_lookup(Any $common_name)`
 
 The letsencrypt::letsencrypt_lookup function.
 
 Returns: `Any`
 
-##### `cn`
+##### `common_name`
 
 Data type: `Any`
 
