@@ -93,6 +93,7 @@ class letsencrypt (
   }
 
   contain letsencrypt::renew
+  include letsencrypt::scripts
 
   # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
@@ -100,15 +101,6 @@ class letsencrypt (
     path        => $facts['path'],
     environment => $environment,
     refreshonly => true,
-  }
-
-  # Used in letsencrypt::certonly Exec["letsencrypt certonly ${title}"]
-  file { '/usr/local/sbin/letsencrypt-domain-validation':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0500',
-    source => "puppet:///modules/${module_name}/domain-validation.sh",
   }
 
   $certificates.each |$certificate, $properties| {

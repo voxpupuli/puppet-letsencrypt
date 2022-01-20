@@ -19,13 +19,13 @@ describe 'letsencrypt' do
 
           epel = facts[:osfamily] == 'RedHat' && facts[:operatingsystem] != 'Fedora'
 
-          it 'contains File[/usr/local/sbin/letsencrypt-domain-validation]' do
+          it 'contains the domain validation script' do
             is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
               with_ensure('file').
               with_owner('root').
               with_group('root').
               with_mode('0500').
-              with_source('puppet:///modules/letsencrypt/domain-validation.sh')
+              with_content(%r{result=}) # TODO: what should be check?
           end
 
           it 'contains the correct resources' do

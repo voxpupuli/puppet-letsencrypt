@@ -252,7 +252,7 @@ define letsencrypt::certonly (
     environment => $environment,
     provider    => 'shell',
     require     => [
-      Class['letsencrypt'],
+      Exec['initialize letsencrypt'],
       File['/usr/local/sbin/letsencrypt-domain-validation'],
     ],
   }
