@@ -25,7 +25,7 @@ describe 'letsencrypt' do
               with_owner('root').
               with_group('root').
               with_mode('0500').
-              with_content(%r{result=}) # TODO: what should be check?
+              with_content(%r{#!/bin/sh})
           end
 
           it 'contains the correct resources' do
