@@ -151,6 +151,7 @@ describe 'letsencrypt' do
             } }
           end
 
+          it { is_expected.to compile.with_all_deps }
           it { is_expected.to contain_letsencrypt__certonly('foo').with_domains(%w[lth0edae4nzfq895 nsgqqm4mbw257t9i]) }
           it { is_expected.to contain_letsencrypt__certonly('a').with_environment(%w[ABC=y9jby5nmfgmstnbk DFE=y00lt0fh1vj2amjx]) }
         end
