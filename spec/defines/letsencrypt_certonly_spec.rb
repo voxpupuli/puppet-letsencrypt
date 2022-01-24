@@ -20,6 +20,17 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('Letsencrypt::Install') }
         it { is_expected.to contain_class('Letsencrypt::Config') }
+        it { is_expected.to contain_class('Letsencrypt::Scripts') }
+
+        # letsencrypt::scripts is a private class and is therefore tested in this define
+        it 'contains the domain validation script' do
+          is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
+            with_ensure('file').
+            with_owner('root').
+            with_group('root').
+            with_mode('0500').
+            with_content(%r{#!/bin/sh})
+        end
 
         if facts[:osfamily] == 'FreeBSD'
           it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }

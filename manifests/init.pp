@@ -93,7 +93,6 @@ class letsencrypt (
   }
 
   contain letsencrypt::renew
-  include letsencrypt::scripts
 
   # TODO: do we need this command when installing from package?
   exec { 'initialize letsencrypt':
