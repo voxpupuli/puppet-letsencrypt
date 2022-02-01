@@ -18,6 +18,7 @@
 #### Private Classes
 
 * `letsencrypt::config`: Configures the Let's Encrypt client.
+* `letsencrypt::scripts`: Deploy helper scripts scripts
 
 ### Defined types
 

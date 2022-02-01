@@ -141,6 +141,8 @@ define letsencrypt::certonly (
     fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
   }
 
+  include letsencrypt::scripts
+
   # Wildcard-less title for use in file paths
   $title_nowc = regsubst($title, '^\*\.', '')
 
@@ -252,7 +254,7 @@ define letsencrypt::certonly (
     environment => $environment,
     provider    => 'shell',
     require     => [
-      Class['letsencrypt'],
+      Exec['initialize letsencrypt'],
       File['/usr/local/sbin/letsencrypt-domain-validation'],
     ],
   }
