@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v8.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v8.0.1) (2022-01-19)
+## [v8.0.2](https://github.com/voxpupuli/puppet-letsencrypt/tree/v8.0.2) (2022-02-01)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v8.0.1...v8.0.2)
+
+**Fixed bugs:**
+
+- move scripts into a separate class [\#275](https://github.com/voxpupuli/puppet-letsencrypt/pull/275) ([nod0n](https://github.com/nod0n))
+
+## [v8.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v8.0.1) (2022-01-20)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v8.0.0...v8.0.1)
 
