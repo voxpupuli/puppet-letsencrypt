@@ -253,7 +253,8 @@ define letsencrypt::certonly (
   $verify_domains = join(unique($domains), '\' \'')
 
   if $ensure == 'present' {
-    $exec_ensure = { 'unless' => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'" }
+    $exec_ensure = { 'unless' => ['test ! -f /usr/local/sbin/letsencrypt-domain-validation',
+    "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'"] }
   } else {
     $exec_ensure = { 'onlyif' => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'" }
   }
