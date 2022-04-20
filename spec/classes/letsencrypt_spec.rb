@@ -105,7 +105,7 @@ describe 'letsencrypt' do
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/custom_config.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
 
-        describe 'with custom config' do # rubocop:disable RSpec/EmptyExampleGroup
+        describe 'with custom config' do
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
 
           case facts[:operatingsystem]
@@ -244,7 +244,7 @@ describe 'letsencrypt' do
           it { is_expected.to raise_error Puppet::Error, %r{Please specify an email address} }
         end
 
-        context 'with unsafe_registration set to true' do # rubocop:disable RSpec/EmptyExampleGroup
+        context 'with unsafe_registration set to true' do
           let(:params) { { unsafe_registration: true } }
 
           case facts[:operatingsystem]
