@@ -168,6 +168,17 @@ define letsencrypt::certonly (
       $plugin_args = ["--cert-name '${cert_name}'"] + $_plugin_args
     }
 
+    'dns-cloudflare': {
+      require letsencrypt::plugin::dns_cloudflare
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args  = [
+        "--cert-name '${cert_name}' -d '${_domains}'",
+        '--dns-cloudflare',
+        "--dns-cloudflare-credentials ${letsencrypt::plugin::dns_cloudflare::config_path}",
+        "--dns-cloudflare-propagation-seconds ${letsencrypt::plugin::dns_cloudflare::propagation_seconds}",
+      ]
+    }
+
     'dns-rfc2136': {
       require letsencrypt::plugin::dns_rfc2136
       $_domains = join($domains, '\' -d \'')
@@ -242,7 +253,8 @@ define letsencrypt::certonly (
   $verify_domains = join(unique($domains), '\' \'')
 
   if $ensure == 'present' {
-    $exec_ensure = { 'unless' => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'" }
+    $exec_ensure = { 'unless' => ['test ! -f /usr/local/sbin/letsencrypt-domain-validation',
+    "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'"] }
   } else {
     $exec_ensure = { 'onlyif' => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'" }
   }

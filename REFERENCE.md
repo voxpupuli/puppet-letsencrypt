@@ -10,6 +10,7 @@
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
 * [`letsencrypt::install`](#letsencryptinstall): Installs the Let's Encrypt client.
+* [`letsencrypt::plugin::dns_cloudflare`](#letsencryptplugindns_cloudflare): Installs and configures the dns-cloudflare plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencryptplugindns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencryptplugindns_route53): Installs and configures the dns-route53 plugin
 * [`letsencrypt::plugin::nginx`](#letsencryptpluginnginx): install and configure the Let's Encrypt nginx plugin
@@ -328,6 +329,84 @@ Data type: `String`
 Name of package to use when installing the client package.
 
 Default value: `$letsencrypt::package_name`
+
+### <a name="letsencryptplugindns_cloudflare"></a>`letsencrypt::plugin::dns_cloudflare`
+
+This class installs and configures the Let's Encrypt dns-cloudflare plugin.
+https://certbot-dns-cloudflare.readthedocs.io
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::dns_cloudflare` class:
+
+* [`package_name`](#package_name)
+* [`api_key`](#api_key)
+* [`api_token`](#api_token)
+* [`email`](#email)
+* [`config_dir`](#config_dir)
+* [`manage_package`](#manage_package)
+* [`propagation_seconds`](#propagation_seconds)
+* [`config_path`](#config_path)
+
+##### <a name="package_name"></a>`package_name`
+
+Data type: `Optional[String[1]]`
+
+The name of the package to install when $manage_package is true.
+
+Default value: ``undef``
+
+##### <a name="api_key"></a>`api_key`
+
+Data type: `Optional[String[1]]`
+
+Optional string, cloudflare api key value for authentication.
+
+Default value: ``undef``
+
+##### <a name="api_token"></a>`api_token`
+
+Data type: `Optional[String[1]]`
+
+Optional string, cloudflare api token value for authentication.
+
+Default value: ``undef``
+
+##### <a name="email"></a>`email`
+
+Data type: `Optional[String[1]]`
+
+Optional string, cloudflare account email address, used in conjunction with api_key.
+
+Default value: ``undef``
+
+##### <a name="config_dir"></a>`config_dir`
+
+The path to the configuration directory.
+
+##### <a name="manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: ``true``
+
+##### <a name="propagation_seconds"></a>`propagation_seconds`
+
+Data type: `Integer`
+
+Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+
+Default value: `10`
+
+##### <a name="config_path"></a>`config_path`
+
+Data type: `Stdlib::Absolutepath`
+
+
+
+Default value: `"${letsencrypt::config_dir}/dns-cloudflare.ini"`
 
 ### <a name="letsencryptplugindns_rfc2136"></a>`letsencrypt::plugin::dns_rfc2136`
 
