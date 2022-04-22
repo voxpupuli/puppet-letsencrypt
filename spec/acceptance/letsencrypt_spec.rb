@@ -4,21 +4,8 @@ require 'spec_helper_acceptance'
 
 describe 'letsencrypt' do
   context 'with defaults values' do
-    pp = %(
-      class { 'letsencrypt' :
-        email  => 'letsregister@example.com',
-        config => {
-          'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
-        },
-      }
-    )
-
-    it 'installs letsencrypt without error' do
-      apply_manifest(pp, catch_failures: true)
-    end
-
-    it 'installs letsencrypt idempotently' do
-      apply_manifest(pp, catch_changes: true)
+    it_behaves_like 'an idempotent resource' do
+      let(:manifest) { 'include letsencrypt' }
     end
 
     describe file('/etc/letsencrypt/cli.ini') do

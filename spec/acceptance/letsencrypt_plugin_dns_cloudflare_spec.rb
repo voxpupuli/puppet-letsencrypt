@@ -6,12 +6,7 @@ describe 'letsencrypt::plugin::dns_cloudflare' do
   it_behaves_like 'an idempotent resource' do
     let(:manifest) do
       <<-PUPPET
-      class { 'letsencrypt' :
-        email  => 'letsregister@example.com',
-        config => {
-          'server' => 'https://acme-staging-v02.api.letsencrypt.org/directory',
-        },
-      }
+      include letsencrypt
       class { 'letsencrypt::plugin::dns_cloudflare':
         api_token => 'dummy-cloudflare-api-token',
       }
