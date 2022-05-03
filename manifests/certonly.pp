@@ -96,7 +96,7 @@
 # @param cron_success_command Representation of a command that should be run if the renewal command succeeds.
 # @param cron_hour
 #   Optional hour(s) that the renewal command should execute.
-#   e.g. '[0,12]' execute at midnight and midday.  Default - seeded random hour.
+#   e.g. '[0,12]' execute at midnight and midday.  Default - seeded random hour, twice a day.
 # @param cron_minute
 #   Optional minute(s) that the renewal command should execute.
 #   e.g. 0 or '00' or [0,30].  Default - seeded random minute.
@@ -130,7 +130,7 @@ define letsencrypt::certonly (
   Optional[String[1]]                       $cron_before_command  = undef,
   Optional[String[1]]                       $cron_success_command = undef,
   Array[Variant[Integer[0, 59], String[1]]] $cron_monthday        = ['*'],
-  Variant[Integer[0,23], String, Array]     $cron_hour            = fqdn_rand(24, $title),
+  Variant[Integer[0,23], String, Array]     $cron_hour            = [fqdn_rand(12, $title), fqdn_rand(12, $title) + 12],
   Variant[Integer[0,59], String, Array]     $cron_minute          = fqdn_rand(60, fqdn_rand_string(10, $title)),
   Stdlib::Unixpath                          $config_dir           = $letsencrypt::config_dir,
   Variant[String[1], Array[String[1]]]      $pre_hook_commands    = [],

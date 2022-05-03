@@ -888,9 +888,9 @@ Default value: ``undef``
 Data type: `Variant[Integer[0,23], String, Array]`
 
 Optional hour(s) that the renewal command should execute.
-e.g. '[0,12]' execute at midnight and midday.  Default - seeded random hour.
+e.g. '[0,12]' execute at midnight and midday.  Default - seeded random hour, twice a day.
 
-Default value: `fqdn_rand(24, $title)`
+Default value: `[fqdn_rand(12, $title), fqdn_rand(12, $title) + 12]`
 
 ##### <a name="cron_minute"></a>`cron_minute`
 
