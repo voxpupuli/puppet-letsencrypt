@@ -29,17 +29,23 @@ class letsencrypt::config (
     $_config = $config
   }
 
+  $ensure_unsafe_registration = $unsafe_registration ? {
+    true  => present,
+    false => absent,
+  }
+
+  ini_setting { "${config_file} register-unsafely-without-email true":
+    ensure  => $ensure_unsafe_registration,
+    path    => $config_file,
+    section => '',
+    setting => 'register-unsafely-without-email',
+    value   => true,
+    require => File[$config_dir],
+  }
+
   unless 'email' in $_config {
     if $unsafe_registration {
       warning('No email address specified for the letsencrypt class! Registering unsafely!')
-      ini_setting { "${config_file} register-unsafely-without-email true":
-        ensure  => present,
-        path    => $config_file,
-        section => '',
-        setting => 'register-unsafely-without-email',
-        value   => true,
-        require => File[$config_dir],
-      }
     } else {
       fail("Please specify an email address to register with Let's Encrypt using the \$email parameter on the letsencrypt class")
     }
