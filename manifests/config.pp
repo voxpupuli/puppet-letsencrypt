@@ -29,13 +29,8 @@ class letsencrypt::config (
     $_config = $config
   }
 
-  $ensure_unsafe_registration = $unsafe_registration ? {
-    true  => present,
-    false => absent,
-  }
-
   ini_setting { "${config_file} register-unsafely-without-email true":
-    ensure  => $ensure_unsafe_registration,
+    ensure  => bool2str($unsafe_registration, 'present', 'absent'),
     path    => $config_file,
     section => '',
     setting => 'register-unsafely-without-email',
