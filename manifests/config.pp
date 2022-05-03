@@ -35,7 +35,6 @@ class letsencrypt::config (
     section => '',
     setting => 'register-unsafely-without-email',
     value   => true,
-    require => File[$config_dir],
   }
 
   unless 'email' in $_config {
