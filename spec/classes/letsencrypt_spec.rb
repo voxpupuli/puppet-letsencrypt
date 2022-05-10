@@ -215,6 +215,20 @@ describe 'letsencrypt' do
                      command: 'certbot renew -q AdditionalBar')
             end
           end
+
+          describe 'renew_cron_ensure and environment' do
+            let(:additional_params) do
+              { renew_cron_ensure: 'present',
+                renew_cron_environment: ['PATH=/usr/sbin'] }
+            end
+
+            it do
+              is_expected.to contain_cron('letsencrypt-renew').
+                with(ensure: 'present',
+                     command: 'certbot renew -q',
+                     environment: ['PATH=/usr/sbin'])
+            end
+          end
         end
       end
 
