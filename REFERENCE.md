@@ -283,7 +283,7 @@ Data type: `Any`
 Optional string, integer or array of minute(s) the renewal command should
 run. E.g. 0 or '00' or [0,30].
 
-Default value: `fqdn_rand(60, fqdn_rand_string(10))`
+Default value: `fqdn_rand(60)`
 
 ##### <a name="renew_cron_monthday"></a>`renew_cron_monthday`
 
@@ -899,7 +899,7 @@ Data type: `Variant[Integer[0,59], String, Array]`
 Optional minute(s) that the renewal command should execute.
 e.g. 0 or '00' or [0,30].  Default - seeded random minute.
 
-Default value: `fqdn_rand(60, fqdn_rand_string(10, $title))`
+Default value: `fqdn_rand(60, $title)`
 
 ##### <a name="cron_monthday"></a>`cron_monthday`
 

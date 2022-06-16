@@ -76,7 +76,7 @@ class letsencrypt (
   $renew_additional_args             = [],
   $renew_cron_ensure                 = 'absent',
   $renew_cron_hour                   = fqdn_rand(24),
-  $renew_cron_minute                 = fqdn_rand(60, fqdn_rand_string(10)),
+  $renew_cron_minute                 = fqdn_rand(60),
   $renew_cron_monthday               = '*',
 ) {
   if $manage_install {
