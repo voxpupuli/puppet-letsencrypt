@@ -11,6 +11,7 @@
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
 * [`letsencrypt::install`](#letsencryptinstall): Installs the Let's Encrypt client.
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencryptplugindns_cloudflare): Installs and configures the dns-cloudflare plugin
+* [`letsencrypt::plugin::dns_gandi`](#letsencryptplugindns_gandi): Installs and configures the dns-gandi plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencryptplugindns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencryptplugindns_route53): Installs and configures the dns-route53 plugin
 * [`letsencrypt::plugin::nginx`](#letsencryptpluginnginx): install and configure the Let's Encrypt nginx plugin
@@ -407,6 +408,50 @@ Data type: `Stdlib::Absolutepath`
 
 
 Default value: `"${letsencrypt::config_dir}/dns-cloudflare.ini"`
+
+### <a name="letsencryptplugindns_gandi"></a>`letsencrypt::plugin::dns_gandi`
+
+This class installs and configures the Let's Encrypt dns-gandi plugin.
+https://pypi.org/project/certbot-plugin-gandi/
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::dns_gandi` class:
+
+* [`api_key`](#api_key)
+* [`package_name`](#package_name)
+* [`config_file`](#config_file)
+* [`manage_package`](#manage_package)
+
+##### <a name="api_key"></a>`api_key`
+
+Data type: `String[1]`
+
+Gandi production api key secret. You can get it in you security tab of your account
+
+##### <a name="package_name"></a>`package_name`
+
+Data type: `Optional[String[1]]`
+
+The name of the package to install when $manage_package is true.
+
+Default value: ``undef``
+
+##### <a name="config_file"></a>`config_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The path to the configuration file.
+
+Default value: `"${letsencrypt::config_dir}/dns-gandi.ini"`
+
+##### <a name="manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: ``true``
 
 ### <a name="letsencryptplugindns_rfc2136"></a>`letsencrypt::plugin::dns_rfc2136`
 
@@ -1059,6 +1104,6 @@ List of accepted plugins
 Alias of
 
 ```puppet
-Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-rfc2136']
+Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-rfc2136', 'dns-gandi']
 ```
 
