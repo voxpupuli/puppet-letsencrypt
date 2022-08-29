@@ -24,7 +24,7 @@ describe 'letsencrypt::plugin::dns_route53' do
         when 'RedHat-7', 'CentOS-7'
           'python2-certbot-dns-route53'
         when 'FreeBSD-12', 'FreeBSD-13'
-          'py38-certbot-dns-route53'
+          'py39-certbot-dns-route53'
         end
       end
 
