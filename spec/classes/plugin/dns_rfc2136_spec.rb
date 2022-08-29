@@ -24,7 +24,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         when 'RedHat-7', 'CentOS-7'
           'python2-certbot-dns-rfc2136'
         when 'FreeBSD-12', 'FreeBSD-13'
-          'py38-certbot-dns-rfc2136'
+          'py39-certbot-dns-rfc2136'
         end
       end
 
