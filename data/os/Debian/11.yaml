@@ -1,0 +1,3 @@
+---
+letsencrypt::plugin::dns_gandi::package_provider: apt
+letsencrypt::plugin::dns_gandi::package_name: python3-certbot-dns-gandi

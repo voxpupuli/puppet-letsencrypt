@@ -10,9 +10,10 @@
 #
 class letsencrypt::plugin::dns_gandi (
   String[1]            $api_key,
-  Optional[String[1]]  $package_name   = undef,
-  Stdlib::Absolutepath $config_file    = "${letsencrypt::config_dir}/dns-gandi.ini",
-  Boolean              $manage_package = true,
+  String[1]            $package_provider = 'pip',
+  Optional[String[1]]  $package_name     = undef,
+  Stdlib::Absolutepath $config_file      = "${letsencrypt::config_dir}/dns-gandi.ini",
+  Boolean              $manage_package   = true,
 ) {
   require letsencrypt
 
@@ -23,6 +24,7 @@ class letsencrypt::plugin::dns_gandi (
 
     package { $package_name:
       ensure   => installed,
+      provider => $package_provider,
     }
   }
 
