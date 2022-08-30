@@ -10,7 +10,7 @@
 #
 class letsencrypt::plugin::dns_gandi (
   String[1]            $api_key,
-  String[1]            $package_provider = 'pip',
+  Optional[String[1]]  $package_provider = undef,
   Optional[String[1]]  $package_name     = undef,
   Stdlib::Absolutepath $config_file      = "${letsencrypt::config_dir}/dns-gandi.ini",
   Boolean              $manage_package   = true,
@@ -22,9 +22,16 @@ class letsencrypt::plugin::dns_gandi (
       fail('No package name provided for certbot dns gandi plugin.')
     }
 
-    package { $package_name:
-      ensure   => installed,
-      provider => $package_provider,
+    if $package_provider {
+      package { $package_name:
+        ensure   => installed,
+        provider => $package_provider,
+      }
+    }
+    else {
+      package { $package_name:
+        ensure => installed,
+      }
     }
   }
 
