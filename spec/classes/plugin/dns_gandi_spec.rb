@@ -19,10 +19,6 @@ describe 'letsencrypt::plugin::dns_gandi' do
         osrelease = facts[:os]['release']['major']
         osfull = "#{osname}-#{osrelease}"
         case osfull
-        when 'Debian-10', 'AlmaLinux-8', 'RedHat-8', 'Ubuntu-18.04', 'Fedora-32', 'RedHat-7', 'CentOS-7'
-          'certbot-plugin-gandi'
-        when 'FreeBSD-12', 'FreeBSD-13'
-          'py39-certbot-dns-gandi'
         when 'Debian-11', 'Ubuntu-20.04'
           'python3-certbot-dns-gandi'
         end
