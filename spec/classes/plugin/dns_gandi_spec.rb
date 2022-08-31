@@ -4,6 +4,8 @@ require 'spec_helper'
 
 describe 'letsencrypt::plugin::dns_gandi' do
   on_supported_os.each do |os, facts|
+    next unless (facts[:os]['name'] == 'Debian' && facts[:os]['release']['major'] == '11') || (facts[:os]['name'] == 'Ubuntu' && facts[:os]['release']['major'] == '20.04')
+
     context "on #{os} based operating systems" do
       let(:facts) { facts }
       let(:params) { { 'api_key' => 'dummy-gandi-api-token' } }
