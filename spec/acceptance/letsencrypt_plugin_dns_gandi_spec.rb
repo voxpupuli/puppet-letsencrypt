@@ -2,7 +2,7 @@
 
 require 'spec_helper_acceptance'
 
-describe 'letsencrypt::plugin::dns_gandi' do
+describe 'letsencrypt::plugin::dns_gandi', if: supported_os_gandi(fact('os')) do
   it_behaves_like 'an idempotent resource' do
     let(:manifest) do
       <<-PUPPET
