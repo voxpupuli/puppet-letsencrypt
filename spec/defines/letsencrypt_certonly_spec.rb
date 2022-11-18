@@ -453,16 +453,28 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport FOO=bar\nexport FIZZ=buzz\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com'\n" }
       end
 
-      context 'with manage cron and suppress_cron_output' do\
+      context 'with manage cron and cron_output=suppress' do\
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
-            suppress_cron_output: true }
+            cron_output: 'suppress' }
         end
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command('"/var/lib/puppet/letsencrypt/renew-foo.example.com.sh"').with_ensure('present') }
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com' > /dev/null 2>&1\n") }
+      end
+
+      context 'with manage cron and cron_output=log' do\
+        let(:title) { 'foo.example.com' }
+        let(:params) do
+          { manage_cron: true,
+            cron_output: 'log' }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command('"/var/lib/puppet/letsencrypt/renew-foo.example.com.sh"').with_ensure('present') }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com' 2>&1 | logger -t letsencrypt-renew\n") }
       end
 
       context 'with manage cron and custom day of month' do
