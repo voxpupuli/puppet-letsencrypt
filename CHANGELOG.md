@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v9.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.0.0) (2022-11-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v8.0.2...v9.0.0)
+
+**Breaking changes:**
+
+- Drop Fedora 32, add Fedora 36 support [\#301](https://github.com/voxpupuli/puppet-letsencrypt/pull/301) ([treydock](https://github.com/treydock))
+- Update FreeBSD package names [\#296](https://github.com/voxpupuli/puppet-letsencrypt/pull/296) ([smortex](https://github.com/smortex))
+- Support logging cron output [\#277](https://github.com/voxpupuli/puppet-letsencrypt/pull/277) ([treydock](https://github.com/treydock))
+
+**Implemented enhancements:**
+
+- Add support for ubuntu 22.04 [\#297](https://github.com/voxpupuli/puppet-letsencrypt/pull/297) ([cible](https://github.com/cible))
+- Allow using the 'manual' plugin [\#292](https://github.com/voxpupuli/puppet-letsencrypt/pull/292) ([smokris](https://github.com/smokris))
+- Reduce acceptance test duplication [\#282](https://github.com/voxpupuli/puppet-letsencrypt/pull/282) ([ekohl](https://github.com/ekohl))
+- Configure Debian as an OS family [\#280](https://github.com/voxpupuli/puppet-letsencrypt/pull/280) ([ekohl](https://github.com/ekohl))
+- Add Cloudflare DNS plugin support [\#279](https://github.com/voxpupuli/puppet-letsencrypt/pull/279) ([bkuebler](https://github.com/bkuebler))
+
+**Fixed bugs:**
+
+- Fix misuse of fqdn\_rand\_string [\#291](https://github.com/voxpupuli/puppet-letsencrypt/pull/291) ([smokris](https://github.com/smokris))
+- Fix registration after an unsafe one [\#287](https://github.com/voxpupuli/puppet-letsencrypt/pull/287) ([neomilium](https://github.com/neomilium))
+
 ## [v8.0.2](https://github.com/voxpupuli/puppet-letsencrypt/tree/v8.0.2) (2022-02-01)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v8.0.1...v8.0.2)
@@ -371,7 +394,7 @@ These should not affect the functionality of the module.
 - Fixing test failures when STRICT\_VARIABLES is set to true [\#25](https://github.com/voxpupuli/puppet-letsencrypt/pull/25) ([danzilio](https://github.com/danzilio))
 - Update client [\#24](https://github.com/voxpupuli/puppet-letsencrypt/pull/24) ([lazyfrosch](https://github.com/lazyfrosch))
 - Fix \#16 by specifying VENV\_PATH when running letsencrypt. [\#17](https://github.com/voxpupuli/puppet-letsencrypt/pull/17) ([mheistermann](https://github.com/mheistermann))
-- Changing default version to 0.4.0 [\#15](https://github.com/voxpupuli/puppet-letsencrypt/pull/15) ([as0bu](https://github.com/as0bu))
+- Changing default version to 0.4.0 [\#15](https://github.com/voxpupuli/puppet-letsencrypt/pull/15) ([serialh0bbyist](https://github.com/serialh0bbyist))
 
 ## [v1.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v1.0.0) (2016-02-22)
 
