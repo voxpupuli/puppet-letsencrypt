@@ -18,12 +18,9 @@ class letsencrypt::plugin::dns_gandi (
   require letsencrypt
 
   if $manage_package {
-    if ! $package_name {
-      fail('No package name provided for certbot dns gandi plugin.')
-    }
-
     package { $package_name:
-      ensure   => installed,
+      ensure => installed,
+      before => File[$config_file],
     }
   }
 
