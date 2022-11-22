@@ -9,10 +9,10 @@
 # @param manage_package Manage the plugin package.
 #
 class letsencrypt::plugin::dns_gandi (
-  String[1]            $api_key,
-  String[1]  $package_name,
-  Stdlib::Absolutepath $config_file    = "${letsencrypt::config_dir}/dns-gandi.ini",
-  Boolean              $manage_package = true,
+  String[1] $api_key,
+  String[1] $package_name,
+  Stdlib::Absolutepath $config_file = "${letsencrypt::config_dir}/dns-gandi.ini",
+  Boolean $manage_package           = true,
 ) {
   require letsencrypt
 
