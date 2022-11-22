@@ -16,15 +16,6 @@ describe 'letsencrypt::plugin::dns_gandi' do
         }
         PUPPET
       end
-      let(:package_name) do
-        osname = facts[:os]['name']
-        osrelease = facts[:os]['release']['major']
-        osfull = "#{osname}-#{osrelease}"
-        case osfull
-        when 'Debian-11', 'Ubuntu-20.04'
-          'python3-certbot-dns-gandi'
-        end
-      end
 
       context 'with required parameters' do
         it do
