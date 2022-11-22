@@ -19,7 +19,7 @@ describe 'letsencrypt::plugin::dns_route53' do
         osrelease = facts[:os]['release']['major']
         osfull = "#{osname}-#{osrelease}"
         case osfull
-        when 'Debian-10', 'Debian-11', 'AlmaLinux-8', 'RedHat-8', 'Ubuntu-20.04', 'Ubuntu-18.04', 'Fedora-32'
+        when 'Debian-10', 'Debian-11', 'AlmaLinux-8', 'RedHat-8', 'Ubuntu-22.04', 'Ubuntu-20.04', 'Ubuntu-18.04', 'Fedora-36'
           'python3-certbot-dns-route53'
         when 'RedHat-7', 'CentOS-7'
           'python2-certbot-dns-route53'

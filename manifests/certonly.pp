@@ -91,7 +91,11 @@
 # @param manage_cron
 #   Indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
-# @param suppress_cron_output Redirect cron output to devnull
+# @param cron_output
+#   How to treat cron output
+#   `suppress` - Suppress all output
+#   `log` - Forward cron output to syslog
+#   undef - Do nothing with cron output (default)
 # @param cron_before_command Representation of a command that should be run before renewal command
 # @param cron_success_command Representation of a command that should be run if the renewal command succeeds.
 # @param cron_hour
@@ -126,7 +130,7 @@ define letsencrypt::certonly (
   Array[String[1]]                          $additional_args      = [],
   Array[String[1]]                          $environment          = [],
   Boolean                                   $manage_cron          = false,
-  Boolean                                   $suppress_cron_output = false,
+  Optional[Enum['suppress', 'log']]         $cron_output          = undef,
   Optional[String[1]]                       $cron_before_command  = undef,
   Optional[String[1]]                       $cron_success_command = undef,
   Array[Variant[Integer[0, 59], String[1]]] $cron_monthday        = ['*'],
@@ -287,11 +291,12 @@ define letsencrypt::certonly (
     $cron_script_ensure = $ensure ? { 'present' => 'file', default => 'absent' }
     $cron_ensure = $ensure
 
-    if $suppress_cron_output {
-      $croncommand = "${maincommand} > /dev/null 2>&1"
-    } else {
-      $croncommand = $maincommand
+    $croncommand = $cron_output ? {
+      'log'      => "${maincommand} 2>&1 | logger -t letsencrypt-renew",
+      'suppress' => "${maincommand} > /dev/null 2>&1",
+      default    => $maincommand
     }
+
     if $cron_before_command {
       $renewcommand = "(${cron_before_command}) && ${croncommand}"
     } else {

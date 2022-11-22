@@ -1104,6 +1104,6 @@ List of accepted plugins
 Alias of
 
 ```puppet
-Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-rfc2136', 'dns-gandi']
+Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-rfc2136', 'dns-gandi', 'manual']
 ```
 

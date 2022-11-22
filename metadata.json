@@ -1,6 +1,6 @@
 {
   "name": "puppet-letsencrypt",
-  "version": "8.0.3-rc0",
+  "version": "9.0.1-rc0",
   "author": "Vox Pupuli",
   "summary": "Manages lets-encrypt and certbot + related certs",
   "license": "Apache-2.0",
@@ -36,14 +36,15 @@
     {
       "operatingsystem": "Fedora",
       "operatingsystemrelease": [
-        "32"
+        "36"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "18.04",
-        "20.04"
+        "20.04",
+        "22.04"
       ]
     },
     {
