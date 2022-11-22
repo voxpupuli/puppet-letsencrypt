@@ -243,7 +243,7 @@ describe 'letsencrypt::certonly' do
           PUPPET
         end
 
-        it { is_expected.to compile.and_raise_error(%r{/expects a value for parameter 'api_key'/}) }
+        it { is_expected.to compile.and_raise_error(%r{expects a value for parameter 'api_key'}) }
       end
 
       context 'with custom plugin' do
