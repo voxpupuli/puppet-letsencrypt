@@ -243,7 +243,7 @@ describe 'letsencrypt::certonly' do
           PUPPET
         end
 
-        it { is_expected.not_to compile.with_all_deps }
+        it { is_expected.to compile.and_raise_error(/expects a value for parameter 'package_name'/) }
       end
 
       context 'with custom plugin' do
