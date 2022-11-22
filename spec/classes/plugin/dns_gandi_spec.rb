@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'letsencrypt::plugin::dns_gandi' do
   on_supported_os.each do |os, facts|
-    next if supported_os_gandi(facts[:os])
+    next unless supported_os_gandi(facts[:os])
 
     context "on #{os} based operating systems" do
       let(:facts) { facts }
