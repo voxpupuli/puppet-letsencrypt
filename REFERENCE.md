@@ -761,7 +761,7 @@ The following parameters are available in the `letsencrypt::certonly` defined ty
 * [`environment`](#environment)
 * [`key_size`](#key_size)
 * [`manage_cron`](#manage_cron)
-* [`suppress_cron_output`](#suppress_cron_output)
+* [`cron_output`](#cron_output)
 * [`cron_before_command`](#cron_before_command)
 * [`cron_success_command`](#cron_success_command)
 * [`cron_hour`](#cron_hour)
@@ -859,13 +859,16 @@ Runs daily but only renews if near expiration, e.g. within 10 days.
 
 Default value: ``false``
 
-##### <a name="suppress_cron_output"></a>`suppress_cron_output`
+##### <a name="cron_output"></a>`cron_output`
 
-Data type: `Boolean`
+Data type: `Optional[Enum['suppress', 'log']]`
 
-Redirect cron output to devnull
+How to treat cron output
+`suppress` - Suppress all output
+`log` - Forward cron output to syslog
+undef - Do nothing with cron output (default)
 
-Default value: ``false``
+Default value: ``undef``
 
 ##### <a name="cron_before_command"></a>`cron_before_command`
 
