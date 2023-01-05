@@ -5,3 +5,4 @@ letsencrypt::cron_owner_group: 'wheel'
 letsencrypt::plugin::dns_rfc2136::package_name: 'py39-certbot-dns-rfc2136'
 letsencrypt::plugin::dns_route53::package_name: 'py39-certbot-dns-route53'
 letsencrypt::plugin::dns_cloudflare::package_name: 'py39-certbot-dns-cloudflare'
+letsencrypt::renew::distro_renew_cron_file: /etc/periodic/weekly/500.certbot-3.9

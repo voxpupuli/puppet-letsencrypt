@@ -39,6 +39,7 @@
 #   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
 #                       Example: "example.com www.example.com"
 # @param renew_additional_args Array of additional command line arguments to pass to 'certbot renew'.
+# @param renew_disable_distro_cron Boolean, set to true to disable the cron created by the distro package
 # @param renew_cron_ensure Intended state of the cron resource running certbot renew.
 # @param renew_cron_hour
 #   Optional string, integer or array of hour(s) the renewal command should run.
@@ -74,6 +75,7 @@ class letsencrypt (
   $renew_post_hook_commands          = [],
   $renew_deploy_hook_commands        = [],
   $renew_additional_args             = [],
+  $renew_disable_distro_cron         = true,
   $renew_cron_ensure                 = 'absent',
   $renew_cron_hour                   = fqdn_rand(24),
   $renew_cron_minute                 = fqdn_rand(60),

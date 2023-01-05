@@ -81,6 +81,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`renew_post_hook_commands`](#renew_post_hook_commands)
 * [`renew_deploy_hook_commands`](#renew_deploy_hook_commands)
 * [`renew_additional_args`](#renew_additional_args)
+* [`renew_disable_distro_cron`](#renew_disable_distro_cron)
 * [`renew_cron_ensure`](#renew_cron_ensure)
 * [`renew_cron_hour`](#renew_cron_hour)
 * [`renew_cron_minute`](#renew_cron_minute)
@@ -257,6 +258,14 @@ Data type: `Any`
 Array of additional command line arguments to pass to 'certbot renew'.
 
 Default value: `[]`
+
+##### <a name="renew_disable_distro_cron"></a>`renew_disable_distro_cron`
+
+Data type: `Any`
+
+Boolean, set to true to disable the cron created by the distro package
+
+Default value: ``true``
 
 ##### <a name="renew_cron_ensure"></a>`renew_cron_ensure`
 
@@ -561,6 +570,8 @@ Note: Hooks set here will run before/after/for ALL certificates, including
 any not managed by Puppet. If you want to create hooks for specific
 certificates only, create them using letsencrypt::certonly.
 
+will be deleted (unless systemd is used)
+
 #### Parameters
 
 The following parameters are available in the `letsencrypt::renew` class:
@@ -569,6 +580,9 @@ The following parameters are available in the `letsencrypt::renew` class:
 * [`post_hook_commands`](#post_hook_commands)
 * [`deploy_hook_commands`](#deploy_hook_commands)
 * [`additional_args`](#additional_args)
+* [`disable_distro_cron`](#disable_distro_cron)
+* [`distro_renew_cron_file`](#distro_renew_cron_file)
+* [`distro_renew_timer`](#distro_renew_timer)
 * [`cron_ensure`](#cron_ensure)
 * [`cron_hour`](#cron_hour)
 * [`cron_minute`](#cron_minute)
@@ -610,6 +624,30 @@ Data type: `Array[String[1]]`
 Array of additional command line arguments to pass to 'certbot renew'.
 
 Default value: `$letsencrypt::renew_additional_args`
+
+##### <a name="disable_distro_cron"></a>`disable_distro_cron`
+
+Data type: `Boolean`
+
+Boolean, set to true to disable the cron created by the distro package
+
+Default value: `$letsencrypt::renew_disable_distro_cron`
+
+##### <a name="distro_renew_cron_file"></a>`distro_renew_cron_file`
+
+Data type: `Optional[Stdlib::Unixpath]`
+
+Optional Unixpath, if set and if disable_distro_cron is true this file
+
+Default value: ``undef``
+
+##### <a name="distro_renew_timer"></a>`distro_renew_timer`
+
+Data type: `Optional[String]`
+
+Optional String, name of the systemd timer to disable if disable_distro_cron is true
+
+Default value: ``undef``
 
 ##### <a name="cron_ensure"></a>`cron_ensure`
 

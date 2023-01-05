@@ -211,6 +211,46 @@ describe 'letsencrypt' do
             end
           end
 
+          describe 'renew_cron_ensure and disable_distro_cron (with systemd)' do
+            let(:additional_params) do
+              { renew_cron_ensure: 'present' }
+            end
+            let(:facts) do
+              facts.merge({
+                            service_provider: 'systemd',
+                          })
+            end
+
+            it do
+              case facts[:os]['family']
+              when 'RedHat'
+                is_expected.to contain_service('certbot-renew.timer').with(ensure: 'stopped', enable: false)
+              when 'Debian'
+                is_expected.to contain_service('certbot.timer').with(ensure: 'stopped', enable: false)
+              end
+            end
+          end
+
+          describe 'renew_cron_ensure and disable_distro_cron (without systemd)' do
+            let(:additional_params) do
+              { renew_cron_ensure: 'present' }
+            end
+            let(:facts) do
+              facts.merge({
+                            service_provider: 'init',
+                          })
+            end
+
+            it do
+              case facts[:os]['family']
+              when 'Debian'
+                is_expected.to contain_file('/etc/cron.d/certbot')
+              when 'FreeBSD'
+                is_expected.to contain_file('/etc/periodic/weekly/500.certbot-3.9')
+              end
+            end
+          end
+
           describe 'renew_cron_ensure and additional args' do
             let(:additional_params) do
               { renew_cron_ensure: 'present',

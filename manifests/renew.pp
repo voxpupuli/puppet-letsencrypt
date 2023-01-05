@@ -16,6 +16,10 @@
 #   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
 #                       Example: "example.com www.example.com"
 # @param additional_args Array of additional command line arguments to pass to 'certbot renew'.
+# @param disable_distro_cron Boolean, set to true to disable the cron created by the distro package
+# @param distro_renew_cron_file Optional Unixpath, if set and if disable_distro_cron is true this file
+# will be deleted (unless systemd is used)
+# @param distro_renew_timer Optional String, name of the systemd timer to disable if disable_distro_cron is true
 # @param cron_ensure Intended state of the cron resource running certbot renew
 # @param cron_hour
 #   Optional string, integer or array of hour(s) the renewal command should run.
@@ -28,14 +32,17 @@
 #   run. E.g. '2-30/2' to run on even days. Default: Every day.
 #
 class letsencrypt::renew (
-  Variant[String[1], Array[String[1]]] $pre_hook_commands    = $letsencrypt::renew_pre_hook_commands,
-  Variant[String[1], Array[String[1]]] $post_hook_commands   = $letsencrypt::renew_post_hook_commands,
-  Variant[String[1], Array[String[1]]] $deploy_hook_commands = $letsencrypt::renew_deploy_hook_commands,
-  Array[String[1]]                     $additional_args      = $letsencrypt::renew_additional_args,
-  Enum['present', 'absent']            $cron_ensure          = $letsencrypt::renew_cron_ensure,
-  Letsencrypt::Cron::Hour              $cron_hour            = $letsencrypt::renew_cron_hour,
-  Letsencrypt::Cron::Minute            $cron_minute          = $letsencrypt::renew_cron_minute,
-  Letsencrypt::Cron::Monthday          $cron_monthday        = $letsencrypt::renew_cron_monthday,
+  Variant[String[1], Array[String[1]]] $pre_hook_commands      = $letsencrypt::renew_pre_hook_commands,
+  Variant[String[1], Array[String[1]]] $post_hook_commands     = $letsencrypt::renew_post_hook_commands,
+  Variant[String[1], Array[String[1]]] $deploy_hook_commands   = $letsencrypt::renew_deploy_hook_commands,
+  Array[String[1]]                     $additional_args        = $letsencrypt::renew_additional_args,
+  Boolean                              $disable_distro_cron    = $letsencrypt::renew_disable_distro_cron,
+  Optional[Stdlib::Unixpath]           $distro_renew_cron_file = undef,
+  Optional[String]                     $distro_renew_timer     = undef,
+  Enum['present', 'absent']            $cron_ensure            = $letsencrypt::renew_cron_ensure,
+  Letsencrypt::Cron::Hour              $cron_hour              = $letsencrypt::renew_cron_hour,
+  Letsencrypt::Cron::Minute            $cron_minute            = $letsencrypt::renew_cron_minute,
+  Letsencrypt::Cron::Monthday          $cron_monthday          = $letsencrypt::renew_cron_monthday,
 ) {
   # Directory used for Puppet-managed renewal hooks. Make sure old unmanaged
   # hooks in this directory are purged. Leave custom hooks in the default
@@ -83,5 +90,18 @@ class letsencrypt::renew (
     hour     => $cron_hour,
     minute   => $cron_minute,
     monthday => $cron_monthday,
+  }
+
+  if $disable_distro_cron and $distro_renew_timer and $facts['service_provider'] == 'systemd' {
+    service { $distro_renew_timer:
+      ensure => stopped,
+      enable => false,
+    }
+  }
+  elsif $disable_distro_cron and $distro_renew_cron_file and $facts['service_provider'] != 'systemd' {
+    file { $distro_renew_cron_file:
+      ensure  => file,
+      content => '# certbot renew managed by puppet',
+    }
   }
 }
