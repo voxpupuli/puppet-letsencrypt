@@ -4,6 +4,7 @@ type Letsencrypt::Plugin = Enum[
   'standalone',
   'webroot',
   'nginx',
+  'dns-azure',
   'dns-route53',
   'dns-google',
   'dns-cloudflare',

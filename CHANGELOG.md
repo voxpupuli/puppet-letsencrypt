@@ -4,7 +4,27 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v9.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.0.0) (2022-11-18)
+## [v9.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.1.0) (2023-01-15)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.0.1...v9.1.0)
+
+**Implemented enhancements:**
+
+- Add dns-azure to allowed plugins [\#298](https://github.com/voxpupuli/puppet-letsencrypt/pull/298) ([yachub](https://github.com/yachub))
+
+## [v9.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.0.1) (2022-12-02)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.0.0...v9.0.1)
+
+**Fixed bugs:**
+
+- Update REFERENCE.md with recent breaking changes [\#303](https://github.com/voxpupuli/puppet-letsencrypt/pull/303) ([treydock](https://github.com/treydock))
+
+**Closed issues:**
+
+- Documentation/examples for certonly `suppress_cron_output` not updated after removal of parameter [\#302](https://github.com/voxpupuli/puppet-letsencrypt/issues/302)
+
+## [v9.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.0.0) (2022-11-21)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v8.0.2...v9.0.0)
 
