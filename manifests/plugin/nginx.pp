@@ -25,7 +25,10 @@ class letsencrypt::plugin::nginx (
 
     file { '/etc/letsencrypt/options-ssl-nginx.conf':
       ensure  => link,
-      target  => '/usr/lib/python3.6/site-packages/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf',
+      target  => $::osfamily ? {
+        'Redhat' => '/usr/lib/python3.6/site-packages/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf',
+        'Debian' => '/usr/lib/python3/dist-packages/certbot_nginx/options-ssl-nginx.conf',
+      },
       require => Package[$package_name],
     }
   }
