@@ -22,10 +22,8 @@ describe 'letsencrypt' do
           it 'contains the correct resources' do
             is_expected.to contain_class('letsencrypt::install').
               with(configure_epel: epel).
-              that_notifies('Exec[initialize letsencrypt]').
               that_comes_before('Class[letsencrypt::renew]')
-            is_expected.to contain_exec('initialize letsencrypt').with_command('certbot -h')
-            is_expected.to contain_class('letsencrypt::config').that_comes_before('Exec[initialize letsencrypt]')
+            is_expected.to contain_class('letsencrypt::config')
             is_expected.to contain_class('letsencrypt::renew').
               with(pre_hook_commands: [],
                    post_hook_commands: [],
@@ -85,12 +83,6 @@ describe 'letsencrypt' do
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             end
           end
-        end
-
-        describe 'with custom environment variables' do
-          let(:additional_params) { { environment: ['FOO=bar', 'FIZZ=buzz'] } }
-
-          it { is_expected.to contain_exec('initialize letsencrypt').with_environment(['FOO=bar', 'FIZZ=buzz']) }
         end
 
         describe 'with custom package_ensure' do
