@@ -42,7 +42,6 @@ describe 'letsencrypt::certonly' do
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
-        it { is_expected.to contain_exec('initialize letsencrypt') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless(['test ! -f /usr/local/sbin/letsencrypt-domain-validation', "/usr/local/sbin/letsencrypt-domain-validation #{pathprefix}/etc/letsencrypt/live/foo.example.com/cert.pem 'foo.example.com'"]) }
       end

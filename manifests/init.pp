@@ -81,7 +81,6 @@ class letsencrypt (
 ) {
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
-    Class['letsencrypt::install'] ~> Exec['initialize letsencrypt']
     Class['letsencrypt::install'] -> Class['letsencrypt::renew']
   }
 
@@ -89,18 +88,9 @@ class letsencrypt (
 
   if $manage_config {
     contain letsencrypt::config # lint:ignore:relative_classname_inclusion
-    Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
   contain letsencrypt::renew
-
-  # TODO: do we need this command when installing from package?
-  exec { 'initialize letsencrypt':
-    command     => "${package_command} -h",
-    path        => $facts['path'],
-    environment => $environment,
-    refreshonly => true,
-  }
 
   $certificates.each |$certificate, $properties| {
     letsencrypt::certonly { $certificate: * => $properties }
