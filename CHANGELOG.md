@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v9.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.2.0) (2023-04-04)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.1.0...v9.2.0)
+
+**Implemented enhancements:**
+
+- Add missing datatypes and documentation [\#315](https://github.com/voxpupuli/puppet-letsencrypt/pull/315) ([bastelfreak](https://github.com/bastelfreak))
+- Add EL9 support [\#314](https://github.com/voxpupuli/puppet-letsencrypt/pull/314) ([bastelfreak](https://github.com/bastelfreak))
+- Add CentOS 8 support [\#313](https://github.com/voxpupuli/puppet-letsencrypt/pull/313) ([bastelfreak](https://github.com/bastelfreak))
+- Add Rocky 8 support [\#312](https://github.com/voxpupuli/puppet-letsencrypt/pull/312) ([bastelfreak](https://github.com/bastelfreak))
+- certonly: Implement default hook commands [\#311](https://github.com/voxpupuli/puppet-letsencrypt/pull/311) ([bastelfreak](https://github.com/bastelfreak))
+- Remove unnecessary exec [\#309](https://github.com/voxpupuli/puppet-letsencrypt/pull/309) ([deric](https://github.com/deric))
+
 ## [v9.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.1.0) (2023-01-15)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.0.1...v9.1.0)
