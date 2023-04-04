@@ -85,6 +85,9 @@ The following parameters are available in the `letsencrypt` class:
 * [`renew_cron_hour`](#-letsencrypt--renew_cron_hour)
 * [`renew_cron_minute`](#-letsencrypt--renew_cron_minute)
 * [`renew_cron_monthday`](#-letsencrypt--renew_cron_monthday)
+* [`certonly_pre_hook_commands`](#-letsencrypt--certonly_pre_hook_commands)
+* [`certonly_post_hook_commands`](#-letsencrypt--certonly_post_hook_commands)
+* [`certonly_deploy_hook_commands`](#-letsencrypt--certonly_deploy_hook_commands)
 
 ##### <a name="-letsencrypt--email"></a>`email`
 
@@ -293,6 +296,35 @@ Optional string, integer or array of monthday(s) the renewal command should
 run. E.g. '2-30/2' to run on even days.
 
 Default value: `'*'`
+
+##### <a name="-letsencrypt--certonly_pre_hook_commands"></a>`certonly_pre_hook_commands`
+
+Data type: `Any`
+
+Array of commands to run in a shell before obtaining/renewing any certificates.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--certonly_post_hook_commands"></a>`certonly_post_hook_commands`
+
+Data type: `Any`
+
+Array of commands to run in a shell after attempting to obtain/renew certificates.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--certonly_deploy_hook_commands"></a>`certonly_deploy_hook_commands`
+
+Data type: `Any`
+
+Array of commands to run in a shell once for each successfully issued/renewed
+certificate. Two environmental variables are supplied by certbot:
+- $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
+                    Example: /etc/letsencrypt/live/example.com
+- $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
+                    Example: "example.com www.example.com"
+
+Default value: `[]`
 
 ### <a name="letsencrypt--install"></a>`letsencrypt::install`
 
@@ -927,7 +959,7 @@ Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell before attempting to obtain/renew the certificate.
 
-Default value: `[]`
+Default value: `$letsencrypt::certonly_pre_hook_commands`
 
 ##### <a name="-letsencrypt--certonly--post_hook_commands"></a>`post_hook_commands`
 
@@ -935,7 +967,7 @@ Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of command(s) to run in a shell after attempting to obtain/renew the certificate.
 
-Default value: `[]`
+Default value: `$letsencrypt::certonly_post_hook_commands`
 
 ##### <a name="-letsencrypt--certonly--deploy_hook_commands"></a>`deploy_hook_commands`
 
@@ -948,7 +980,7 @@ Two environmental variables are supplied by certbot:
 - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
                     Example: "example.com www.example.com"
 
-Default value: `[]`
+Default value: `$letsencrypt::certonly_deploy_hook_commands`
 
 ##### <a name="-letsencrypt--certonly--cert_name"></a>`cert_name`
 
