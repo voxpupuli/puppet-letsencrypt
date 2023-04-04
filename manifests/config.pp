@@ -3,12 +3,12 @@
 # @api private
 #
 class letsencrypt::config (
-  $config_dir          = $letsencrypt::config_dir,
-  $config_file         = $letsencrypt::config_file,
-  $config              = $letsencrypt::config,
-  $email               = $letsencrypt::email,
-  $unsafe_registration = $letsencrypt::unsafe_registration,
-  $agree_tos           = $letsencrypt::agree_tos,
+  Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
+  Stdlib::Absolutepath $config_file = $letsencrypt::config_file,
+  Hash $config = $letsencrypt::config,
+  Optional[String[1]] $email = $letsencrypt::email,
+  Boolean $unsafe_registration = $letsencrypt::unsafe_registration,
+  Boolean $agree_tos = $letsencrypt::agree_tos,
 ) {
   assert_private()
 

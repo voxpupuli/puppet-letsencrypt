@@ -65,7 +65,7 @@ class letsencrypt (
   Optional[String] $email            = undef,
   Array $environment                 = [],
   String $package_name               = 'certbot',
-  $package_ensure                    = 'installed',
+  String[1] $package_ensure          = 'installed',
   String $package_command            = 'certbot',
   Stdlib::Unixpath $config_dir       = '/etc/letsencrypt',
   String $config_file                = "${config_dir}/cli.ini",
@@ -79,18 +79,18 @@ class letsencrypt (
   Integer[2048] $key_size            = 4096,
   Hash[String[1],Hash] $certificates = {},
   # $renew_* should only be used in letsencrypt::renew (blame rspec)
-  $renew_pre_hook_commands           = [],
-  $renew_post_hook_commands          = [],
-  $renew_deploy_hook_commands        = [],
-  $renew_additional_args             = [],
-  $renew_cron_ensure                 = 'absent',
-  $renew_cron_hour                   = fqdn_rand(24),
-  $renew_cron_minute                 = fqdn_rand(60),
-  $renew_cron_monthday               = '*',
+  Variant[String[1], Array[String[1]]] $renew_pre_hook_commands = [],
+  Variant[String[1], Array[String[1]]] $renew_post_hook_commands = [],
+  Variant[String[1], Array[String[1]]] $renew_deploy_hook_commands = [],
+  Variant[String[1], Array[String[1]]] $renew_additional_args = [],
+  String[1] $renew_cron_ensure                 = 'absent',
+  Letsencrypt::Cron::Hour $renew_cron_hour = fqdn_rand(24),
+  Letsencrypt::Cron::Minute $renew_cron_minute = fqdn_rand(60),
+  Letsencrypt::Cron::Monthday $renew_cron_monthday = '*',
   # define default hooks for all certonly defined resources
-  $certonly_pre_hook_commands        = [],
-  $certonly_post_hook_commands       = [],
-  $certonly_deploy_hook_commands     = [],
+  Array[String[1]] $certonly_pre_hook_commands = [],
+  Array[String[1]] $certonly_post_hook_commands = [],
+  Array[String[1]] $certonly_deploy_hook_commands = [],
 ) {
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
