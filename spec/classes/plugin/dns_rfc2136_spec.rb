@@ -19,12 +19,14 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         osrelease = facts[:os]['release']['major']
         osfull = "#{osname}-#{osrelease}"
         case osfull
-        when 'Debian-10', 'Debian-11', 'AlmaLinux-8', 'RedHat-8', 'Ubuntu-22.04', 'Ubuntu-20.04', 'Ubuntu-18.04', 'Fedora-36', 'Rocky-8', 'CentOS-8'
-          'python3-certbot-dns-rfc2136'
         when 'RedHat-7', 'CentOS-7'
           'python2-certbot-dns-rfc2136'
         when 'FreeBSD-12', 'FreeBSD-13'
           'py39-certbot-dns-rfc2136'
+        when %r{OpenBSD}
+          ''
+        else
+          'python3-certbot-dns-rfc2136'
         end
       end
 
@@ -45,7 +47,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         let(:pathprefix) { facts[:kernel] == 'FreeBSD' ? '/usr/local' : '' }
 
         it do
-          if package_name.nil?
+          if package_name.empty?
             is_expected.not_to compile
           else
             is_expected.to compile.with_all_deps
@@ -63,7 +65,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
           let(:params) { super().merge(manage_package: true) }
 
           it do
-            if package_name.nil?
+            if package_name.empty?
               is_expected.not_to compile
             else
               is_expected.to contain_class('letsencrypt::plugin::dns_rfc2136').with_package_name(package_name)
