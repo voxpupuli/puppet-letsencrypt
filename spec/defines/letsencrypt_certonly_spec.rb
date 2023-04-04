@@ -508,6 +508,17 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/usr/local/etc/letsencrypt').with_ensure('directory') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless(['test ! -f /usr/local/sbin/letsencrypt-domain-validation', '/usr/local/sbin/letsencrypt-domain-validation /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem \'foo.example.com\'']) }
       end
+
+      context 'with custom commands in init.pp' do
+        let(:title) { 'foo.example.com' }
+        let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', certonly_pre_hook_commands => ['foo'], certonly_post_hook_commands => ['bar'], certonly_deploy_hook_commands => ['baz']}" }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_letsencrypt__hook('foo.example.com-pre') }
+        it { is_expected.to contain_letsencrypt__hook('foo.example.com-post') }
+        it { is_expected.to contain_letsencrypt__hook('foo.example.com-deploy') }
+        it { is_expected.to have_letsencrypt__hook_resource_count(3) }
+      end
     end
   end
 end

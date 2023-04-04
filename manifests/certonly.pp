@@ -137,9 +137,9 @@ define letsencrypt::certonly (
   Variant[Integer[0,23], String, Array]     $cron_hour            = fqdn_rand(24, $title),
   Variant[Integer[0,59], String, Array]     $cron_minute          = fqdn_rand(60, $title),
   Stdlib::Unixpath                          $config_dir           = $letsencrypt::config_dir,
-  Variant[String[1], Array[String[1]]]      $pre_hook_commands    = [],
-  Variant[String[1], Array[String[1]]]      $post_hook_commands   = [],
-  Variant[String[1], Array[String[1]]]      $deploy_hook_commands = [],
+  Variant[String[1], Array[String[1]]]      $pre_hook_commands    = $letsencrypt::certonly_pre_hook_commands,
+  Variant[String[1], Array[String[1]]]      $post_hook_commands   = $letsencrypt::certonly_post_hook_commands,
+  Variant[String[1], Array[String[1]]]      $deploy_hook_commands = $letsencrypt::certonly_deploy_hook_commands,
 ) {
   if $plugin == 'webroot' and empty($webroot_paths) {
     fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")

@@ -50,6 +50,15 @@
 # @param renew_cron_monthday
 #   Optional string, integer or array of monthday(s) the renewal command should
 #   run. E.g. '2-30/2' to run on even days.
+# @param certonly_pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
+# @param certonly_post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
+# @param certonly_deploy_hook_commands
+#   Array of commands to run in a shell once for each successfully issued/renewed
+#   certificate. Two environmental variables are supplied by certbot:
+#   - $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
+#                       Example: /etc/letsencrypt/live/example.com
+#   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
+#                       Example: "example.com www.example.com"
 #
 class letsencrypt (
   Boolean $configure_epel,
@@ -78,6 +87,10 @@ class letsencrypt (
   $renew_cron_hour                   = fqdn_rand(24),
   $renew_cron_minute                 = fqdn_rand(60),
   $renew_cron_monthday               = '*',
+  # define default hooks for all certonly defined resources
+  $certonly_pre_hook_commands        = [],
+  $certonly_post_hook_commands       = [],
+  $certonly_deploy_hook_commands     = [],
 ) {
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
