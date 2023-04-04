@@ -118,6 +118,8 @@
 #   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
 #                       Example: "example.com www.example.com"
 #
+# @param cert_name the common name used for the certificate
+#
 define letsencrypt::certonly (
   Enum['present','absent']                  $ensure               = 'present',
   Array[String[1]]                          $domains              = [$title],

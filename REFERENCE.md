@@ -981,7 +981,7 @@ Default value: `$letsencrypt::certonly_deploy_hook_commands`
 
 Data type: `String[1]`
 
-
+the common name used for the certificate
 
 Default value: `$title`
 
