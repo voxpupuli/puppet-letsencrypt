@@ -10,7 +10,7 @@
 #   Optional string, cloudflare api token value for authentication.
 # @param email
 #   Optional string, cloudflare account email address, used in conjunction with api_key.
-# @param config_dir The path to the configuration directory.
+# @param config_path The path to the configuration directory.
 # @param manage_package Manage the plugin package.
 # @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 #

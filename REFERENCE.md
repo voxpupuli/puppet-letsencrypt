@@ -116,7 +116,7 @@ Default value: `'certbot'`
 
 ##### <a name="-letsencrypt--package_ensure"></a>`package_ensure`
 
-Data type: `Any`
+Data type: `String[1]`
 
 The value passed to `ensure` when installing the client package.
 
@@ -226,7 +226,7 @@ Default value: `{}`
 
 ##### <a name="-letsencrypt--renew_pre_hook_commands"></a>`renew_pre_hook_commands`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell before obtaining/renewing any certificates.
 
@@ -234,7 +234,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_post_hook_commands"></a>`renew_post_hook_commands`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell after attempting to obtain/renew certificates.
 
@@ -242,7 +242,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_deploy_hook_commands"></a>`renew_deploy_hook_commands`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell once for each successfully issued/renewed
 certificate. Two environmental variables are supplied by certbot:
@@ -255,7 +255,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_additional_args"></a>`renew_additional_args`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of additional command line arguments to pass to 'certbot renew'.
 
@@ -263,7 +263,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_cron_ensure"></a>`renew_cron_ensure`
 
-Data type: `Any`
+Data type: `String[1]`
 
 Intended state of the cron resource running certbot renew.
 
@@ -271,7 +271,7 @@ Default value: `'absent'`
 
 ##### <a name="-letsencrypt--renew_cron_hour"></a>`renew_cron_hour`
 
-Data type: `Any`
+Data type: `Letsencrypt::Cron::Hour`
 
 Optional string, integer or array of hour(s) the renewal command should run.
 E.g. '[0,12]' to execute at midnight and midday.
@@ -281,7 +281,7 @@ Default value: `fqdn_rand(24)`
 
 ##### <a name="-letsencrypt--renew_cron_minute"></a>`renew_cron_minute`
 
-Data type: `Any`
+Data type: `Letsencrypt::Cron::Minute`
 
 Optional string, integer or array of minute(s) the renewal command should
 run. E.g. 0 or '00' or [0,30].
@@ -290,7 +290,7 @@ Default value: `fqdn_rand(60)`
 
 ##### <a name="-letsencrypt--renew_cron_monthday"></a>`renew_cron_monthday`
 
-Data type: `Any`
+Data type: `Letsencrypt::Cron::Monthday`
 
 Optional string, integer or array of monthday(s) the renewal command should
 run. E.g. '2-30/2' to run on even days.
@@ -299,7 +299,7 @@ Default value: `'*'`
 
 ##### <a name="-letsencrypt--certonly_pre_hook_commands"></a>`certonly_pre_hook_commands`
 
-Data type: `Any`
+Data type: `Array[String[1]]`
 
 Array of commands to run in a shell before obtaining/renewing any certificates.
 
@@ -307,7 +307,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--certonly_post_hook_commands"></a>`certonly_post_hook_commands`
 
-Data type: `Any`
+Data type: `Array[String[1]]`
 
 Array of commands to run in a shell after attempting to obtain/renew certificates.
 
@@ -315,7 +315,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--certonly_deploy_hook_commands"></a>`certonly_deploy_hook_commands`
 
-Data type: `Any`
+Data type: `Array[String[1]]`
 
 Array of commands to run in a shell once for each successfully issued/renewed
 certificate. Two environmental variables are supplied by certbot:
@@ -375,10 +375,9 @@ The following parameters are available in the `letsencrypt::plugin::dns_cloudfla
 * [`api_key`](#-letsencrypt--plugin--dns_cloudflare--api_key)
 * [`api_token`](#-letsencrypt--plugin--dns_cloudflare--api_token)
 * [`email`](#-letsencrypt--plugin--dns_cloudflare--email)
-* [`config_dir`](#-letsencrypt--plugin--dns_cloudflare--config_dir)
+* [`config_path`](#-letsencrypt--plugin--dns_cloudflare--config_path)
 * [`manage_package`](#-letsencrypt--plugin--dns_cloudflare--manage_package)
 * [`propagation_seconds`](#-letsencrypt--plugin--dns_cloudflare--propagation_seconds)
-* [`config_path`](#-letsencrypt--plugin--dns_cloudflare--config_path)
 
 ##### <a name="-letsencrypt--plugin--dns_cloudflare--package_name"></a>`package_name`
 
@@ -412,9 +411,13 @@ Optional string, cloudflare account email address, used in conjunction with api_
 
 Default value: `undef`
 
-##### <a name="-letsencrypt--plugin--dns_cloudflare--config_dir"></a>`config_dir`
+##### <a name="-letsencrypt--plugin--dns_cloudflare--config_path"></a>`config_path`
+
+Data type: `Stdlib::Absolutepath`
 
 The path to the configuration directory.
+
+Default value: `"${letsencrypt::config_dir}/dns-cloudflare.ini"`
 
 ##### <a name="-letsencrypt--plugin--dns_cloudflare--manage_package"></a>`manage_package`
 
@@ -431,14 +434,6 @@ Data type: `Integer`
 Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
 Default value: `10`
-
-##### <a name="-letsencrypt--plugin--dns_cloudflare--config_path"></a>`config_path`
-
-Data type: `Stdlib::Absolutepath`
-
-
-
-Default value: `"${letsencrypt::config_dir}/dns-cloudflare.ini"`
 
 ### <a name="letsencrypt--plugin--dns_rfc2136"></a>`letsencrypt::plugin::dns_rfc2136`
 
