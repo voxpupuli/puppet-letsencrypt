@@ -28,7 +28,7 @@ class letsencrypt::plugin::dns_rfc2136 (
 
   if $manage_package {
     package { $package_name:
-      ensure => installed,
+      ensure => $letsencrypt::package_ensure,
     }
   }
 
