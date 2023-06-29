@@ -16,7 +16,7 @@ class letsencrypt::plugin::dns_route53 (
 
   if $manage_package {
     package { $package_name:
-      ensure => installed,
+      ensure => $letsencrypt::package_ensure,
     }
   }
 }

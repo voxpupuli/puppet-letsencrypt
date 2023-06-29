@@ -23,7 +23,7 @@ class letsencrypt::plugin::dns_cloudflare (
   Boolean $manage_package           = true,
   Integer $propagation_seconds      = 10,
 ) {
-  require letsencrypt::install
+  require letsencrypt
 
   if ! $api_key and ! $api_token {
     fail('No authentication method provided, please specify either api_token or api_key and api_email.')
@@ -35,7 +35,7 @@ class letsencrypt::plugin::dns_cloudflare (
     }
 
     package { $package_name:
-      ensure => installed,
+      ensure => $letsencrypt::package_ensure,
     }
   }
 
