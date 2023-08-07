@@ -6,11 +6,8 @@ LOCKFD=9
 _lock() {
   local lock_binary=$(which flock)
   if [ -z "${lock_binary}" ]; then
-    lock_binary=$(which lockf)
-    if [ -z "${lock_binary}" ]; then
-      echo "flock/lockf binary wasn't found"
-      exit 1
-    fi
+    echo "flock binary wasn't found"
+    exit 1
   fi
   ${lock_binary} "$@" $LOCKFD;
 }
