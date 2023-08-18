@@ -452,7 +452,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport FOO=bar\nexport FIZZ=buzz\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com'\n" }
       end
 
-      context 'with manage cron and cron_output=suppress' do\
+      context 'with manage cron and cron_output=suppress' do \
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
@@ -464,7 +464,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com' > /dev/null 2>&1\n") }
       end
 
-      context 'with manage cron and cron_output=log' do\
+      context 'with manage cron and cron_output=log' do \
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
