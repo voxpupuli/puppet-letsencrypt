@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v10.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v10.0.0) (2023-09-27)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.2.0...v10.0.0)
+
+**Breaking changes:**
+
+- Drop support for Debian 10 \(EOL\) [\#330](https://github.com/voxpupuli/puppet-letsencrypt/pull/330) ([evgeni](https://github.com/evgeni))
+- Drop support for Ubuntu 18.04 \(EOL\) [\#329](https://github.com/voxpupuli/puppet-letsencrypt/pull/329) ([evgeni](https://github.com/evgeni))
+- Drop Puppet 6 support [\#318](https://github.com/voxpupuli/puppet-letsencrypt/pull/318) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Allow puppetlabs/inifile 6.x, puppet/epel 5.x [\#327](https://github.com/voxpupuli/puppet-letsencrypt/pull/327) ([evgeni](https://github.com/evgeni))
+- puppetlabs/stdlib: Allow 9.x [\#323](https://github.com/voxpupuli/puppet-letsencrypt/pull/323) ([bastelfreak](https://github.com/bastelfreak))
+- Add a `certbot_version` fact [\#322](https://github.com/voxpupuli/puppet-letsencrypt/pull/322) ([martijndegouw](https://github.com/martijndegouw))
+
+**Fixed bugs:**
+
+- Propagate the package\_ensure parameter to all plugins [\#321](https://github.com/voxpupuli/puppet-letsencrypt/pull/321) ([martijndegouw](https://github.com/martijndegouw))
+
 ## [v9.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.2.0) (2023-04-04)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.1.0...v9.2.0)
