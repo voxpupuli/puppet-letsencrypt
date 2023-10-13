@@ -12,7 +12,7 @@ class letsencrypt::plugin::dns_route53 (
   Integer $propagation_seconds     = 10,
   Boolean $manage_package          = true,
 ) {
-  require letsencrypt
+  include letsencrypt
 
   if $manage_package {
     package { $package_name:

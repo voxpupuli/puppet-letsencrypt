@@ -24,7 +24,7 @@ class letsencrypt::plugin::dns_rfc2136 (
   Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
   Boolean $manage_package          = true,
 ) {
-  require letsencrypt
+  include letsencrypt
 
   if $manage_package {
     package { $package_name:
