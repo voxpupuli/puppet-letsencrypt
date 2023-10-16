@@ -24,7 +24,7 @@ class letsencrypt::config (
   }
 
   if $email {
-    $_config = merge($config, { 'email' => $email })
+    $_config = $config + { 'email' => $email }
   } else {
     $_config = $config
   }
