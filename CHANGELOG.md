@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v10.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v10.1.0) (2023-10-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v10.0.0...v10.1.0)
+
+**Implemented enhancements:**
+
+- replace obsolete merge function [\#333](https://github.com/voxpupuli/puppet-letsencrypt/pull/333) ([vchepkov](https://github.com/vchepkov))
+
 ## [v10.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v10.0.0) (2023-09-27)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.2.0...v10.0.0)
