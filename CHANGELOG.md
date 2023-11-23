@@ -378,7 +378,7 @@ These should not affect the functionality of the module.
 **Closed issues:**
 
 - Puppet support in readme and metadata.json conflicts [\#102](https://github.com/voxpupuli/puppet-letsencrypt/issues/102)
-- Could not find declared class ::letsencrypt [\#101](https://github.com/voxpupuli/puppet-letsencrypt/issues/101)
+- Could not find declared class letsencrypt [\#101](https://github.com/voxpupuli/puppet-letsencrypt/issues/101)
 - Please issue a new release [\#54](https://github.com/voxpupuli/puppet-letsencrypt/issues/54)
 
 ## [v2.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.0.1) (2017-09-17)

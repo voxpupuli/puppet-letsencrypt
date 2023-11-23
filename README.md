@@ -264,7 +264,7 @@ A fact that contains the current version of certbot installed on your operating 
 
 ### Fact: letsencrypt_directory
 
-Facts about your live certificates are available through facter. You can query the list of live certificates from puppet using `$::letsencrypt_directory` in your puppet code, hiera data or from the command line.
+Facts about your live certificates are available through facter. You can query the list of live certificates from puppet using `$facts['letsencrypt_directory']` in your puppet code, hiera data or from the command line.
 
 ```
 facter -p letsencrypt_directory
