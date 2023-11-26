@@ -9,7 +9,6 @@
 #### Public Classes
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
-* [`letsencrypt::install`](#letsencrypt--install): Installs the Let's Encrypt client.
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencrypt--plugin--dns_cloudflare): Installs and configures the dns-cloudflare plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencrypt--plugin--dns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencrypt--plugin--dns_route53): Installs and configures the dns-route53 plugin
@@ -19,6 +18,7 @@
 #### Private Classes
 
 * `letsencrypt::config`: Configures the Let's Encrypt client.
+* `letsencrypt::install`: Installs the Let's Encrypt client.
 * `letsencrypt::scripts`: Deploy helper scripts scripts
 
 ### Defined types
@@ -327,42 +327,6 @@ certificate. Two environmental variables are supplied by certbot:
                     Example: "example.com www.example.com"
 
 Default value: `[]`
-
-### <a name="letsencrypt--install"></a>`letsencrypt::install`
-
-Installs the Let's Encrypt client.
-
-#### Parameters
-
-The following parameters are available in the `letsencrypt::install` class:
-
-* [`configure_epel`](#-letsencrypt--install--configure_epel)
-* [`package_ensure`](#-letsencrypt--install--package_ensure)
-* [`package_name`](#-letsencrypt--install--package_name)
-
-##### <a name="-letsencrypt--install--configure_epel"></a>`configure_epel`
-
-Data type: `Boolean`
-
-A feature flag to include the 'epel' class and depend on it for package installation.
-
-Default value: `$letsencrypt::configure_epel`
-
-##### <a name="-letsencrypt--install--package_ensure"></a>`package_ensure`
-
-Data type: `String`
-
-The value passed to `ensure` when installing the client package.
-
-Default value: `$letsencrypt::package_ensure`
-
-##### <a name="-letsencrypt--install--package_name"></a>`package_name`
-
-Data type: `String`
-
-Name of package to use when installing the client package.
-
-Default value: `$letsencrypt::package_name`
 
 ### <a name="letsencrypt--plugin--dns_cloudflare"></a>`letsencrypt::plugin::dns_cloudflare`
 
