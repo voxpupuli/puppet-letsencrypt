@@ -1,2 +1,0 @@
----
-letsencrypt::configure_epel: false

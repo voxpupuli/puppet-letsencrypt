@@ -184,6 +184,8 @@ Data type: `Boolean`
 
 A feature flag to include the 'epel' class and depend on it for package installation.
 
+Default value: `false`
+
 ##### <a name="-letsencrypt--agree_tos"></a>`agree_tos`
 
 Data type: `Boolean`

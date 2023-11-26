@@ -61,7 +61,7 @@
 #                       Example: "example.com www.example.com"
 #
 class letsencrypt (
-  Boolean $configure_epel,
+  Boolean $configure_epel            = false,
   Optional[String] $email            = undef,
   Array $environment                 = [],
   String $package_name               = 'certbot',

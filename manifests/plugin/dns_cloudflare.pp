@@ -23,7 +23,7 @@ class letsencrypt::plugin::dns_cloudflare (
   Boolean $manage_package           = true,
   Integer $propagation_seconds      = 10,
 ) {
-  require letsencrypt
+  include letsencrypt
 
   if ! $api_key and ! $api_token {
     fail('No authentication method provided, please specify either api_token or api_key and api_email.')
@@ -34,8 +34,15 @@ class letsencrypt::plugin::dns_cloudflare (
       fail('No package name provided for certbot dns cloudflare plugin.')
     }
 
+    $requirement = if $letsencrypt::configure_epel {
+      Class['epel']
+    } else {
+      undef
+    }
+
     package { $package_name:
-      ensure => $letsencrypt::package_ensure,
+      ensure  => $letsencrypt::package_ensure,
+      require => $requirement,
     }
   }
 
