@@ -34,8 +34,15 @@ class letsencrypt::plugin::dns_cloudflare (
       fail('No package name provided for certbot dns cloudflare plugin.')
     }
 
+    $requirement = if $letsencrypt::configure_epel {
+      Class['epel']
+    } else {
+      undef
+    }
+
     package { $package_name:
-      ensure => $letsencrypt::package_ensure,
+      ensure  => $letsencrypt::package_ensure,
+      require => $requirement,
     }
   }
 
