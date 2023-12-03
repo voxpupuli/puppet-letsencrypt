@@ -27,7 +27,9 @@
 # @param agree_tos A flag to agree to the Let's Encrypt Terms of Service.
 # @param unsafe_registration A flag to allow using the 'register-unsafely-without-email' flag.
 # @param config_dir The path to the configuration directory.
+# @param key_type Type of private key
 # @param key_size Size for the RSA public key
+# @param elliptic_curve The SECG elliptic curve name to use
 # @param certificates A hash containing certificates. Each key is the title and each value is a hash, both passed to letsencrypt::certonly.
 # @param renew_pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
 # @param renew_post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
@@ -76,7 +78,9 @@ class letsencrypt (
   Boolean $manage_install            = true,
   Boolean $agree_tos                 = true,
   Boolean $unsafe_registration       = false,
+  Enum['rsa', 'ecdsa'] $key_type     = 'rsa',
   Integer[2048] $key_size            = 4096,
+  String[1] $elliptic_curve          = 'secp256r1',
   Hash[String[1],Hash] $certificates = {},
   # $renew_* should only be used in letsencrypt::renew (blame rspec)
   Variant[String[1], Array[String[1]]] $renew_pre_hook_commands = [],

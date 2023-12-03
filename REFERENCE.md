@@ -75,7 +75,9 @@ The following parameters are available in the `letsencrypt` class:
 * [`agree_tos`](#-letsencrypt--agree_tos)
 * [`unsafe_registration`](#-letsencrypt--unsafe_registration)
 * [`config_dir`](#-letsencrypt--config_dir)
+* [`key_type`](#-letsencrypt--key_type)
 * [`key_size`](#-letsencrypt--key_size)
+* [`elliptic_curve`](#-letsencrypt--elliptic_curve)
 * [`certificates`](#-letsencrypt--certificates)
 * [`renew_pre_hook_commands`](#-letsencrypt--renew_pre_hook_commands)
 * [`renew_post_hook_commands`](#-letsencrypt--renew_post_hook_commands)
@@ -210,6 +212,14 @@ The path to the configuration directory.
 
 Default value: `'/etc/letsencrypt'`
 
+##### <a name="-letsencrypt--key_type"></a>`key_type`
+
+Data type: `Enum['rsa', 'ecdsa']`
+
+Type of private key
+
+Default value: `'rsa'`
+
 ##### <a name="-letsencrypt--key_size"></a>`key_size`
 
 Data type: `Integer[2048]`
@@ -217,6 +227,14 @@ Data type: `Integer[2048]`
 Size for the RSA public key
 
 Default value: `4096`
+
+##### <a name="-letsencrypt--elliptic_curve"></a>`elliptic_curve`
+
+Data type: `String[1]`
+
+The SECG elliptic curve name to use
+
+Default value: `'secp256r1'`
 
 ##### <a name="-letsencrypt--certificates"></a>`certificates`
 
@@ -752,7 +770,9 @@ The following parameters are available in the `letsencrypt::certonly` defined ty
 * [`letsencrypt_command`](#-letsencrypt--certonly--letsencrypt_command)
 * [`additional_args`](#-letsencrypt--certonly--additional_args)
 * [`environment`](#-letsencrypt--certonly--environment)
+* [`key_type`](#-letsencrypt--certonly--key_type)
 * [`key_size`](#-letsencrypt--certonly--key_size)
+* [`elliptic_curve`](#-letsencrypt--certonly--elliptic_curve)
 * [`manage_cron`](#-letsencrypt--certonly--manage_cron)
 * [`cron_output`](#-letsencrypt--certonly--cron_output)
 * [`cron_before_command`](#-letsencrypt--certonly--cron_before_command)
@@ -835,6 +855,14 @@ An optional array of environment variables
 
 Default value: `[]`
 
+##### <a name="-letsencrypt--certonly--key_type"></a>`key_type`
+
+Data type: `Enum['rsa', 'ecdsa']`
+
+Type of private key
+
+Default value: `$letsencrypt::key_type`
+
 ##### <a name="-letsencrypt--certonly--key_size"></a>`key_size`
 
 Data type: `Integer[2048]`
@@ -842,6 +870,14 @@ Data type: `Integer[2048]`
 Size for the RSA public key
 
 Default value: `$letsencrypt::key_size`
+
+##### <a name="-letsencrypt--certonly--elliptic_curve"></a>`elliptic_curve`
+
+Data type: `String[1]`
+
+The SECG elliptic curve name to use
+
+Default value: `$letsencrypt::elliptic_curve`
 
 ##### <a name="-letsencrypt--certonly--manage_cron"></a>`manage_cron`
 
