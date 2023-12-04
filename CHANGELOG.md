@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v11.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.0.0) (2023-12-03)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v10.1.0...v11.0.0)
+
+**Breaking changes:**
+
+- Add support for Fedora 39, drop support for Fedora 36 [\#336](https://github.com/voxpupuli/puppet-letsencrypt/pull/336) ([kenyon](https://github.com/kenyon))
+- certonly: Use the first domain for `$cert_name` instead of the `$title` [\#220](https://github.com/voxpupuli/puppet-letsencrypt/pull/220) ([saimonn](https://github.com/saimonn))
+
+**Implemented enhancements:**
+
+- Add Puppet 8 support [\#324](https://github.com/voxpupuli/puppet-letsencrypt/pull/324) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- plugins: avoid circular dependencies [\#332](https://github.com/voxpupuli/puppet-letsencrypt/pull/332) ([kenyon](https://github.com/kenyon))
+
+**Merged pull requests:**
+
+- Mark `install.pp` as private [\#338](https://github.com/voxpupuli/puppet-letsencrypt/pull/338) ([kenyon](https://github.com/kenyon))
+- move `letsencrypt::configure_epel` from hiera to `init.pp` [\#337](https://github.com/voxpupuli/puppet-letsencrypt/pull/337) ([kenyon](https://github.com/kenyon))
+- Remove legacy top-scope syntax [\#335](https://github.com/voxpupuli/puppet-letsencrypt/pull/335) ([smortex](https://github.com/smortex))
+
 ## [v10.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v10.1.0) (2023-10-18)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v10.0.0...v10.1.0)
