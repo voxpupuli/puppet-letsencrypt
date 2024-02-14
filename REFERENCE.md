@@ -85,6 +85,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`renew_cron_hour`](#-letsencrypt--renew_cron_hour)
 * [`renew_cron_minute`](#-letsencrypt--renew_cron_minute)
 * [`renew_cron_monthday`](#-letsencrypt--renew_cron_monthday)
+* [`renew_cron_environment`](#-letsencrypt--renew_cron_environment)
 * [`certonly_pre_hook_commands`](#-letsencrypt--certonly_pre_hook_commands)
 * [`certonly_post_hook_commands`](#-letsencrypt--certonly_post_hook_commands)
 * [`certonly_deploy_hook_commands`](#-letsencrypt--certonly_deploy_hook_commands)
@@ -298,6 +299,15 @@ Optional string, integer or array of monthday(s) the renewal command should
 run. E.g. '2-30/2' to run on even days.
 
 Default value: `'*'`
+
+##### <a name="-letsencrypt--renew_cron_environment"></a>`renew_cron_environment`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Optional string or array of environments(s) the renewal command should have.
+E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+Default value: `[]`
 
 ##### <a name="-letsencrypt--certonly_pre_hook_commands"></a>`certonly_pre_hook_commands`
 
@@ -566,6 +576,7 @@ The following parameters are available in the `letsencrypt::renew` class:
 * [`cron_hour`](#-letsencrypt--renew--cron_hour)
 * [`cron_minute`](#-letsencrypt--renew--cron_minute)
 * [`cron_monthday`](#-letsencrypt--renew--cron_monthday)
+* [`cron_environment`](#-letsencrypt--renew--cron_environment)
 
 ##### <a name="-letsencrypt--renew--pre_hook_commands"></a>`pre_hook_commands`
 
@@ -638,6 +649,15 @@ Optional string, integer or array of monthday(s) the renewal command should
 run. E.g. '2-30/2' to run on even days. Default: Every day.
 
 Default value: `$letsencrypt::renew_cron_monthday`
+
+##### <a name="-letsencrypt--renew--cron_environment"></a>`cron_environment`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Optional string or array of environment variables the renewal command should have.
+E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+Default value: `$letsencrypt::renew_cron_environment`
 
 ## Defined types
 

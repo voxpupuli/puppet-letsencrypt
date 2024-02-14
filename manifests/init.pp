@@ -50,6 +50,9 @@
 # @param renew_cron_monthday
 #   Optional string, integer or array of monthday(s) the renewal command should
 #   run. E.g. '2-30/2' to run on even days.
+# @param renew_cron_environment
+#   Optional string or array of environments(s) the renewal command should have.
+#   E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
 # @param certonly_pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
 # @param certonly_post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
 # @param certonly_deploy_hook_commands
@@ -87,6 +90,7 @@ class letsencrypt (
   Letsencrypt::Cron::Hour $renew_cron_hour = fqdn_rand(24),
   Letsencrypt::Cron::Minute $renew_cron_minute = fqdn_rand(60),
   Letsencrypt::Cron::Monthday $renew_cron_monthday = '*',
+  Variant[String[1], Array[String[1]]] $renew_cron_environment = [],
   # define default hooks for all certonly defined resources
   Array[String[1]] $certonly_pre_hook_commands = [],
   Array[String[1]] $certonly_post_hook_commands = [],
