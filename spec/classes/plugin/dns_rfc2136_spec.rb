@@ -17,7 +17,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
       let(:package_name) do
         case facts[:os]['family']
         when 'FreeBSD'
-          'py39-certbot-dns-rfc2136'
+          'py311-certbot-dns-rfc2136'
         when 'OpenBSD'
           ''
         else

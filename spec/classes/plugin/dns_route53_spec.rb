@@ -17,7 +17,7 @@ describe 'letsencrypt::plugin::dns_route53' do
       let(:package_name) do
         case facts[:os]['family']
         when 'FreeBSD'
-          'py39-certbot-dns-route53'
+          'py311-certbot-dns-route53'
         when 'OpenBSD'
           ''
         else
