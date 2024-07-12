@@ -20,7 +20,7 @@
 # @param config_file The path to the configuration file for the letsencrypt cli.
 # @param config A hash representation of the letsencrypt configuration file.
 # @param cron_scripts_path The path for renewal scripts called by cron
-# @param cron_owner_group Group owner of cron renew scripts.
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 # @param manage_config A feature flag to toggle the management of the letsencrypt configuration file.
 # @param manage_install A feature flag to toggle the management of the letsencrypt client installation.
 # @param configure_epel A feature flag to include the 'epel' class and depend on it for package installation.
@@ -74,7 +74,7 @@ class letsencrypt (
   String $config_file                = "${config_dir}/cli.ini",
   Hash $config                       = { 'server' => 'https://acme-v02.api.letsencrypt.org/directory' },
   String $cron_scripts_path          = "${facts['puppet_vardir']}/letsencrypt",
-  String $cron_owner_group           = 'root',
+  String $root_group                 = 'root',
   Boolean $manage_config             = true,
   Boolean $manage_install            = true,
   Boolean $agree_tos                 = true,

@@ -302,7 +302,7 @@ define letsencrypt::certonly (
       ensure  => $cron_script_ensure,
       mode    => '0755',
       owner   => 'root',
-      group   => $letsencrypt::cron_owner_group,
+      group   => $letsencrypt::root_group,
       content => template('letsencrypt/renew-script.sh.erb'),
     }
 
