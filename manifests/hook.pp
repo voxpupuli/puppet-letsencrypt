@@ -9,6 +9,7 @@
 define letsencrypt::hook (
   Enum['pre', 'post', 'deploy'] $type,
   String[1]                     $hook_file,
+  String[1]                     $root_group = $letsencrypt::root_group,
   # hook.sh.epp will validate this
   Variant[String[1],Array[String[1]]] $commands,
 ) {
@@ -20,7 +21,7 @@ define letsencrypt::hook (
   file { $hook_file:
     ensure  => file,
     owner   => 'root',
-    group   => 'root',
+    group   => $root_group,
     mode    => '0755',
     content => epp('letsencrypt/hook.sh.epp', {
         commands     => $commands,
