@@ -23,6 +23,7 @@ class letsencrypt::plugin::dns_rfc2136 (
   Integer $propagation_seconds     = 10,
   Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
   Boolean $manage_package          = true,
+  String[1] $root_group            = $letsencrypt::root_group,
 ) {
   include letsencrypt
 
@@ -43,7 +44,7 @@ class letsencrypt::plugin::dns_rfc2136 (
   file { "${config_dir}/dns-rfc2136.ini":
     ensure  => file,
     owner   => 'root',
-    group   => 'root',
+    group   => $root_group,
     mode    => '0400',
     content => epp('letsencrypt/ini.epp', {
         vars => { '' => $ini_vars },

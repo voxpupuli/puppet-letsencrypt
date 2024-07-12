@@ -132,6 +132,7 @@ define letsencrypt::certonly (
   Array[String[1]]                          $additional_args      = [],
   Array[String[1]]                          $environment          = [],
   Boolean                                   $manage_cron          = false,
+  String[1]                                 $root_group           = $letsencrypt::root_group,
   Optional[Enum['suppress', 'log']]         $cron_output          = undef,
   Optional[String[1]]                       $cron_before_command  = undef,
   Optional[String[1]]                       $cron_success_command = undef,
@@ -302,7 +303,7 @@ define letsencrypt::certonly (
       ensure  => $cron_script_ensure,
       mode    => '0755',
       owner   => 'root',
-      group   => $letsencrypt::root_group,
+      group   => $root_group,
       content => template('letsencrypt/renew-script.sh.erb'),
     }
 

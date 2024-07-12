@@ -22,6 +22,7 @@ class letsencrypt::plugin::dns_cloudflare (
   Stdlib::Absolutepath $config_path = "${letsencrypt::config_dir}/dns-cloudflare.ini",
   Boolean $manage_package           = true,
   Integer $propagation_seconds      = 10,
+  String[1] $root_group              = $letsencrypt::root_group,
 ) {
   include letsencrypt
 
@@ -65,7 +66,7 @@ class letsencrypt::plugin::dns_cloudflare (
   file { $config_path:
     ensure  => file,
     owner   => 'root',
-    group   => 'root',
+    group   => $root_group,
     mode    => '0400',
     content => epp('letsencrypt/ini.epp', {
         vars => { '' => $ini_vars },
