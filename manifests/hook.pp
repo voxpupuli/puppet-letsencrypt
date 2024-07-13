@@ -10,9 +10,9 @@
 define letsencrypt::hook (
   Enum['pre', 'post', 'deploy'] $type,
   String[1]                     $hook_file,
-  String[1]                     $root_group = $letsencrypt::root_group,
   # hook.sh.epp will validate this
   Variant[String[1],Array[String[1]]] $commands,
+  String[1]                     $root_group = $letsencrypt::root_group,
 ) {
   $validate_env = $type ? {
     'deploy' => true,
