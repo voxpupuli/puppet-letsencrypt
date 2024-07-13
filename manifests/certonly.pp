@@ -91,6 +91,7 @@
 # @param manage_cron
 #   Indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 # @param cron_output
 #   How to treat cron output
 #   `suppress` - Suppress all output

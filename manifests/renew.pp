@@ -15,6 +15,7 @@
 #                       Example: /etc/letsencrypt/live/example.com
 #   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
 #                       Example: "example.com www.example.com"
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 # @param additional_args Array of additional command line arguments to pass to 'certbot renew'.
 # @param cron_ensure Intended state of the cron resource running certbot renew
 # @param cron_hour

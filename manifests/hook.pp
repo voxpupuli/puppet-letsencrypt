@@ -4,6 +4,7 @@
 #
 # @param type Hook type.
 # @param hook_file Path to deploy hook script.
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 # @param commands Bash commands to execute when the hook is run by certbot.
 #
 define letsencrypt::hook (

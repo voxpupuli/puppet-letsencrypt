@@ -13,6 +13,7 @@
 # @param config_path The path to the configuration directory.
 # @param manage_package Manage the plugin package.
 # @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 #
 class letsencrypt::plugin::dns_cloudflare (
   Optional[String[1]] $package_name = undef,

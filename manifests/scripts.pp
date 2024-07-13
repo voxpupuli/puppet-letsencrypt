@@ -1,6 +1,7 @@
 # @summary Deploy helper scripts scripts
 #
 # @api private
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 #
 class letsencrypt::scripts (
   String[1]                                 $root_group           = $letsencrypt::root_group,

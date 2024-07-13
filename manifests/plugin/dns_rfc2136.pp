@@ -12,6 +12,7 @@
 # @param manage_package Manage the plugin package.
 # @param package_name The name of the package to install when $manage_package is true.
 # @param config_dir The path to the configuration directory.
+# @param root_group Group owner of renewal hooks and cron renew scripts.
 #
 class letsencrypt::plugin::dns_rfc2136 (
   Stdlib::Host $server,
