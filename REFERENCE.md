@@ -68,7 +68,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`config_file`](#-letsencrypt--config_file)
 * [`config`](#-letsencrypt--config)
 * [`cron_scripts_path`](#-letsencrypt--cron_scripts_path)
-* [`cron_owner_group`](#-letsencrypt--cron_owner_group)
+* [`root_group`](#-letsencrypt--root_group)
 * [`manage_config`](#-letsencrypt--manage_config)
 * [`manage_install`](#-letsencrypt--manage_install)
 * [`configure_epel`](#-letsencrypt--configure_epel)
@@ -155,11 +155,11 @@ The path for renewal scripts called by cron
 
 Default value: `"${facts['puppet_vardir']}/letsencrypt"`
 
-##### <a name="-letsencrypt--cron_owner_group"></a>`cron_owner_group`
+##### <a name="-letsencrypt--root_group"></a>`root_group`
 
 Data type: `String`
 
-Group owner of cron renew scripts.
+Group owner of renewal hooks and cron renew scripts.
 
 Default value: `'root'`
 
@@ -354,6 +354,7 @@ The following parameters are available in the `letsencrypt::plugin::dns_cloudfla
 * [`config_path`](#-letsencrypt--plugin--dns_cloudflare--config_path)
 * [`manage_package`](#-letsencrypt--plugin--dns_cloudflare--manage_package)
 * [`propagation_seconds`](#-letsencrypt--plugin--dns_cloudflare--propagation_seconds)
+* [`root_group`](#-letsencrypt--plugin--dns_cloudflare--root_group)
 
 ##### <a name="-letsencrypt--plugin--dns_cloudflare--package_name"></a>`package_name`
 
@@ -411,6 +412,14 @@ Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
 Default value: `10`
 
+##### <a name="-letsencrypt--plugin--dns_cloudflare--root_group"></a>`root_group`
+
+Data type: `String[1]`
+
+Group owner of renewal hooks and cron renew scripts.
+
+Default value: `$letsencrypt::root_group`
+
 ### <a name="letsencrypt--plugin--dns_rfc2136"></a>`letsencrypt::plugin::dns_rfc2136`
 
 This class installs and configures the Let's Encrypt dns-rfc2136 plugin.
@@ -429,6 +438,7 @@ The following parameters are available in the `letsencrypt::plugin::dns_rfc2136`
 * [`manage_package`](#-letsencrypt--plugin--dns_rfc2136--manage_package)
 * [`package_name`](#-letsencrypt--plugin--dns_rfc2136--package_name)
 * [`config_dir`](#-letsencrypt--plugin--dns_rfc2136--config_dir)
+* [`root_group`](#-letsencrypt--plugin--dns_rfc2136--root_group)
 
 ##### <a name="-letsencrypt--plugin--dns_rfc2136--server"></a>`server`
 
@@ -493,6 +503,14 @@ Data type: `Stdlib::Absolutepath`
 The path to the configuration directory.
 
 Default value: `$letsencrypt::config_dir`
+
+##### <a name="-letsencrypt--plugin--dns_rfc2136--root_group"></a>`root_group`
+
+Data type: `String[1]`
+
+Group owner of renewal hooks and cron renew scripts.
+
+Default value: `$letsencrypt::root_group`
 
 ### <a name="letsencrypt--plugin--dns_route53"></a>`letsencrypt::plugin::dns_route53`
 
@@ -571,6 +589,7 @@ The following parameters are available in the `letsencrypt::renew` class:
 * [`pre_hook_commands`](#-letsencrypt--renew--pre_hook_commands)
 * [`post_hook_commands`](#-letsencrypt--renew--post_hook_commands)
 * [`deploy_hook_commands`](#-letsencrypt--renew--deploy_hook_commands)
+* [`root_group`](#-letsencrypt--renew--root_group)
 * [`additional_args`](#-letsencrypt--renew--additional_args)
 * [`cron_ensure`](#-letsencrypt--renew--cron_ensure)
 * [`cron_hour`](#-letsencrypt--renew--cron_hour)
@@ -606,6 +625,14 @@ certificate. Two environmental variables are supplied by certbot:
                     Example: "example.com www.example.com"
 
 Default value: `$letsencrypt::renew_deploy_hook_commands`
+
+##### <a name="-letsencrypt--renew--root_group"></a>`root_group`
+
+Data type: `String[1]`
+
+Group owner of renewal hooks and cron renew scripts.
+
+Default value: `$letsencrypt::root_group`
 
 ##### <a name="-letsencrypt--renew--additional_args"></a>`additional_args`
 
@@ -774,6 +801,7 @@ The following parameters are available in the `letsencrypt::certonly` defined ty
 * [`environment`](#-letsencrypt--certonly--environment)
 * [`key_size`](#-letsencrypt--certonly--key_size)
 * [`manage_cron`](#-letsencrypt--certonly--manage_cron)
+* [`root_group`](#-letsencrypt--certonly--root_group)
 * [`cron_output`](#-letsencrypt--certonly--cron_output)
 * [`cron_before_command`](#-letsencrypt--certonly--cron_before_command)
 * [`cron_success_command`](#-letsencrypt--certonly--cron_success_command)
@@ -871,6 +899,14 @@ Indicating whether or not to schedule cron job for renewal.
 Runs daily but only renews if near expiration, e.g. within 10 days.
 
 Default value: `false`
+
+##### <a name="-letsencrypt--certonly--root_group"></a>`root_group`
+
+Data type: `String[1]`
+
+Group owner of renewal hooks and cron renew scripts.
+
+Default value: `$letsencrypt::root_group`
 
 ##### <a name="-letsencrypt--certonly--cron_output"></a>`cron_output`
 
@@ -981,6 +1017,7 @@ The following parameters are available in the `letsencrypt::hook` defined type:
 
 * [`type`](#-letsencrypt--hook--type)
 * [`hook_file`](#-letsencrypt--hook--hook_file)
+* [`root_group`](#-letsencrypt--hook--root_group)
 * [`commands`](#-letsencrypt--hook--commands)
 
 ##### <a name="-letsencrypt--hook--type"></a>`type`
@@ -994,6 +1031,14 @@ Hook type.
 Data type: `String[1]`
 
 Path to deploy hook script.
+
+##### <a name="-letsencrypt--hook--root_group"></a>`root_group`
+
+Data type: `String[1]`
+
+Group owner of renewal hooks and cron renew scripts.
+
+Default value: `$letsencrypt::root_group`
 
 ##### <a name="-letsencrypt--hook--commands"></a>`commands`
 
