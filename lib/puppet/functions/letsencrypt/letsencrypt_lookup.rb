@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-#
-# @return letsencrypt_directory for a particular domain.
+
 Puppet::Functions.create_function(:'letsencrypt::letsencrypt_lookup') do
   def letsencrypt_lookup(common_name)
     domain = common_name.split('.', 2)[1]
