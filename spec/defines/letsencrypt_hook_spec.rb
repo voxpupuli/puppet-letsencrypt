@@ -33,7 +33,7 @@ describe 'letsencrypt::hook' do
           is_expected.to contain_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-pre.sh').
             with(ensure: 'file',
                  owner: 'root',
-                 group: 'root',
+                 group: 0,
                  mode: '0755',
                  content: %r{^.*validate_env=0.*FooBar.*$}m).
             that_requires('File[letsencrypt-renewal-hooks-puppet]')

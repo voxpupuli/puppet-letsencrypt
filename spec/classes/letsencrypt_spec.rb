@@ -40,7 +40,7 @@ describe 'letsencrypt' do
                 with(ensure: 'directory',
                      path: '/usr/local/etc/letsencrypt/renewal-hooks-puppet',
                      owner: 'root',
-                     group: 'root',
+                     group: 0,
                      mode: '0755',
                      recurse: true,
                      purge: true)
