@@ -55,7 +55,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
             is_expected.to contain_file("#{pathprefix}/etc/letsencrypt/dns-rfc2136.ini").
               with_ensure('file').
               with_owner('root').
-              with_group('root').
+              with_group('0').
               with_mode('0400').
               with_content(%r{^.*dns_rfc2136_server.*$})
           end

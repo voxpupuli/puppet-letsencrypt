@@ -20,7 +20,7 @@ define letsencrypt::hook (
   file { $hook_file:
     ensure  => file,
     owner   => 'root',
-    group   => 'root',
+    group   => 0,
     mode    => '0755',
     content => epp('letsencrypt/hook.sh.epp', {
         commands     => $commands,

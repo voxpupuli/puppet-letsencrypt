@@ -27,7 +27,7 @@ describe 'letsencrypt::certonly' do
           is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
             with_ensure('file').
             with_owner('root').
-            with_group('root').
+            with_group('0').
             with_mode('0500').
             with_content(%r{#!/bin/sh})
         end
