@@ -74,9 +74,9 @@ describe 'letsencrypt' do
               is_expected.to contain_package('letsencrypt').with(name: 'certbot').with_ensure('installed')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
             elsif facts[:operatingsystem] == 'FreeBSD'
-              is_expected.to contain_class('letsencrypt::install').with(package_name: 'py39-certbot')
+              is_expected.to contain_class('letsencrypt::install').with(package_name: 'py311-certbot')
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
-              is_expected.to contain_package('letsencrypt').with(name: 'py39-certbot').with_ensure('installed')
+              is_expected.to contain_package('letsencrypt').with(name: 'py311-certbot').with_ensure('installed')
               is_expected.to contain_file('/usr/local/etc/letsencrypt').with(ensure: 'directory')
             else
               is_expected.to contain_class('letsencrypt::install')

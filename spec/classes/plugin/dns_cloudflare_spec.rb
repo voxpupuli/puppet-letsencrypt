@@ -23,7 +23,7 @@ describe 'letsencrypt::plugin::dns_cloudflare' do
         elsif %w[Debian RedHat].include?(facts[:os]['family'])
           'python3-certbot-dns-cloudflare'
         elsif %w[FreeBSD].include?(facts[:os]['family'])
-          'py39-certbot-dns-cloudflare'
+          'py311-certbot-dns-cloudflare'
         end
       end
 
