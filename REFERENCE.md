@@ -9,6 +9,7 @@
 #### Public Classes
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
+* [`letsencrypt::plugin::apache`](#letsencrypt--plugin--apache): install and configure the Let's Encrypt apache plugin
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencrypt--plugin--dns_cloudflare): Installs and configures the dns-cloudflare plugin
 * [`letsencrypt::plugin::dns_linode`](#letsencrypt--plugin--dns_linode): Installs and configures the dns-linode plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencrypt--plugin--dns_rfc2136): Installs and configures the dns-rfc2136 plugin
@@ -347,6 +348,33 @@ certificate. Two environmental variables are supplied by certbot:
                     Example: "example.com www.example.com"
 
 Default value: `[]`
+
+### <a name="letsencrypt--plugin--apache"></a>`letsencrypt::plugin::apache`
+
+install and configure the Let's Encrypt apache plugin
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::apache` class:
+
+* [`manage_package`](#-letsencrypt--plugin--apache--manage_package)
+* [`package_name`](#-letsencrypt--plugin--apache--package_name)
+
+##### <a name="-letsencrypt--plugin--apache--manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--plugin--apache--package_name"></a>`package_name`
+
+Data type: `String[1]`
+
+The name of the package to install when $manage_package is true.
+
+Default value: `'python3-certbot-apache'`
 
 ### <a name="letsencrypt--plugin--dns_cloudflare"></a>`letsencrypt::plugin::dns_cloudflare`
 

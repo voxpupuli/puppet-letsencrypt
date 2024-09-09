@@ -185,6 +185,26 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a nginx --cert-name 'foo.example.com' -d 'foo.example.com'" }
       end
 
+      context 'with apache plugin' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'apache', letsencrypt_command: 'letsencrypt' } }
+        let(:pre_condition) do
+          <<-PUPPET
+          class { 'letsencrypt':
+            email      => 'foo@example.com',
+            config_dir => '/etc/letsencrypt',
+          }
+          class { 'letsencrypt::plugin::apache':
+            package_name => 'irrelevant',
+          }
+          PUPPET
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('letsencrypt::plugin::apache') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a apache --cert-name 'foo.example.com' -d 'foo.example.com'" }
+      end
+
       context 'with dns-cloudflare plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'dns-cloudflare', letsencrypt_command: 'letsencrypt' } }
