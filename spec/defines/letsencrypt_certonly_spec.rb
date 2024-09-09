@@ -12,7 +12,7 @@ describe 'letsencrypt::certonly' do
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
       # FreeBSD uses a different filesystem path
-      pathprefix = facts[:kernel] == 'FreeBSD' ? '/usr/local' : ''
+      pathprefix = facts['kernel'] == 'FreeBSD' ? '/usr/local' : ''
 
       context 'with a single domain' do
         let(:title) { 'foo.example.com' }
@@ -32,7 +32,7 @@ describe 'letsencrypt::certonly' do
             with_content(%r{#!/bin/sh})
         end
 
-        if facts[:osfamily] == 'FreeBSD'
+        if facts['os']['family'] == 'FreeBSD'
           it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
@@ -497,7 +497,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless(['test ! -f /usr/local/sbin/letsencrypt-domain-validation', '/usr/local/sbin/letsencrypt-domain-validation /foo/bar/baz/live/foo.example.com/cert.pem \'foo.example.com\'']) }
       end
 
-      context 'on FreeBSD', if: facts[:os]['name'] == 'FreeBSD' do
+      context 'on FreeBSD', if: facts['os']['name'] == 'FreeBSD' do
         let(:title) { 'foo.example.com' }
         let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com'}" }
 
