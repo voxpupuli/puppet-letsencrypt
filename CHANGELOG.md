@@ -4,7 +4,17 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v11.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.0.0) (2023-12-03)
+## [v11.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.1.0) (2024-09-09)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.0.0...v11.1.0)
+
+**Implemented enhancements:**
+
+- remove the 'root' group and replace with group 0 [\#355](https://github.com/voxpupuli/puppet-letsencrypt/pull/355) ([rtprio](https://github.com/rtprio))
+- Add support for FreeBSD 14 [\#350](https://github.com/voxpupuli/puppet-letsencrypt/pull/350) ([smortex](https://github.com/smortex))
+- Add environment parameter to renew cron [\#288](https://github.com/voxpupuli/puppet-letsencrypt/pull/288) ([gmenuel](https://github.com/gmenuel))
+
+## [v11.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.0.0) (2023-12-04)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v10.1.0...v11.0.0)
 
