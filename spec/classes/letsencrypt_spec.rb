@@ -17,8 +17,7 @@ describe 'letsencrypt' do
         describe 'with defaults' do
           it { is_expected.to compile }
 
-          epel = facts[:osfamily] == 'RedHat' && facts[:operatingsystem] != 'Fedora'
-
+          epel = facts['os']['family'] == 'RedHat' && facts['os']['name'] != 'Fedora'
           it 'contains the correct resources' do
             is_expected.to contain_class('letsencrypt::install').
               with(configure_epel: epel).
@@ -33,7 +32,7 @@ describe 'letsencrypt' do
                    cron_monthday: ['*'])
             is_expected.to contain_cron('letsencrypt-renew').with_ensure('absent')
 
-            if facts[:osfamily] == 'FreeBSD'
+            if facts['os']['family'] == 'FreeBSD'
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com')
               is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory')
               is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').
@@ -50,7 +49,7 @@ describe 'letsencrypt' do
               is_expected.to contain_file('letsencrypt-renewal-hooks-puppet').with_path('/etc/letsencrypt/renewal-hooks-puppet')
             end
 
-            if facts[:osfamily] == 'RedHat'
+            if facts['os']['family'] == 'RedHat'
               if epel
                 is_expected.to contain_class('epel').that_comes_before('Package[letsencrypt]')
               else
@@ -60,20 +59,20 @@ describe 'letsencrypt' do
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'certbot').with_ensure('installed')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:osfamily] == 'Debian'
+            elsif facts['os']['family'] == 'Debian'
               is_expected.to contain_class('letsencrypt::install').with(package_name: 'certbot')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'Gentoo'
+            elsif facts['os']['name'] == 'Gentoo'
               is_expected.to contain_class('letsencrypt::install').with(package_name: 'app-crypt/certbot')
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'app-crypt/certbot').with_ensure('installed')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'OpenBSD'
+            elsif facts['os']['name'] == 'OpenBSD'
               is_expected.to contain_class('letsencrypt::install').with(package_name: 'certbot')
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'certbot').with_ensure('installed')
               is_expected.to contain_file('/etc/letsencrypt').with(ensure: 'directory')
-            elsif facts[:operatingsystem] == 'FreeBSD'
+            elsif facts['os']['name'] == 'FreeBSD'
               is_expected.to contain_class('letsencrypt::install').with(package_name: 'py311-certbot')
               is_expected.to contain_class('letsencrypt').with(package_command: 'certbot')
               is_expected.to contain_package('letsencrypt').with(name: 'py311-certbot').with_ensure('installed')
@@ -100,7 +99,7 @@ describe 'letsencrypt' do
         describe 'with custom config' do
           let(:additional_params) { { config: { 'foo' => 'bar' } } }
 
-          case facts[:operatingsystem]
+          case facts['os']['name']
           when 'FreeBSD'
             it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini foo bar') }
           else
@@ -237,7 +236,7 @@ describe 'letsencrypt' do
 
         it { is_expected.to compile.with_all_deps }
 
-        case facts[:operatingsystem]
+        case facts['os']['name']
         when 'FreeBSD'
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
         else
@@ -253,7 +252,7 @@ describe 'letsencrypt' do
         context 'with unsafe_registration set to true' do
           let(:params) { { unsafe_registration: true } }
 
-          case facts[:operatingsystem]
+          case facts['os']['name']
           when 'FreeBSD'
             it { is_expected.not_to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
             it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini register-unsafely-without-email true') }

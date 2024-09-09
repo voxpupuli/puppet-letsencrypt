@@ -15,9 +15,9 @@ describe 'letsencrypt::plugin::dns_cloudflare' do
         PUPPET
       end
       let(:package_name) do
-        if %w[Debian RedHat].include?(facts[:os]['family'])
+        if %w[Debian RedHat].include?(facts['os']['family'])
           'python3-certbot-dns-cloudflare'
-        elsif %w[FreeBSD].include?(facts[:os]['family'])
+        elsif %w[FreeBSD].include?(facts['os']['family'])
           'py311-certbot-dns-cloudflare'
         end
       end

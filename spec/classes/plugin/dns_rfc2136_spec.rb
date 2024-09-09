@@ -15,7 +15,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         PUPPET
       end
       let(:package_name) do
-        case facts[:os]['family']
+        case facts['os']['family']
         when 'FreeBSD'
           'py311-certbot-dns-rfc2136'
         when 'OpenBSD'
@@ -39,7 +39,7 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
         end
 
         # FreeBSD uses a different filesystem path
-        let(:pathprefix) { facts[:kernel] == 'FreeBSD' ? '/usr/local' : '' }
+        let(:pathprefix) { facts['kernel'] == 'FreeBSD' ? '/usr/local' : '' }
 
         it do
           if package_name.empty?
