@@ -15,15 +15,10 @@ describe 'letsencrypt::plugin::dns_route53' do
         PUPPET
       end
       let(:package_name) do
-        osname = facts[:os]['name']
-        osrelease = facts[:os]['release']['major']
-        osfull = "#{osname}-#{osrelease}"
-        case osfull
-        when 'RedHat-7', 'CentOS-7'
-          'python2-certbot-dns-route53'
-        when 'FreeBSD-12', 'FreeBSD-13'
+        case facts[:os]['family']
+        when 'FreeBSD'
           'py39-certbot-dns-route53'
-        when %r{OpenBSD}
+        when 'OpenBSD'
           ''
         else
           'python3-certbot-dns-route53'
