@@ -2,4 +2,9 @@
 <%- @environment.each do |environment| -%>
 export <%= environment %>
 <%- end -%>
+if [ -f '/usr/share/certbot_lock.sh' ]; then
+  . '/usr/share/certbot_lock.sh'
+fi
+exlock
 <%= @cron_cmd %>
+unlock
