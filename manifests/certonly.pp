@@ -205,6 +205,17 @@ define letsencrypt::certonly (
       ]
     }
 
+    'dns-linode': {
+      require letsencrypt::plugin::dns_linode
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args  = [
+        "--cert-name '${cert_name}' -d '${_domains}'",
+        '--dns-linode',
+        "--dns-linode-credentials ${letsencrypt::plugin::dns_linode::config_path}",
+        "--dns-linode-propagation-seconds ${letsencrypt::plugin::dns_linode::propagation_seconds}",
+      ]
+    }
+
     'nginx': {
       require letsencrypt::plugin::nginx
 
