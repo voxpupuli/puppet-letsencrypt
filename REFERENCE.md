@@ -10,6 +10,7 @@
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencrypt--plugin--dns_cloudflare): Installs and configures the dns-cloudflare plugin
+* [`letsencrypt::plugin::dns_linode`](#letsencrypt--plugin--dns_linode): Installs and configures the dns-linode plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencrypt--plugin--dns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencrypt--plugin--dns_route53): Installs and configures the dns-route53 plugin
 * [`letsencrypt::plugin::nginx`](#letsencrypt--plugin--nginx): install and configure the Let's Encrypt nginx plugin
@@ -410,6 +411,68 @@ Data type: `Integer`
 Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
 Default value: `10`
+
+### <a name="letsencrypt--plugin--dns_linode"></a>`letsencrypt::plugin::dns_linode`
+
+This class installs and configures the Let's Encrypt dns-linode plugin.
+https://certbot-dns-linode.readthedocs.io
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::dns_linode` class:
+
+* [`package_name`](#-letsencrypt--plugin--dns_linode--package_name)
+* [`api_key`](#-letsencrypt--plugin--dns_linode--api_key)
+* [`version`](#-letsencrypt--plugin--dns_linode--version)
+* [`config_path`](#-letsencrypt--plugin--dns_linode--config_path)
+* [`manage_package`](#-letsencrypt--plugin--dns_linode--manage_package)
+* [`propagation_seconds`](#-letsencrypt--plugin--dns_linode--propagation_seconds)
+
+##### <a name="-letsencrypt--plugin--dns_linode--package_name"></a>`package_name`
+
+Data type: `Optional[String[1]]`
+
+The name of the package to install when $manage_package is true.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--plugin--dns_linode--api_key"></a>`api_key`
+
+Data type: `String[1]`
+
+Optional string, linode api key value for authentication.
+
+##### <a name="-letsencrypt--plugin--dns_linode--version"></a>`version`
+
+Data type: `String[1]`
+
+string, linode api version.
+
+Default value: `'4'`
+
+##### <a name="-letsencrypt--plugin--dns_linode--config_path"></a>`config_path`
+
+Data type: `Stdlib::Absolutepath`
+
+The path to the configuration directory.
+
+Default value: `"${letsencrypt::config_dir}/dns-linode.ini"`
+
+##### <a name="-letsencrypt--plugin--dns_linode--manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--plugin--dns_linode--propagation_seconds"></a>`propagation_seconds`
+
+Data type: `Integer`
+
+Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+
+Default value: `120`
 
 ### <a name="letsencrypt--plugin--dns_rfc2136"></a>`letsencrypt::plugin::dns_rfc2136`
 
@@ -1072,5 +1135,5 @@ Variant[Integer[0,31], String[1], Array[
 
 List of accepted plugins
 
-Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-rfc2136', 'manual']`
+Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-linode', 'dns-rfc2136', 'manual']`
 
