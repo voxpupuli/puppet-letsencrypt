@@ -438,11 +438,9 @@ Default value: `undef`
 
 ##### <a name="-letsencrypt--plugin--dns_linode--api_key"></a>`api_key`
 
-Data type: `Optional[String[1]]`
+Data type: `String[1]`
 
 Optional string, linode api key value for authentication.
-
-Default value: `undef`
 
 ##### <a name="-letsencrypt--plugin--dns_linode--version"></a>`version`
 
@@ -474,7 +472,7 @@ Data type: `Integer`
 
 Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
-Default value: `10`
+Default value: `120`
 
 ### <a name="letsencrypt--plugin--dns_rfc2136"></a>`letsencrypt::plugin::dns_rfc2136`
 
