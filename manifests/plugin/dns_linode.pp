@@ -13,8 +13,8 @@
 # @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 #
 class letsencrypt::plugin::dns_linode (
-  Optional[String[1]] $package_name = undef,
   String[1] $api_key,
+  Optional[String[1]] $package_name = undef,
   String[1] $version                = '4',
   Stdlib::Absolutepath $config_path = "${letsencrypt::config_dir}/dns-linode.ini",
   Boolean $manage_package           = true,
