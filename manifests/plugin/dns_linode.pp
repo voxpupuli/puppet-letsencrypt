@@ -55,6 +55,7 @@ class letsencrypt::plugin::dns_linode (
     mode    => '0400',
     content => epp('letsencrypt/ini.epp', {
         vars => { '' => $ini_vars },
-    }),
+      },
+    ),
   }
 }
