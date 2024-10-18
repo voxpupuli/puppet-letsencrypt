@@ -224,7 +224,7 @@ describe 'letsencrypt::certonly' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('letsencrypt::plugin::dns_linode') }
-        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-linode --cert-name 'foo.example.com' -d 'foo.example.com' --dns-linode --dns-linode-credentials /etc/letsencrypt/dns-linode.ini --dns-linode-propagation-seconds 10" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-linode --cert-name 'foo.example.com' -d 'foo.example.com' --dns-linode --dns-linode-credentials /etc/letsencrypt/dns-linode.ini --dns-linode-propagation-seconds 120" }
       end
 
       context 'with custom plugin' do
