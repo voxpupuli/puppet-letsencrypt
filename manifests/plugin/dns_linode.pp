@@ -14,17 +14,13 @@
 #
 class letsencrypt::plugin::dns_linode (
   Optional[String[1]] $package_name = undef,
-  Optional[String[1]] $api_key      = undef,
-  String[1] $version      = '4',
+  String[1] $api_key,
+  String[1] $version                = '4',
   Stdlib::Absolutepath $config_path = "${letsencrypt::config_dir}/dns-linode.ini",
   Boolean $manage_package           = true,
-  Integer $propagation_seconds      = 10,
+  Integer $propagation_seconds      = 120,
 ) {
   include letsencrypt
-
-  if ! $api_key {
-    fail('No authentication method provided, please specify api_key and version.')
-  }
 
   if $manage_package {
     if ! $package_name {
