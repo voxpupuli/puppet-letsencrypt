@@ -50,13 +50,25 @@
 # @param renew_cron_monthday
 #   Optional string, integer or array of monthday(s) the renewal command should
 #   run. E.g. '2-30/2' to run on even days.
+# @param renew_cron_environment
+#   Optional string or array of environments(s) the renewal command should have.
+#   E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
+# @param certonly_pre_hook_commands Array of commands to run in a shell before obtaining/renewing any certificates.
+# @param certonly_post_hook_commands Array of commands to run in a shell after attempting to obtain/renew certificates.
+# @param certonly_deploy_hook_commands
+#   Array of commands to run in a shell once for each successfully issued/renewed
+#   certificate. Two environmental variables are supplied by certbot:
+#   - $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
+#                       Example: /etc/letsencrypt/live/example.com
+#   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
+#                       Example: "example.com www.example.com"
 #
 class letsencrypt (
-  Boolean $configure_epel,
+  Boolean $configure_epel            = false,
   Optional[String] $email            = undef,
   Array $environment                 = [],
   String $package_name               = 'certbot',
-  $package_ensure                    = 'installed',
+  String[1] $package_ensure          = 'installed',
   String $package_command            = 'certbot',
   Stdlib::Unixpath $config_dir       = '/etc/letsencrypt',
   String $config_file                = "${config_dir}/cli.ini",
@@ -70,18 +82,22 @@ class letsencrypt (
   Integer[2048] $key_size            = 4096,
   Hash[String[1],Hash] $certificates = {},
   # $renew_* should only be used in letsencrypt::renew (blame rspec)
-  $renew_pre_hook_commands           = [],
-  $renew_post_hook_commands          = [],
-  $renew_deploy_hook_commands        = [],
-  $renew_additional_args             = [],
-  $renew_cron_ensure                 = 'absent',
-  $renew_cron_hour                   = fqdn_rand(24),
-  $renew_cron_minute                 = fqdn_rand(60),
-  $renew_cron_monthday               = '*',
+  Variant[String[1], Array[String[1]]] $renew_pre_hook_commands = [],
+  Variant[String[1], Array[String[1]]] $renew_post_hook_commands = [],
+  Variant[String[1], Array[String[1]]] $renew_deploy_hook_commands = [],
+  Variant[String[1], Array[String[1]]] $renew_additional_args = [],
+  String[1] $renew_cron_ensure                 = 'absent',
+  Letsencrypt::Cron::Hour $renew_cron_hour = fqdn_rand(24),
+  Letsencrypt::Cron::Minute $renew_cron_minute = fqdn_rand(60),
+  Letsencrypt::Cron::Monthday $renew_cron_monthday = '*',
+  Variant[String[1], Array[String[1]]] $renew_cron_environment = [],
+  # define default hooks for all certonly defined resources
+  Array[String[1]] $certonly_pre_hook_commands = [],
+  Array[String[1]] $certonly_post_hook_commands = [],
+  Array[String[1]] $certonly_deploy_hook_commands = [],
 ) {
   if $manage_install {
     contain letsencrypt::install # lint:ignore:relative_classname_inclusion
-    Class['letsencrypt::install'] ~> Exec['initialize letsencrypt']
     Class['letsencrypt::install'] -> Class['letsencrypt::renew']
   }
 
@@ -89,18 +105,9 @@ class letsencrypt (
 
   if $manage_config {
     contain letsencrypt::config # lint:ignore:relative_classname_inclusion
-    Class['letsencrypt::config'] -> Exec['initialize letsencrypt']
   }
 
   contain letsencrypt::renew
-
-  # TODO: do we need this command when installing from package?
-  exec { 'initialize letsencrypt':
-    command     => "${package_command} -h",
-    path        => $facts['path'],
-    environment => $environment,
-    refreshonly => true,
-  }
 
   $certificates.each |$certificate, $properties| {
     letsencrypt::certonly { $certificate: * => $properties }

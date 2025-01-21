@@ -9,9 +9,9 @@
 #### Public Classes
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
-* [`letsencrypt::install`](#letsencrypt--install): Installs the Let's Encrypt client.
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencrypt--plugin--dns_cloudflare): Installs and configures the dns-cloudflare plugin
 * [`letsencrypt::plugin::dns_gandi`](#letsencrypt--plugin--dns_gandi): Installs and configures the dns-gandi plugin
+* [`letsencrypt::plugin::dns_linode`](#letsencrypt--plugin--dns_linode): Installs and configures the dns-linode plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencrypt--plugin--dns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencrypt--plugin--dns_route53): Installs and configures the dns-route53 plugin
 * [`letsencrypt::plugin::nginx`](#letsencrypt--plugin--nginx): install and configure the Let's Encrypt nginx plugin
@@ -46,7 +46,7 @@ Install and configure Certbot, the LetsEncrypt client
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 class { 'letsencrypt' :
@@ -114,7 +114,7 @@ Default value: `'certbot'`
 
 ##### <a name="-letsencrypt--package_ensure"></a>`package_ensure`
 
-Data type: `Any`
+Data type: `String[1]`
 
 The value passed to `ensure` when installing the client package.
 
@@ -224,7 +224,7 @@ Default value: `{}`
 
 ##### <a name="-letsencrypt--renew_pre_hook_commands"></a>`renew_pre_hook_commands`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell before obtaining/renewing any certificates.
 
@@ -232,7 +232,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_post_hook_commands"></a>`renew_post_hook_commands`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell after attempting to obtain/renew certificates.
 
@@ -240,7 +240,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_deploy_hook_commands"></a>`renew_deploy_hook_commands`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell once for each successfully issued/renewed
 certificate. Two environmental variables are supplied by certbot:
@@ -253,7 +253,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_additional_args"></a>`renew_additional_args`
 
-Data type: `Any`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of additional command line arguments to pass to 'certbot renew'.
 
@@ -261,7 +261,7 @@ Default value: `[]`
 
 ##### <a name="-letsencrypt--renew_cron_ensure"></a>`renew_cron_ensure`
 
-Data type: `Any`
+Data type: `String[1]`
 
 Intended state of the cron resource running certbot renew.
 
@@ -269,7 +269,7 @@ Default value: `'absent'`
 
 ##### <a name="-letsencrypt--renew_cron_hour"></a>`renew_cron_hour`
 
-Data type: `Any`
+Data type: `Letsencrypt::Cron::Hour`
 
 Optional string, integer or array of hour(s) the renewal command should run.
 E.g. '[0,12]' to execute at midnight and midday.
@@ -279,7 +279,7 @@ Default value: `fqdn_rand(24)`
 
 ##### <a name="-letsencrypt--renew_cron_minute"></a>`renew_cron_minute`
 
-Data type: `Any`
+Data type: `Letsencrypt::Cron::Minute`
 
 Optional string, integer or array of minute(s) the renewal command should
 run. E.g. 0 or '00' or [0,30].
@@ -288,48 +288,50 @@ Default value: `fqdn_rand(60)`
 
 ##### <a name="-letsencrypt--renew_cron_monthday"></a>`renew_cron_monthday`
 
-Data type: `Any`
+Data type: `Letsencrypt::Cron::Monthday`
 
 Optional string, integer or array of monthday(s) the renewal command should
 run. E.g. '2-30/2' to run on even days.
 
 Default value: `'*'`
 
-### <a name="letsencrypt--install"></a>`letsencrypt::install`
+##### <a name="-letsencrypt--renew_cron_environment"></a>`renew_cron_environment`
 
-Installs the Let's Encrypt client.
+Data type: `Variant[String[1], Array[String[1]]]`
 
-#### Parameters
+Optional string or array of environments(s) the renewal command should have.
+E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
-The following parameters are available in the `letsencrypt::install` class:
+Default value: `[]`
 
-* [`configure_epel`](#-letsencrypt--install--configure_epel)
-* [`package_ensure`](#-letsencrypt--install--package_ensure)
-* [`package_name`](#-letsencrypt--install--package_name)
+##### <a name="-letsencrypt--certonly_pre_hook_commands"></a>`certonly_pre_hook_commands`
 
-##### <a name="-letsencrypt--install--configure_epel"></a>`configure_epel`
+Data type: `Array[String[1]]`
 
-Data type: `Boolean`
+Array of commands to run in a shell before obtaining/renewing any certificates.
 
-A feature flag to include the 'epel' class and depend on it for package installation.
+Default value: `[]`
 
-Default value: `$letsencrypt::configure_epel`
+##### <a name="-letsencrypt--certonly_post_hook_commands"></a>`certonly_post_hook_commands`
 
-##### <a name="-letsencrypt--install--package_ensure"></a>`package_ensure`
+Data type: `Array[String[1]]`
 
-Data type: `String`
+Array of commands to run in a shell after attempting to obtain/renew certificates.
 
-The value passed to `ensure` when installing the client package.
+Default value: `[]`
 
-Default value: `$letsencrypt::package_ensure`
+##### <a name="-letsencrypt--certonly_deploy_hook_commands"></a>`certonly_deploy_hook_commands`
 
-##### <a name="-letsencrypt--install--package_name"></a>`package_name`
+Data type: `Array[String[1]]`
 
-Data type: `String`
+Array of commands to run in a shell once for each successfully issued/renewed
+certificate. Two environmental variables are supplied by certbot:
+- $RENEWED_LINEAGE: Points to the live directory with the cert files and key.
+                    Example: /etc/letsencrypt/live/example.com
+- $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
+                    Example: "example.com www.example.com"
 
-Name of package to use when installing the client package.
-
-Default value: `$letsencrypt::package_name`
+Default value: `[]`
 
 ### <a name="letsencrypt--plugin--dns_cloudflare"></a>`letsencrypt::plugin::dns_cloudflare`
 
@@ -344,10 +346,9 @@ The following parameters are available in the `letsencrypt::plugin::dns_cloudfla
 * [`api_key`](#-letsencrypt--plugin--dns_cloudflare--api_key)
 * [`api_token`](#-letsencrypt--plugin--dns_cloudflare--api_token)
 * [`email`](#-letsencrypt--plugin--dns_cloudflare--email)
-* [`config_dir`](#-letsencrypt--plugin--dns_cloudflare--config_dir)
+* [`config_path`](#-letsencrypt--plugin--dns_cloudflare--config_path)
 * [`manage_package`](#-letsencrypt--plugin--dns_cloudflare--manage_package)
 * [`propagation_seconds`](#-letsencrypt--plugin--dns_cloudflare--propagation_seconds)
-* [`config_path`](#-letsencrypt--plugin--dns_cloudflare--config_path)
 
 ##### <a name="-letsencrypt--plugin--dns_cloudflare--package_name"></a>`package_name`
 
@@ -381,9 +382,13 @@ Optional string, cloudflare account email address, used in conjunction with api_
 
 Default value: `undef`
 
-##### <a name="-letsencrypt--plugin--dns_cloudflare--config_dir"></a>`config_dir`
+##### <a name="-letsencrypt--plugin--dns_cloudflare--config_path"></a>`config_path`
+
+Data type: `Stdlib::Absolutepath`
 
 The path to the configuration directory.
+
+Default value: `"${letsencrypt::config_dir}/dns-cloudflare.ini"`
 
 ##### <a name="-letsencrypt--plugin--dns_cloudflare--manage_package"></a>`manage_package`
 
@@ -401,13 +406,67 @@ Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
 Default value: `10`
 
-##### <a name="-letsencrypt--plugin--dns_cloudflare--config_path"></a>`config_path`
+### <a name="letsencrypt--plugin--dns_linode"></a>`letsencrypt::plugin::dns_linode`
+
+This class installs and configures the Let's Encrypt dns-linode plugin.
+https://certbot-dns-linode.readthedocs.io
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::dns_linode` class:
+
+* [`package_name`](#-letsencrypt--plugin--dns_linode--package_name)
+* [`api_key`](#-letsencrypt--plugin--dns_linode--api_key)
+* [`version`](#-letsencrypt--plugin--dns_linode--version)
+* [`config_path`](#-letsencrypt--plugin--dns_linode--config_path)
+* [`manage_package`](#-letsencrypt--plugin--dns_linode--manage_package)
+* [`propagation_seconds`](#-letsencrypt--plugin--dns_linode--propagation_seconds)
+
+##### <a name="-letsencrypt--plugin--dns_linode--package_name"></a>`package_name`
+
+Data type: `Optional[String[1]]`
+
+The name of the package to install when $manage_package is true.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--plugin--dns_linode--api_key"></a>`api_key`
+
+Data type: `String[1]`
+
+Optional string, linode api key value for authentication.
+
+##### <a name="-letsencrypt--plugin--dns_linode--version"></a>`version`
+
+Data type: `String[1]`
+
+string, linode api version.
+
+Default value: `'4'`
+
+##### <a name="-letsencrypt--plugin--dns_linode--config_path"></a>`config_path`
 
 Data type: `Stdlib::Absolutepath`
 
+The path to the configuration directory.
 
+Default value: `"${letsencrypt::config_dir}/dns-linode.ini"`
 
-Default value: `"${letsencrypt::config_dir}/dns-cloudflare.ini"`
+##### <a name="-letsencrypt--plugin--dns_linode--manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--plugin--dns_linode--propagation_seconds"></a>`propagation_seconds`
+
+Data type: `Integer`
+
+Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
+
+Default value: `120`
 
 ### <a name="letsencrypt--plugin--dns_gandi"></a>`letsencrypt::plugin::dns_gandi`
 
@@ -618,6 +677,7 @@ The following parameters are available in the `letsencrypt::renew` class:
 * [`cron_hour`](#-letsencrypt--renew--cron_hour)
 * [`cron_minute`](#-letsencrypt--renew--cron_minute)
 * [`cron_monthday`](#-letsencrypt--renew--cron_monthday)
+* [`cron_environment`](#-letsencrypt--renew--cron_environment)
 
 ##### <a name="-letsencrypt--renew--pre_hook_commands"></a>`pre_hook_commands`
 
@@ -690,6 +750,15 @@ Optional string, integer or array of monthday(s) the renewal command should
 run. E.g. '2-30/2' to run on even days. Default: Every day.
 
 Default value: `$letsencrypt::renew_cron_monthday`
+
+##### <a name="-letsencrypt--renew--cron_environment"></a>`cron_environment`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Optional string or array of environment variables the renewal command should have.
+E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+Default value: `$letsencrypt::renew_cron_environment`
 
 ## Defined types
 
@@ -972,7 +1041,7 @@ Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of commands to run in a shell before attempting to obtain/renew the certificate.
 
-Default value: `[]`
+Default value: `$letsencrypt::certonly_pre_hook_commands`
 
 ##### <a name="-letsencrypt--certonly--post_hook_commands"></a>`post_hook_commands`
 
@@ -980,7 +1049,7 @@ Data type: `Variant[String[1], Array[String[1]]]`
 
 Array of command(s) to run in a shell after attempting to obtain/renew the certificate.
 
-Default value: `[]`
+Default value: `$letsencrypt::certonly_post_hook_commands`
 
 ##### <a name="-letsencrypt--certonly--deploy_hook_commands"></a>`deploy_hook_commands`
 
@@ -993,15 +1062,15 @@ Two environmental variables are supplied by certbot:
 - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
                     Example: "example.com www.example.com"
 
-Default value: `[]`
+Default value: `$letsencrypt::certonly_deploy_hook_commands`
 
 ##### <a name="-letsencrypt--certonly--cert_name"></a>`cert_name`
 
 Data type: `String[1]`
 
+the common name used for the certificate
 
-
-Default value: `$title`
+Default value: `$domains[0]`
 
 ### <a name="letsencrypt--hook"></a>`letsencrypt::hook`
 
@@ -1104,5 +1173,7 @@ Variant[Integer[0,31], String[1], Array[
 
 List of accepted plugins
 
-Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-rfc2136', 'dns-gandi', 'manual']`
+
+Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-linode', 'dns-rfc2136', 'dns-gandi', 'manual']`
+
 

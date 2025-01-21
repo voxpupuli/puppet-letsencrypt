@@ -24,11 +24,11 @@ class letsencrypt::plugin::dns_rfc2136 (
   Stdlib::Absolutepath $config_dir = $letsencrypt::config_dir,
   Boolean $manage_package          = true,
 ) {
-  require letsencrypt
+  include letsencrypt
 
   if $manage_package {
     package { $package_name:
-      ensure => installed,
+      ensure => $letsencrypt::package_ensure,
     }
   }
 
@@ -43,7 +43,7 @@ class letsencrypt::plugin::dns_rfc2136 (
   file { "${config_dir}/dns-rfc2136.ini":
     ensure  => file,
     owner   => 'root',
-    group   => 'root',
+    group   => 0,
     mode    => '0400',
     content => epp('letsencrypt/ini.epp', {
         vars => { '' => $ini_vars },

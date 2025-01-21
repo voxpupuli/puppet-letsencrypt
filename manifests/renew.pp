@@ -26,6 +26,9 @@
 # @param cron_monthday
 #   Optional string, integer or array of monthday(s) the renewal command should
 #   run. E.g. '2-30/2' to run on even days. Default: Every day.
+# @param cron_environment
+#   Optional string or array of environment variables the renewal command should have.
+#   E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
 #
 class letsencrypt::renew (
   Variant[String[1], Array[String[1]]] $pre_hook_commands    = $letsencrypt::renew_pre_hook_commands,
@@ -36,6 +39,7 @@ class letsencrypt::renew (
   Letsencrypt::Cron::Hour              $cron_hour            = $letsencrypt::renew_cron_hour,
   Letsencrypt::Cron::Minute            $cron_minute          = $letsencrypt::renew_cron_minute,
   Letsencrypt::Cron::Monthday          $cron_monthday        = $letsencrypt::renew_cron_monthday,
+  Variant[String[1], Array[String[1]]] $cron_environment     = $letsencrypt::renew_cron_environment,
 ) {
   # Directory used for Puppet-managed renewal hooks. Make sure old unmanaged
   # hooks in this directory are purged. Leave custom hooks in the default
@@ -44,7 +48,7 @@ class letsencrypt::renew (
     ensure  => directory,
     path    => "${letsencrypt::config_dir}/renewal-hooks-puppet",
     owner   => 'root',
-    group   => 'root',
+    group   => 0,
     mode    => '0755',
     recurse => true,
     purge   => true,
@@ -77,11 +81,12 @@ class letsencrypt::renew (
   $command = join($_command, ' ')
 
   cron { 'letsencrypt-renew':
-    ensure   => $cron_ensure,
-    command  => $command,
-    user     => 'root',
-    hour     => $cron_hour,
-    minute   => $cron_minute,
-    monthday => $cron_monthday,
+    ensure      => $cron_ensure,
+    command     => $command,
+    user        => 'root',
+    hour        => $cron_hour,
+    minute      => $cron_minute,
+    monthday    => $cron_monthday,
+    environment => $cron_environment,
   }
 }

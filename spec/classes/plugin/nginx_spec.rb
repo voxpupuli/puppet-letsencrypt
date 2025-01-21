@@ -15,11 +15,7 @@ describe 'letsencrypt::plugin::nginx' do
         PUPPET
       end
       let(:package_name) do
-        if facts[:os]['family'] == 'RedHat' && facts[:os]['release']['major'] == '7'
-          'python2-certbot-nginx'
-        else
-          'python3-certbot-nginx'
-        end
+        'python3-certbot-nginx'
       end
 
       context 'with default parameters' do

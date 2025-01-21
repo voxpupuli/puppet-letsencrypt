@@ -118,10 +118,12 @@
 #   - $RENEWED_DOMAINS: A space-delimited list of renewed certificate domains.
 #                       Example: "example.com www.example.com"
 #
+# @param cert_name the common name used for the certificate
+#
 define letsencrypt::certonly (
   Enum['present','absent']                  $ensure               = 'present',
   Array[String[1]]                          $domains              = [$title],
-  String[1]                                 $cert_name            = $title,
+  String[1]                                 $cert_name            = $domains[0],
   Boolean                                   $custom_plugin        = false,
   Letsencrypt::Plugin                       $plugin               = 'standalone',
   Array[Stdlib::Unixpath]                   $webroot_paths        = [],
@@ -137,9 +139,9 @@ define letsencrypt::certonly (
   Variant[Integer[0,23], String, Array]     $cron_hour            = fqdn_rand(24, $title),
   Variant[Integer[0,59], String, Array]     $cron_minute          = fqdn_rand(60, $title),
   Stdlib::Unixpath                          $config_dir           = $letsencrypt::config_dir,
-  Variant[String[1], Array[String[1]]]      $pre_hook_commands    = [],
-  Variant[String[1], Array[String[1]]]      $post_hook_commands   = [],
-  Variant[String[1], Array[String[1]]]      $deploy_hook_commands = [],
+  Variant[String[1], Array[String[1]]]      $pre_hook_commands    = $letsencrypt::certonly_pre_hook_commands,
+  Variant[String[1], Array[String[1]]]      $post_hook_commands   = $letsencrypt::certonly_post_hook_commands,
+  Variant[String[1], Array[String[1]]]      $deploy_hook_commands = $letsencrypt::certonly_deploy_hook_commands,
 ) {
   if $plugin == 'webroot' and empty($webroot_paths) {
     fail("The 'webroot_paths' parameter must be specified when using the 'webroot' plugin")
@@ -200,6 +202,17 @@ define letsencrypt::certonly (
       $plugin_args  = [
         "--cert-name '${cert_name}' -d '${_domains}'",
         "--dns-route53-propagation-seconds ${letsencrypt::plugin::dns_route53::propagation_seconds}",
+      ]
+    }
+
+    'dns-linode': {
+      require letsencrypt::plugin::dns_linode
+      $_domains = join($domains, '\' -d \'')
+      $plugin_args  = [
+        "--cert-name '${cert_name}' -d '${_domains}'",
+        '--dns-linode',
+        "--dns-linode-credentials ${letsencrypt::plugin::dns_linode::config_path}",
+        "--dns-linode-propagation-seconds ${letsencrypt::plugin::dns_linode::propagation_seconds}",
       ]
     }
 
@@ -281,7 +294,6 @@ define letsencrypt::certonly (
     environment => $environment,
     provider    => 'shell',
     require     => [
-      Exec['initialize letsencrypt'],
       File['/usr/local/sbin/letsencrypt-domain-validation'],
     ],
   }

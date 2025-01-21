@@ -255,7 +255,16 @@ letsencrypt::renew_deploy_hook_commands:
 
 ## Facts
 
-Facts about your live certificates are available through facter. You can query the list of live certificates from puppet using `$::letsencrypt_directory` in your puppet code, hiera data or from the command line.
+* [certbot_version](#fact-certbotversion)
+* [letsencrypt_directory](#fact-letsencryptdirectory)
+
+### Fact: certbot_version
+
+A fact that contains the current version of certbot installed on your operating system/distribution.
+
+### Fact: letsencrypt_directory
+
+Facts about your live certificates are available through facter. You can query the list of live certificates from puppet using `$facts['letsencrypt_directory']` in your puppet code, hiera data or from the command line.
 
 ```
 facter -p letsencrypt_directory

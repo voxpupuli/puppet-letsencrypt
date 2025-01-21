@@ -6,9 +6,11 @@ class letsencrypt::plugin::nginx (
   Boolean $manage_package = true,
   String[1] $package_name = 'python3-certbot-nginx',
 ) {
+  include letsencrypt
+
   if $manage_package {
     package { $package_name:
-      ensure => installed,
+      ensure => $letsencrypt::package_ensure,
     }
   }
 }

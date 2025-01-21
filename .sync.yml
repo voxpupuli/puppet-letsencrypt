@@ -1,0 +1,7 @@
+---
+.puppet-lint.rc:
+  enabled_lint_checks:
+    - parameter_documentation
+    - parameter_types
+spec/spec_helper.rb:
+  facterdb_string_keys: true

@@ -10,7 +10,7 @@
 #   Optional string, cloudflare api token value for authentication.
 # @param email
 #   Optional string, cloudflare account email address, used in conjunction with api_key.
-# @param config_dir The path to the configuration directory.
+# @param config_path The path to the configuration directory.
 # @param manage_package Manage the plugin package.
 # @param propagation_seconds Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 #
@@ -23,7 +23,7 @@ class letsencrypt::plugin::dns_cloudflare (
   Boolean $manage_package           = true,
   Integer $propagation_seconds      = 10,
 ) {
-  require letsencrypt::install
+  include letsencrypt
 
   if ! $api_key and ! $api_token {
     fail('No authentication method provided, please specify either api_token or api_key and api_email.')
@@ -34,8 +34,15 @@ class letsencrypt::plugin::dns_cloudflare (
       fail('No package name provided for certbot dns cloudflare plugin.')
     }
 
+    $requirement = if $letsencrypt::configure_epel {
+      Class['epel']
+    } else {
+      undef
+    }
+
     package { $package_name:
-      ensure => installed,
+      ensure  => $letsencrypt::package_ensure,
+      require => $requirement,
     }
   }
 
@@ -58,7 +65,7 @@ class letsencrypt::plugin::dns_cloudflare (
   file { $config_path:
     ensure  => file,
     owner   => 'root',
-    group   => 'root',
+    group   => 0,
     mode    => '0400',
     content => epp('letsencrypt/ini.epp', {
         vars => { '' => $ini_vars },

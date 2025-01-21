@@ -12,7 +12,7 @@ describe 'letsencrypt::certonly' do
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
       # FreeBSD uses a different filesystem path
-      pathprefix = facts[:kernel] == 'FreeBSD' ? '/usr/local' : ''
+      pathprefix = facts['kernel'] == 'FreeBSD' ? '/usr/local' : ''
 
       context 'with a single domain' do
         let(:title) { 'foo.example.com' }
@@ -27,12 +27,12 @@ describe 'letsencrypt::certonly' do
           is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
             with_ensure('file').
             with_owner('root').
-            with_group('root').
+            with_group('0').
             with_mode('0500').
             with_content(%r{#!/bin/sh})
         end
 
-        if facts[:osfamily] == 'FreeBSD'
+        if facts['os']['family'] == 'FreeBSD'
           it { is_expected.to contain_file('/usr/local/etc/letsencrypt') }
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
@@ -42,7 +42,6 @@ describe 'letsencrypt::certonly' do
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini email foo@example.com') }
           it { is_expected.to contain_ini_setting('/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         end
-        it { is_expected.to contain_exec('initialize letsencrypt') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless(['test ! -f /usr/local/sbin/letsencrypt-domain-validation', "/usr/local/sbin/letsencrypt-domain-validation #{pathprefix}/etc/letsencrypt/live/foo.example.com/cert.pem 'foo.example.com'"]) }
       end
@@ -61,7 +60,7 @@ describe 'letsencrypt::certonly' do
         let(:params) { { domains: ['foo.example.com', 'bar.example.com', '*.example.com'] } }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo' -d 'foo.example.com' -d 'bar.example.com' -d '*.example.com'" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com' -d 'bar.example.com' -d '*.example.com'" }
       end
 
       context 'with custom cert-name' do
@@ -100,7 +99,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name 'foo' --webroot-path /var/www/foo -d 'foo.example.com' --webroot-path /var/www/bar -d 'bar.example.com'" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name 'foo.example.com' --webroot-path /var/www/foo -d 'foo.example.com' --webroot-path /var/www/bar -d 'bar.example.com'" }
       end
 
       context 'with webroot plugin, one webroot, and multiple domains' do
@@ -112,7 +111,7 @@ describe 'letsencrypt::certonly' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name 'foo' --webroot-path /var/www/foo -d 'foo.example.com' -d 'bar.example.com'" }
+        it { is_expected.to contain_exec('letsencrypt certonly foo').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a webroot --cert-name 'foo.example.com' --webroot-path /var/www/foo -d 'foo.example.com' -d 'bar.example.com'" }
       end
 
       context 'with webroot plugin and no webroot_paths' do
@@ -205,6 +204,27 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('letsencrypt::plugin::dns_cloudflare') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-cloudflare --cert-name 'foo.example.com' -d 'foo.example.com' --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/dns-cloudflare.ini --dns-cloudflare-propagation-seconds 10" }
+      end
+
+      context 'with dns-linode plugin' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'dns-linode', letsencrypt_command: 'letsencrypt' } }
+        let(:pre_condition) do
+          <<-PUPPET
+          class { 'letsencrypt':
+            email      => 'foo@example.com',
+            config_dir => '/etc/letsencrypt',
+          }
+          class { 'letsencrypt::plugin::dns_linode':
+            package_name => 'irrelevant',
+            api_key      => 'dummy-linode-api-key',
+          }
+          PUPPET
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('letsencrypt::plugin::dns_linode') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-linode --cert-name 'foo.example.com' -d 'foo.example.com' --dns-linode --dns-linode-credentials /etc/letsencrypt/dns-linode.ini --dns-linode-propagation-seconds 120" }
       end
 
       context 'with dns-gandi plugin' do
@@ -492,7 +512,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport FOO=bar\nexport FIZZ=buzz\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com'\n" }
       end
 
-      context 'with manage cron and cron_output=suppress' do\
+      context 'with manage cron and cron_output=suppress' do \
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
@@ -504,7 +524,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com' > /dev/null 2>&1\n") }
       end
 
-      context 'with manage cron and cron_output=log' do\
+      context 'with manage cron and cron_output=log' do \
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
@@ -537,7 +557,7 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless(['test ! -f /usr/local/sbin/letsencrypt-domain-validation', '/usr/local/sbin/letsencrypt-domain-validation /foo/bar/baz/live/foo.example.com/cert.pem \'foo.example.com\'']) }
       end
 
-      context 'on FreeBSD', if: facts[:os]['name'] == 'FreeBSD' do
+      context 'on FreeBSD', if: facts['os']['name'] == 'FreeBSD' do
         let(:title) { 'foo.example.com' }
         let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com'}" }
 
@@ -547,6 +567,17 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/cli.ini server https://acme-v02.api.letsencrypt.org/directory') }
         it { is_expected.to contain_file('/usr/local/etc/letsencrypt').with_ensure('directory') }
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_unless(['test ! -f /usr/local/sbin/letsencrypt-domain-validation', '/usr/local/sbin/letsencrypt-domain-validation /usr/local/etc/letsencrypt/live/foo.example.com/cert.pem \'foo.example.com\'']) }
+      end
+
+      context 'with custom commands in init.pp' do
+        let(:title) { 'foo.example.com' }
+        let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', certonly_pre_hook_commands => ['foo'], certonly_post_hook_commands => ['bar'], certonly_deploy_hook_commands => ['baz']}" }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_letsencrypt__hook('foo.example.com-pre') }
+        it { is_expected.to contain_letsencrypt__hook('foo.example.com-post') }
+        it { is_expected.to contain_letsencrypt__hook('foo.example.com-deploy') }
+        it { is_expected.to have_letsencrypt__hook_resource_count(3) }
       end
     end
   end

@@ -4,6 +4,80 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v11.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.1.0) (2024-09-09)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.0.0...v11.1.0)
+
+**Implemented enhancements:**
+
+- remove the 'root' group and replace with group 0 [\#355](https://github.com/voxpupuli/puppet-letsencrypt/pull/355) ([rtprio](https://github.com/rtprio))
+- Add support for FreeBSD 14 [\#350](https://github.com/voxpupuli/puppet-letsencrypt/pull/350) ([smortex](https://github.com/smortex))
+- Add environment parameter to renew cron [\#288](https://github.com/voxpupuli/puppet-letsencrypt/pull/288) ([gmenuel](https://github.com/gmenuel))
+
+## [v11.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.0.0) (2023-12-04)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v10.1.0...v11.0.0)
+
+**Breaking changes:**
+
+- Add support for Fedora 39, drop support for Fedora 36 [\#336](https://github.com/voxpupuli/puppet-letsencrypt/pull/336) ([kenyon](https://github.com/kenyon))
+- certonly: Use the first domain for `$cert_name` instead of the `$title` [\#220](https://github.com/voxpupuli/puppet-letsencrypt/pull/220) ([saimonn](https://github.com/saimonn))
+
+**Implemented enhancements:**
+
+- Add Puppet 8 support [\#324](https://github.com/voxpupuli/puppet-letsencrypt/pull/324) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- plugins: avoid circular dependencies [\#332](https://github.com/voxpupuli/puppet-letsencrypt/pull/332) ([kenyon](https://github.com/kenyon))
+
+**Merged pull requests:**
+
+- Mark `install.pp` as private [\#338](https://github.com/voxpupuli/puppet-letsencrypt/pull/338) ([kenyon](https://github.com/kenyon))
+- move `letsencrypt::configure_epel` from hiera to `init.pp` [\#337](https://github.com/voxpupuli/puppet-letsencrypt/pull/337) ([kenyon](https://github.com/kenyon))
+- Remove legacy top-scope syntax [\#335](https://github.com/voxpupuli/puppet-letsencrypt/pull/335) ([smortex](https://github.com/smortex))
+
+## [v10.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v10.1.0) (2023-10-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v10.0.0...v10.1.0)
+
+**Implemented enhancements:**
+
+- replace obsolete merge function [\#333](https://github.com/voxpupuli/puppet-letsencrypt/pull/333) ([vchepkov](https://github.com/vchepkov))
+
+## [v10.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v10.0.0) (2023-09-27)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.2.0...v10.0.0)
+
+**Breaking changes:**
+
+- Drop support for Debian 10 \(EOL\) [\#330](https://github.com/voxpupuli/puppet-letsencrypt/pull/330) ([evgeni](https://github.com/evgeni))
+- Drop support for Ubuntu 18.04 \(EOL\) [\#329](https://github.com/voxpupuli/puppet-letsencrypt/pull/329) ([evgeni](https://github.com/evgeni))
+- Drop Puppet 6 support [\#318](https://github.com/voxpupuli/puppet-letsencrypt/pull/318) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Allow puppetlabs/inifile 6.x, puppet/epel 5.x [\#327](https://github.com/voxpupuli/puppet-letsencrypt/pull/327) ([evgeni](https://github.com/evgeni))
+- puppetlabs/stdlib: Allow 9.x [\#323](https://github.com/voxpupuli/puppet-letsencrypt/pull/323) ([bastelfreak](https://github.com/bastelfreak))
+- Add a `certbot_version` fact [\#322](https://github.com/voxpupuli/puppet-letsencrypt/pull/322) ([martijndegouw](https://github.com/martijndegouw))
+
+**Fixed bugs:**
+
+- Propagate the package\_ensure parameter to all plugins [\#321](https://github.com/voxpupuli/puppet-letsencrypt/pull/321) ([martijndegouw](https://github.com/martijndegouw))
+
+## [v9.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.2.0) (2023-04-04)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.1.0...v9.2.0)
+
+**Implemented enhancements:**
+
+- Add missing datatypes and documentation [\#315](https://github.com/voxpupuli/puppet-letsencrypt/pull/315) ([bastelfreak](https://github.com/bastelfreak))
+- Add EL9 support [\#314](https://github.com/voxpupuli/puppet-letsencrypt/pull/314) ([bastelfreak](https://github.com/bastelfreak))
+- Add CentOS 8 support [\#313](https://github.com/voxpupuli/puppet-letsencrypt/pull/313) ([bastelfreak](https://github.com/bastelfreak))
+- Add Rocky 8 support [\#312](https://github.com/voxpupuli/puppet-letsencrypt/pull/312) ([bastelfreak](https://github.com/bastelfreak))
+- certonly: Implement default hook commands [\#311](https://github.com/voxpupuli/puppet-letsencrypt/pull/311) ([bastelfreak](https://github.com/bastelfreak))
+- Remove unnecessary exec [\#309](https://github.com/voxpupuli/puppet-letsencrypt/pull/309) ([deric](https://github.com/deric))
+
 ## [v9.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v9.1.0) (2023-01-15)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v9.0.1...v9.1.0)
@@ -337,7 +411,7 @@ These should not affect the functionality of the module.
 **Closed issues:**
 
 - Puppet support in readme and metadata.json conflicts [\#102](https://github.com/voxpupuli/puppet-letsencrypt/issues/102)
-- Could not find declared class ::letsencrypt [\#101](https://github.com/voxpupuli/puppet-letsencrypt/issues/101)
+- Could not find declared class letsencrypt [\#101](https://github.com/voxpupuli/puppet-letsencrypt/issues/101)
 - Please issue a new release [\#54](https://github.com/voxpupuli/puppet-letsencrypt/issues/54)
 
 ## [v2.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v2.0.1) (2017-09-17)
