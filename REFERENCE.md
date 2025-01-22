@@ -20,6 +20,7 @@
 #### Private Classes
 
 * `letsencrypt::config`: Configures the Let's Encrypt client.
+* `letsencrypt::install`: Installs the Let's Encrypt client.
 * `letsencrypt::scripts`: Deploy helper scripts scripts
 
 ### Defined types
@@ -46,7 +47,7 @@ Install and configure Certbot, the LetsEncrypt client
 
 #### Examples
 
-#####
+##### 
 
 ```puppet
 class { 'letsencrypt' :
@@ -86,6 +87,10 @@ The following parameters are available in the `letsencrypt` class:
 * [`renew_cron_hour`](#-letsencrypt--renew_cron_hour)
 * [`renew_cron_minute`](#-letsencrypt--renew_cron_minute)
 * [`renew_cron_monthday`](#-letsencrypt--renew_cron_monthday)
+* [`renew_cron_environment`](#-letsencrypt--renew_cron_environment)
+* [`certonly_pre_hook_commands`](#-letsencrypt--certonly_pre_hook_commands)
+* [`certonly_post_hook_commands`](#-letsencrypt--certonly_post_hook_commands)
+* [`certonly_deploy_hook_commands`](#-letsencrypt--certonly_deploy_hook_commands)
 
 ##### <a name="-letsencrypt--email"></a>`email`
 
@@ -181,6 +186,8 @@ Default value: `true`
 Data type: `Boolean`
 
 A feature flag to include the 'epel' class and depend on it for package installation.
+
+Default value: `false`
 
 ##### <a name="-letsencrypt--agree_tos"></a>`agree_tos`
 
