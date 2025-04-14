@@ -201,7 +201,6 @@ define letsencrypt::certonly (
       $_domains = join($domains, '\' -d \'')
       $plugin_args  = [
         "--cert-name '${cert_name}' -d '${_domains}'",
-        "--dns-route53-propagation-seconds ${letsencrypt::plugin::dns_route53::propagation_seconds}",
       ]
     }
 
