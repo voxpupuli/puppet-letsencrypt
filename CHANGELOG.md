@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v12.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v12.0.0) (2025-04-15)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.1.0...v12.0.0)
+
+**Breaking changes:**
+
+- drop support for Fedora 39 -- EOL [\#373](https://github.com/voxpupuli/puppet-letsencrypt/pull/373) ([jhoblitt](https://github.com/jhoblitt))
+- drop support for CentOS 8 -- EOL [\#372](https://github.com/voxpupuli/puppet-letsencrypt/pull/372) ([jhoblitt](https://github.com/jhoblitt))
+- Drop EL7 support [\#356](https://github.com/voxpupuli/puppet-letsencrypt/pull/356) ([ekohl](https://github.com/ekohl))
+- Remove EoL FreeBSD 12 [\#354](https://github.com/voxpupuli/puppet-letsencrypt/pull/354) ([rtprio](https://github.com/rtprio))
+- Update FreeBSD packages to Python 3.11 [\#352](https://github.com/voxpupuli/puppet-letsencrypt/pull/352) ([rtprio](https://github.com/rtprio))
+
+**Implemented enhancements:**
+
+- metadata.json: Add OpenVox [\#367](https://github.com/voxpupuli/puppet-letsencrypt/pull/367) ([jstraw](https://github.com/jstraw))
+- Add support for certbot-dns-linode [\#363](https://github.com/voxpupuli/puppet-letsencrypt/pull/363) ([justafish](https://github.com/justafish))
+
+**Fixed bugs:**
+
+- DNS Route 53 propagation Seconds / Certbot [\#368](https://github.com/voxpupuli/puppet-letsencrypt/issues/368)
+- \(certonly.pp\) remove stale route 53 dns plugin flag [\#369](https://github.com/voxpupuli/puppet-letsencrypt/pull/369) ([dtapiacl](https://github.com/dtapiacl))
+
 ## [v11.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.1.0) (2024-09-09)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.0.0...v11.1.0)
