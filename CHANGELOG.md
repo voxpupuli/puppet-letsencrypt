@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v11.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.2.0) (2025-04-15)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.1.0...v11.2.0)
+
+**Breaking changes:**
+
+- Drop EL7 support [\#356](https://github.com/voxpupuli/puppet-letsencrypt/pull/356) ([ekohl](https://github.com/ekohl))
+- Remove EoL FreeBSD 12 [\#354](https://github.com/voxpupuli/puppet-letsencrypt/pull/354) ([rtprio](https://github.com/rtprio))
+
+**Implemented enhancements:**
+
+- metadata.json: Add OpenVox [\#367](https://github.com/voxpupuli/puppet-letsencrypt/pull/367) ([jstraw](https://github.com/jstraw))
+- Add support for certbot-dns-linode [\#363](https://github.com/voxpupuli/puppet-letsencrypt/pull/363) ([justafish](https://github.com/justafish))
+
+**Fixed bugs:**
+
+- \(certonly.pp\) remove stale route 53 dns plugin flag [\#369](https://github.com/voxpupuli/puppet-letsencrypt/pull/369) ([dtapiacl](https://github.com/dtapiacl))
+
+**Closed issues:**
+
+- DNS Route 53 propagation Seconds / Certbot [\#368](https://github.com/voxpupuli/puppet-letsencrypt/issues/368)
+- default keytype ecdsa is not supported by dogtag, and module doesn't have option to choose rsa keytype [\#365](https://github.com/voxpupuli/puppet-letsencrypt/issues/365)
+
+**Merged pull requests:**
+
+- Update FreeBSD packages to Python 3.11 [\#352](https://github.com/voxpupuli/puppet-letsencrypt/pull/352) ([rtprio](https://github.com/rtprio))
+
 ## [v11.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v11.1.0) (2024-09-09)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.0.0...v11.1.0)
