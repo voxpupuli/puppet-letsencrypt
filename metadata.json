@@ -42,12 +42,6 @@
       ]
     },
     {
-      "operatingsystem": "Fedora",
-      "operatingsystemrelease": [
-        "39"
-      ]
-    },
-    {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "20.04",
