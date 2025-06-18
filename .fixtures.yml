@@ -1,9 +1,8 @@
+---
 fixtures:
   repositories:
-    epel: 'https://github.com/voxpupuli/puppet-epel.git'
-    inifile: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
-    stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
-    yumrepo_core:
-      repo: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
-    cron_core:
-      repo: https://github.com/puppetlabs/puppetlabs-cron_core.git
+    cron_core: https://github.com/puppetlabs/puppetlabs-cron_core.git
+    epel: https://github.com/voxpupuli/puppet-epel.git
+    inifile: https://github.com/puppetlabs/puppetlabs-inifile.git
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+    yumrepo_core: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
