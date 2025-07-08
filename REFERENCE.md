@@ -423,7 +423,7 @@ https://pypi.org/project/certbot-plugin-gandi/
 The following parameters are available in the `letsencrypt::plugin::dns_gandi` class:
 
 * [`api_key`](#-letsencrypt--plugin--dns_gandi--api_key)
-* [`personnal_access_token`](#-letsencrypt--plugin--dns_gandi--personnal_access_token)
+* [`personal_access_token`](#-letsencrypt--plugin--dns_gandi--personal_access_token)
 * [`package_name`](#-letsencrypt--plugin--dns_gandi--package_name)
 * [`config_file`](#-letsencrypt--plugin--dns_gandi--config_file)
 * [`manage_package`](#-letsencrypt--plugin--dns_gandi--manage_package)
@@ -436,11 +436,11 @@ Gandi production api key secret. You can get it in your security tab of your acc
 
 Default value: `undef`
 
-##### <a name="-letsencrypt--plugin--dns_gandi--personnal_access_token"></a>`personnal_access_token`
+##### <a name="-letsencrypt--plugin--dns_gandi--personal_access_token"></a>`personal_access_token`
 
 Data type: `Optional[String[1]]`
 
-Gandi personnal access token(PAT). You can get it in your security tab of your account
+Gandi personal access token(PAT). You can get it in your security tab of your account
 
 Default value: `undef`
 
