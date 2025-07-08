@@ -1,6 +1,6 @@
 {
   "name": "puppet-letsencrypt",
-  "version": "11.1.1-rc0",
+  "version": "12.0.1-rc0",
   "author": "Vox Pupuli",
   "summary": "Manages lets-encrypt and certbot + related certs",
   "license": "Apache-2.0",
@@ -24,7 +24,6 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "8",
         "9"
       ]
     },
@@ -43,16 +42,11 @@
       ]
     },
     {
-      "operatingsystem": "Fedora",
-      "operatingsystemrelease": [
-        "39"
-      ]
-    },
-    {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "20.04",
-        "22.04"
+        "22.04",
+        "24.04"
       ]
     },
     {
@@ -78,6 +72,10 @@
   "requirements": [
     {
       "name": "puppet",
+      "version_requirement": ">= 7.0.0 < 9.0.0"
+    },
+    {
+      "name": "openvox",
       "version_requirement": ">= 7.0.0 < 9.0.0"
     }
   ],
