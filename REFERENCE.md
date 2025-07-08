@@ -432,7 +432,7 @@ The following parameters are available in the `letsencrypt::plugin::dns_gandi` c
 
 Data type: `Optional[String[1]]`
 
-Gandi production api key secret. You can get it in you security tab of your account
+Gandi production api key secret. You can get it in your security tab of your account
 
 Default value: `undef`
 
@@ -440,7 +440,7 @@ Default value: `undef`
 
 Data type: `Optional[String[1]]`
 
-Gandi personnal access token(PAT). You can get it in you security tab of your account
+Gandi personnal access token(PAT). You can get it in your security tab of your account
 
 Default value: `undef`
 

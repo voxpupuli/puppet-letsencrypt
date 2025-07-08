@@ -3,8 +3,8 @@
 # This class installs and configures the Let's Encrypt dns-gandi plugin.
 # https://pypi.org/project/certbot-plugin-gandi/
 #
-# @param api_key Gandi production api key secret. You can get it in you security tab of your account
-# @param personnal_access_token Gandi personnal access token(PAT). You can get it in you security tab of your account
+# @param api_key Gandi production api key secret. You can get it in your security tab of your account
+# @param personal_access_token Gandi personal access token(PAT). You can get it in your security tab of your account
 # @param package_name The name of the package to install when $manage_package is true.
 # @param config_file The path to the configuration file.
 # @param manage_package Manage the plugin package.
@@ -12,7 +12,7 @@
 class letsencrypt::plugin::dns_gandi (
   String[1] $package_name,
   Optional[String[1]] $api_key                = undef,
-  Optional[String[1]] $personnal_access_token = undef,
+  Optional[String[1]] $personal_access_token = undef,
   Stdlib::Absolutepath $config_file           = "${letsencrypt::config_dir}/dns-gandi.ini",
   Boolean $manage_package                     = true,
 ) {
@@ -29,12 +29,12 @@ class letsencrypt::plugin::dns_gandi (
     $ini_vars = {
       'dns_gandi_api_key' => $api_key,
     }
-  } elsif $personnal_access_token != undef {
+  } elsif $personal_access_token != undef {
     $ini_vars = {
-      'dns_gandi_token' => $personnal_access_token,
+      'dns_gandi_token' => $personal_access_token,
     }
   } else {
-    fail("expects a value for parameter 'api_key' or 'personnal_access_token'")
+    fail("expects a value for parameter 'api_key' or 'personal_access_token'")
   }
 
   file { $config_file:
