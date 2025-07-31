@@ -82,6 +82,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`renew_post_hook_commands`](#-letsencrypt--renew_post_hook_commands)
 * [`renew_deploy_hook_commands`](#-letsencrypt--renew_deploy_hook_commands)
 * [`renew_additional_args`](#-letsencrypt--renew_additional_args)
+* [`renew_disable_distro_cron`](#-letsencrypt--renew_disable_distro_cron)
 * [`renew_cron_ensure`](#-letsencrypt--renew_cron_ensure)
 * [`renew_cron_hour`](#-letsencrypt--renew_cron_hour)
 * [`renew_cron_minute`](#-letsencrypt--renew_cron_minute)
@@ -264,6 +265,14 @@ Data type: `Variant[String[1], Array[String[1]]]`
 Array of additional command line arguments to pass to 'certbot renew'.
 
 Default value: `[]`
+
+##### <a name="-letsencrypt--renew_disable_distro_cron"></a>`renew_disable_distro_cron`
+
+Data type: `Boolean`
+
+Boolean, set to true to disable the cron created by the distro package
+
+Default value: `false`
 
 ##### <a name="-letsencrypt--renew_cron_ensure"></a>`renew_cron_ensure`
 
@@ -635,6 +644,9 @@ The following parameters are available in the `letsencrypt::renew` class:
 * [`post_hook_commands`](#-letsencrypt--renew--post_hook_commands)
 * [`deploy_hook_commands`](#-letsencrypt--renew--deploy_hook_commands)
 * [`additional_args`](#-letsencrypt--renew--additional_args)
+* [`disable_distro_cron`](#-letsencrypt--renew--disable_distro_cron)
+* [`distro_renew_cron_file`](#-letsencrypt--renew--distro_renew_cron_file)
+* [`distro_renew_timer`](#-letsencrypt--renew--distro_renew_timer)
 * [`cron_ensure`](#-letsencrypt--renew--cron_ensure)
 * [`cron_hour`](#-letsencrypt--renew--cron_hour)
 * [`cron_minute`](#-letsencrypt--renew--cron_minute)
@@ -677,6 +689,30 @@ Data type: `Array[String[1]]`
 Array of additional command line arguments to pass to 'certbot renew'.
 
 Default value: `$letsencrypt::renew_additional_args`
+
+##### <a name="-letsencrypt--renew--disable_distro_cron"></a>`disable_distro_cron`
+
+Data type: `Boolean`
+
+Boolean, set to true to disable the cron created by the distro package
+
+Default value: `$letsencrypt::renew_disable_distro_cron`
+
+##### <a name="-letsencrypt--renew--distro_renew_cron_file"></a>`distro_renew_cron_file`
+
+Data type: `Optional[Stdlib::Unixpath]`
+
+Optional Unixpath, if set and if disable_distro_cron is true this file will be deleted (unless systemd is used)
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--renew--distro_renew_timer"></a>`distro_renew_timer`
+
+Data type: `Optional[String]`
+
+Optional String, name of the systemd timer to disable if disable_distro_cron is true
+
+Default value: `undef`
 
 ##### <a name="-letsencrypt--renew--cron_ensure"></a>`cron_ensure`
 
