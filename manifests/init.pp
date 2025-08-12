@@ -91,7 +91,7 @@ class letsencrypt (
   Letsencrypt::Cron::Hour $renew_cron_hour = fqdn_rand(24),
   Letsencrypt::Cron::Minute $renew_cron_minute = fqdn_rand(60),
   Letsencrypt::Cron::Monthday $renew_cron_monthday = '*',
-  Variant[String[1], Array[String[1]]] $renew_cron_environment = [],
+  Optional[Variant[String[1], Array[String[1]]]] $renew_cron_environment = undef,
   Boolean                              $renew_disable_distro_cron = false,
   # define default hooks for all certonly defined resources
   Array[String[1]] $certonly_pre_hook_commands = [],
