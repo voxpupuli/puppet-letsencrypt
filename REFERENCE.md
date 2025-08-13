@@ -312,12 +312,12 @@ Default value: `'*'`
 
 ##### <a name="-letsencrypt--renew_cron_environment"></a>`renew_cron_environment`
 
-Data type: `Variant[String[1], Array[String[1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Optional string or array of environments(s) the renewal command should have.
 E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
-Default value: `[]`
+Default value: `undef`
 
 ##### <a name="-letsencrypt--certonly_pre_hook_commands"></a>`certonly_pre_hook_commands`
 
@@ -751,7 +751,7 @@ Default value: `$letsencrypt::renew_cron_monthday`
 
 ##### <a name="-letsencrypt--renew--cron_environment"></a>`cron_environment`
 
-Data type: `Variant[String[1], Array[String[1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Optional string or array of environment variables the renewal command should have.
 E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
