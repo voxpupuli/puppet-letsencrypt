@@ -42,7 +42,7 @@ class letsencrypt::renew (
   Letsencrypt::Cron::Hour              $cron_hour              = $letsencrypt::renew_cron_hour,
   Letsencrypt::Cron::Minute            $cron_minute            = $letsencrypt::renew_cron_minute,
   Letsencrypt::Cron::Monthday          $cron_monthday          = $letsencrypt::renew_cron_monthday,
-  Variant[String[1], Array[String[1]]] $cron_environment       = $letsencrypt::renew_cron_environment,
+  Optional[Variant[String[1], Array[String[1]]]] $cron_environment       = $letsencrypt::renew_cron_environment,
   Boolean                              $disable_distro_cron    = $letsencrypt::renew_disable_distro_cron,
   Optional[Stdlib::Unixpath]           $distro_renew_cron_file = undef,
   Optional[String]                     $distro_renew_timer     = undef,
