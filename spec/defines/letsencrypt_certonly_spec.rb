@@ -227,6 +227,66 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-linode --cert-name 'foo.example.com' -d 'foo.example.com' --dns-linode --dns-linode-credentials /etc/letsencrypt/dns-linode.ini --dns-linode-propagation-seconds 120" }
       end
 
+      context 'with dns-gandi plugin with api_key' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'dns-gandi', letsencrypt_command: 'letsencrypt' } }
+        let(:pre_condition) do
+          <<-PUPPET
+          class { 'letsencrypt':
+            email      => 'foo@example.com',
+            config_dir => '/etc/letsencrypt',
+          }
+          class { 'letsencrypt::plugin::dns_gandi':
+            package_name => 'irrelevant',
+            api_key      => 'dummy-gandi-api-token',
+          }
+          PUPPET
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('letsencrypt::plugin::dns_gandi') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-gandi --cert-name 'foo.example.com' -d 'foo.example.com' --dns-gandi-credentials /etc/letsencrypt/dns-gandi.ini" }
+      end
+
+      context 'with dns-gandi plugin with personal_access_token' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'dns-gandi', letsencrypt_command: 'letsencrypt' } }
+        let(:pre_condition) do
+          <<-PUPPET
+          class { 'letsencrypt':
+            email      => 'foo@example.com',
+            config_dir => '/etc/letsencrypt',
+          }
+          class { 'letsencrypt::plugin::dns_gandi':
+            package_name           => 'irrelevant',
+            personal_access_token => 'dummy-pat',
+          }
+          PUPPET
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('letsencrypt::plugin::dns_gandi') }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "letsencrypt --text --agree-tos --non-interactive certonly --rsa-key-size 4096 -a dns-gandi --cert-name 'foo.example.com' -d 'foo.example.com' --dns-gandi-credentials /etc/letsencrypt/dns-gandi.ini" }
+      end
+
+      context 'with dns-gandi plugin without api_key or personal_access_token' do
+        let(:title) { 'foo.example.com' }
+        let(:params) { { plugin: 'dns-gandi', letsencrypt_command: 'letsencrypt' } }
+        let(:pre_condition) do
+          <<-PUPPET
+          class { 'letsencrypt':
+            email      => 'foo@example.com',
+            config_dir => '/etc/letsencrypt',
+          }
+          class { 'letsencrypt::plugin::dns_gandi':
+            package_name => 'irrelevant',
+          }
+          PUPPET
+        end
+
+        it { is_expected.to compile.and_raise_error(%r{expects a value for parameter 'api_key' or 'personal_access_token'}) }
+      end
+
       context 'with custom plugin' do
         let(:title) { 'foo.example.com' }
         let(:params) { { plugin: 'apache' } }
