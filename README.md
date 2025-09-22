@@ -13,7 +13,9 @@ This module installs the Let's Encrypt client (certbot) and allows you to reques
 
 This module is currently only written to work on Debian and RedHat based
 operating systems, although it may work on others. The supported Puppet
-versions are defined in the [metadata.json](metadata.json)
+versions are defined in the [metadata.json](metadata.json).
+
+The [python3-certbot-dns-linode](https://tracker.debian.org/pkg/python-certbot-dns-linode) package does not exist for Debian 13, so `letsencrypt::plugin::dns_linode` will not work on Debian 13 unless you provide your own package.
 
 ## Dependencies
 

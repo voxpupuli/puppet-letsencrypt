@@ -2,7 +2,9 @@
 
 require 'spec_helper_acceptance'
 
-describe 'letsencrypt::plugin::dns_linode' do
+# python3-certbot-dns-linode package does not exist for Debian 13 trixie.
+# https://tracker.debian.org/pkg/python-certbot-dns-linode
+describe 'letsencrypt::plugin::dns_linode', skip: fact('os.distro.codename') == 'trixie' do
   it_behaves_like 'an idempotent resource' do
     let(:manifest) do
       <<-PUPPET
