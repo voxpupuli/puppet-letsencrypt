@@ -67,8 +67,10 @@ class letsencrypt::plugin::dns_cloudflare (
     owner   => 'root',
     group   => 0,
     mode    => '0400',
-    content => epp('letsencrypt/ini.epp', {
+    content => epp('letsencrypt/ini.epp',
+      {
         vars => { '' => $ini_vars },
-    }),
+      },
+    ),
   }
 }

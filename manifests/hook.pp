@@ -22,10 +22,12 @@ define letsencrypt::hook (
     owner   => 'root',
     group   => 0,
     mode    => '0755',
-    content => epp('letsencrypt/hook.sh.epp', {
+    content => epp('letsencrypt/hook.sh.epp',
+      {
         commands     => $commands,
         validate_env => $validate_env,
-    }),
+      },
+    ),
     # Defined in letsencrypt::config
     require => File['letsencrypt-renewal-hooks-puppet'],
   }

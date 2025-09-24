@@ -257,13 +257,15 @@ define letsencrypt::certonly (
   $live_path_certname = regsubst($cert_name, '^\*\.', '')
   $live_path = "${config_dir}/live/${live_path_certname}/cert.pem"
 
-  $_command = flatten([
+  $_command = flatten(
+    [
       $letsencrypt_command,
       $default_args,
       $plugin_args,
       $hook_args,
       $additional_args,
-  ]).filter | $arg | { $arg =~ NotUndef and $arg != [] }
+    ],
+  ).filter | $arg | { $arg =~ NotUndef and $arg != [] }
   $command = join($_command, ' ')
 
   $verify_domains = join(unique($domains), '\' \'')
