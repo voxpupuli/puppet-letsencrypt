@@ -111,6 +111,12 @@ class letsencrypt (
 
   contain letsencrypt::renew
 
+  file { '/usr/share/certbot_lock.sh':
+    ensure  => file,
+    mode    => '0544',
+    content => file("${module_name}/certbot_lock.sh"),
+  }
+
   $certificates.each |$certificate, $properties| {
     letsencrypt::certonly { $certificate: * => $properties }
   }
