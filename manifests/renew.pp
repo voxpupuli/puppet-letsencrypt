@@ -78,12 +78,14 @@ class letsencrypt::renew (
     }
   }
 
-  $_command = flatten([
+  $_command = flatten(
+    [
       $letsencrypt::command,
       $default_args,
       $hook_args,
       $additional_args,
-  ]).filter | $arg | { $arg =~ NotUndef and $arg != [] }
+    ],
+  ).filter | $arg | { $arg =~ NotUndef and $arg != [] }
   $command = join($_command, ' ')
 
   cron { 'letsencrypt-renew':
