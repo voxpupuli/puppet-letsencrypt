@@ -8,6 +8,7 @@
 ENV['COVERAGE'] ||= 'yes' if Dir.exist?(File.expand_path('../lib', __dir__))
 
 require 'voxpupuli/test/spec_helper'
+require 'spec_helper_local'
 
 RSpec.configure do |c|
   c.facterdb_string_keys = true

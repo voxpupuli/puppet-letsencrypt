@@ -10,6 +10,7 @@
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencrypt--plugin--dns_cloudflare): Installs and configures the dns-cloudflare plugin
+* [`letsencrypt::plugin::dns_gandi`](#letsencrypt--plugin--dns_gandi): Installs and configures the dns-gandi plugin
 * [`letsencrypt::plugin::dns_linode`](#letsencrypt--plugin--dns_linode): Installs and configures the dns-linode plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencrypt--plugin--dns_rfc2136): Installs and configures the dns-rfc2136 plugin
 * [`letsencrypt::plugin::dns_route53`](#letsencrypt--plugin--dns_route53): Installs and configures the dns-route53 plugin
@@ -420,6 +421,59 @@ Data type: `Integer`
 Number of seconds to wait for the DNS server to propagate the DNS-01 challenge.
 
 Default value: `10`
+
+### <a name="letsencrypt--plugin--dns_gandi"></a>`letsencrypt::plugin::dns_gandi`
+
+This class installs and configures the Let's Encrypt dns-gandi plugin.
+https://pypi.org/project/certbot-plugin-gandi/
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::dns_gandi` class:
+
+* [`api_key`](#-letsencrypt--plugin--dns_gandi--api_key)
+* [`personal_access_token`](#-letsencrypt--plugin--dns_gandi--personal_access_token)
+* [`package_name`](#-letsencrypt--plugin--dns_gandi--package_name)
+* [`config_file`](#-letsencrypt--plugin--dns_gandi--config_file)
+* [`manage_package`](#-letsencrypt--plugin--dns_gandi--manage_package)
+
+##### <a name="-letsencrypt--plugin--dns_gandi--api_key"></a>`api_key`
+
+Data type: `Optional[String[1]]`
+
+Gandi production api key secret. You can get it in your security tab of your account
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--plugin--dns_gandi--personal_access_token"></a>`personal_access_token`
+
+Data type: `Optional[String[1]]`
+
+Gandi personal access token(PAT). You can get it in your security tab of your account
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--plugin--dns_gandi--package_name"></a>`package_name`
+
+Data type: `String[1]`
+
+The name of the package to install when $manage_package is true.
+
+##### <a name="-letsencrypt--plugin--dns_gandi--config_file"></a>`config_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The path to the configuration file.
+
+Default value: `"${letsencrypt::config_dir}/dns-gandi.ini"`
+
+##### <a name="-letsencrypt--plugin--dns_gandi--manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: `true`
 
 ### <a name="letsencrypt--plugin--dns_linode"></a>`letsencrypt::plugin::dns_linode`
 
@@ -1171,5 +1225,5 @@ Variant[Integer[0,31], String[1], Array[
 
 List of accepted plugins
 
-Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-linode', 'dns-rfc2136', 'manual']`
+Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-linode', 'dns-rfc2136', 'dns-gandi', 'manual']`
 
