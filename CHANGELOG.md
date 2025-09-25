@@ -4,7 +4,34 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v12.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v12.0.0) (2025-04-15)
+## [v13.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.0.0) (2025-09-25)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v12.0.0...v13.0.0)
+
+**Breaking changes:**
+
+- Drop support for EOL Ubuntu 20.04 [\#386](https://github.com/voxpupuli/puppet-letsencrypt/pull/386) ([kenyon](https://github.com/kenyon))
+- Drop puppet, update openvox minimum version to 8.19 [\#382](https://github.com/voxpupuli/puppet-letsencrypt/pull/382) ([TheMeier](https://github.com/TheMeier))
+
+**Implemented enhancements:**
+
+- Add support for Debian 13 [\#387](https://github.com/voxpupuli/puppet-letsencrypt/pull/387) ([kenyon](https://github.com/kenyon))
+- Add support for Debian 12 [\#385](https://github.com/voxpupuli/puppet-letsencrypt/pull/385) ([smortex](https://github.com/smortex))
+- Add Ubuntu 24.04 as a supported OS [\#375](https://github.com/voxpupuli/puppet-letsencrypt/pull/375) ([Tonguechaude](https://github.com/Tonguechaude))
+- Add support for installing and configuring Certbot Apache plugin [\#357](https://github.com/voxpupuli/puppet-letsencrypt/pull/357) ([NeatNerdPrime](https://github.com/NeatNerdPrime))
+- add option for removing cron job provided by distribution packages [\#289](https://github.com/voxpupuli/puppet-letsencrypt/pull/289) ([gmenuel](https://github.com/gmenuel))
+- Change the default `cron_hour` to twice a day [\#283](https://github.com/voxpupuli/puppet-letsencrypt/pull/283) ([bkuebler](https://github.com/bkuebler))
+
+**Fixed bugs:**
+
+- Make `renew_cron_environment` optional [\#383](https://github.com/voxpupuli/puppet-letsencrypt/pull/383) ([robertc99](https://github.com/robertc99))
+
+**Closed issues:**
+
+- /etc/cron.d/certbot cron file should be absent when manage\_cron is set to true on Debian [\#164](https://github.com/voxpupuli/puppet-letsencrypt/issues/164)
+- cron job frequency [\#47](https://github.com/voxpupuli/puppet-letsencrypt/issues/47)
+
+## [v12.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v12.0.0) (2025-04-16)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v11.1.0...v12.0.0)
 
