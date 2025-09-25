@@ -87,7 +87,9 @@
 # @param letsencrypt_command Command to run letsencrypt
 # @param additional_args An array of additional command line arguments to pass to the `letsencrypt` command.
 # @param environment  An optional array of environment variables
+# @param key_type Type of private key
 # @param key_size Size for the RSA public key
+# @param elliptic_curve The SECG elliptic curve name to use
 # @param manage_cron
 #   Indicating whether or not to schedule cron job for renewal.
 #   Runs daily but only renews if near expiration, e.g. within 10 days.
@@ -128,7 +130,9 @@ define letsencrypt::certonly (
   Letsencrypt::Plugin                       $plugin               = 'standalone',
   Array[Stdlib::Unixpath]                   $webroot_paths        = [],
   String[1]                                 $letsencrypt_command  = $letsencrypt::command,
+  Enum['rsa', 'ecdsa']                      $key_type             = $letsencrypt::key_type,
   Integer[2048]                             $key_size             = $letsencrypt::key_size,
+  String[1]                                 $elliptic_curve       = $letsencrypt::elliptic_curve,
   Array[String[1]]                          $additional_args      = [],
   Array[String[1]]                          $environment          = [],
   Boolean                                   $manage_cron          = false,
@@ -153,10 +157,16 @@ define letsencrypt::certonly (
   $title_nowc = regsubst($title, '^\*\.', '')
 
   if $ensure == 'present' {
-    if ($custom_plugin) {
-      $default_args = "--text --agree-tos --non-interactive certonly --rsa-key-size ${key_size}"
+    if $key_type == 'rsa' {
+      $key_args = "--rsa-key-size ${key_size}"
     } else {
-      $default_args = "--text --agree-tos --non-interactive certonly --rsa-key-size ${key_size} -a ${plugin}"
+      $key_args = "--elliptic-curve ${elliptic_curve}"
+    }
+
+    if ($custom_plugin) {
+      $default_args = "--text --agree-tos --non-interactive certonly --key-type ${key_type} ${key_args}"
+    } else {
+      $default_args = "--text --agree-tos --non-interactive certonly --key-type ${key_type} ${key_args} -a ${plugin}"
     }
   } else {
     $default_args = '--text --agree-tos --non-interactive delete'
