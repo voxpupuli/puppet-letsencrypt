@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v13.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.1.0) (2025-09-25)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.0.0...v13.1.0)
+
+**Implemented enhancements:**
+
+- Add support for specifying key type ECDSA [\#320](https://github.com/voxpupuli/puppet-letsencrypt/pull/320) ([martijndegouw](https://github.com/martijndegouw))
+
 ## [v13.0.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.0.0) (2025-09-25)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v12.0.0...v13.0.0)
