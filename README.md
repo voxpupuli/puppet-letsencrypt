@@ -1,6 +1,6 @@
 # Let's Encrypt
 
-[![Build Status](https://travis-ci.org/voxpupuli/puppet-letsencrypt.png?branch=master)](https://travis-ci.org/voxpupuli/puppet-letsencrypt)
+[![Build Status](https://github.com/voxpupuli/puppet-letsencrypt/actions/workflows/ci.yml/badge.svg)](https://github.com/voxpupuli/puppet-letsencrypt/actions/workflows/ci.yml)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/letsencrypt.svg)](https://forge.puppetlabs.com/puppet/letsencrypt)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/letsencrypt.svg)](https://forge.puppetlabs.com/puppet/letsencrypt)
 [![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/letsencrypt.svg)](https://forge.puppetlabs.com/puppet/letsencrypt)
