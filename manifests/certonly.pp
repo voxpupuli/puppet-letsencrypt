@@ -298,6 +298,7 @@ define letsencrypt::certonly (
     $exec_ensure = { 'onlyif' => "/usr/local/sbin/letsencrypt-domain-validation ${live_path} '${verify_domains}'" }
   }
 
+  # lint:ignore:exec_idempotency
   exec { "letsencrypt certonly ${title}":
     command     => $command,
     *           => $exec_ensure,
@@ -308,6 +309,7 @@ define letsencrypt::certonly (
       File['/usr/local/sbin/letsencrypt-domain-validation'],
     ],
   }
+  # lint:endignore
 
   if $manage_cron {
     $maincommand = join(["${letsencrypt_command} --keep-until-expiring"] + $_command[1,-1], ' ')
