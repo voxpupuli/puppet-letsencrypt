@@ -4,7 +4,26 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v13.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.1.0) (2025-09-25)
+## [v13.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.2.0) (2026-02-10)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.1.0...v13.2.0)
+
+**Implemented enhancements:**
+
+- Add support for plugin dns-ovh [\#402](https://github.com/voxpupuli/puppet-letsencrypt/pull/402) ([bastelfreak](https://github.com/bastelfreak))
+- Add support for FreeBSD 15 [\#399](https://github.com/voxpupuli/puppet-letsencrypt/pull/399) ([smortex](https://github.com/smortex))
+
+**Fixed bugs:**
+
+- \(\#396\) Add support for adding hooks after cert creation [\#405](https://github.com/voxpupuli/puppet-letsencrypt/pull/405) ([bastelfreak](https://github.com/bastelfreak))
+
+**Merged pull requests:**
+
+- Further cleanup if conditions [\#404](https://github.com/voxpupuli/puppet-letsencrypt/pull/404) ([bastelfreak](https://github.com/bastelfreak))
+- certonly: Cleanup if conditions [\#403](https://github.com/voxpupuli/puppet-letsencrypt/pull/403) ([bastelfreak](https://github.com/bastelfreak))
+- README: replace Travis status badge with GitHub Actions status [\#391](https://github.com/voxpupuli/puppet-letsencrypt/pull/391) ([kenyon](https://github.com/kenyon))
+
+## [v13.1.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.1.0) (2025-09-26)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.0.0...v13.1.0)
 
@@ -503,16 +522,7 @@ These should not affect the functionality of the module.
 
 ## [v1.0.1](https://github.com/voxpupuli/puppet-letsencrypt/tree/v1.0.1) (2016-12-23)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v999.999.999...v1.0.1)
-
-**Merged pull requests:**
-
-- Bump minimum version dependencies \(for Puppet 4\) [\#72](https://github.com/voxpupuli/puppet-letsencrypt/pull/72) ([juniorsysadmin](https://github.com/juniorsysadmin))
-- release 1.0.1 [\#71](https://github.com/voxpupuli/puppet-letsencrypt/pull/71) ([bastelfreak](https://github.com/bastelfreak))
-
-## [v999.999.999](https://github.com/voxpupuli/puppet-letsencrypt/tree/v999.999.999) (2016-12-20)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.0...v999.999.999)
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v1.0.0...v1.0.1)
 
 **Closed issues:**
 
@@ -529,6 +539,8 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
+- Bump minimum version dependencies \(for Puppet 4\) [\#72](https://github.com/voxpupuli/puppet-letsencrypt/pull/72) ([juniorsysadmin](https://github.com/juniorsysadmin))
+- release 1.0.1 [\#71](https://github.com/voxpupuli/puppet-letsencrypt/pull/71) ([bastelfreak](https://github.com/bastelfreak))
 - Bump LetsEncrypt version to 0.9.3 \(latest as of Oct 2016\)  [\#61](https://github.com/voxpupuli/puppet-letsencrypt/pull/61) ([jethrocarr](https://github.com/jethrocarr))
 - Fix cronspam [\#60](https://github.com/voxpupuli/puppet-letsencrypt/pull/60) ([jethrocarr](https://github.com/jethrocarr))
 - Fix failing builds [\#57](https://github.com/voxpupuli/puppet-letsencrypt/pull/57) ([jethrocarr](https://github.com/jethrocarr))
