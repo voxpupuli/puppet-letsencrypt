@@ -92,7 +92,7 @@
     },
     {
       "name": "puppet/epel",
-      "version_requirement": ">= 3.0.1 < 6.0.0"
+      "version_requirement": ">= 3.0.1 < 7.0.0"
     }
   ]
 }
