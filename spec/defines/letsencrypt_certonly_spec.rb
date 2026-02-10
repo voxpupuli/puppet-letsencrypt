@@ -285,6 +285,7 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('foo.example.com-pre').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-pre.sh')
+            is_expected.to contain_ini_setting('foo.example.com-pre')
           end
         end
 
@@ -295,6 +296,7 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('*.example.com-pre').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/example.com-pre.sh')
+            is_expected.to contain_ini_setting('*.example.com-pre')
           end
         end
 
@@ -305,6 +307,7 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('foo.example.com-post').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-post.sh')
+            is_expected.to contain_ini_setting('foo.example.com-post')
           end
         end
 
@@ -315,6 +318,7 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('foo.example.com-deploy').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-deploy.sh')
+            is_expected.to contain_ini_setting('foo.example.com-deploy')
           end
         end
       end
@@ -566,6 +570,9 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_letsencrypt__hook('foo.example.com-pre') }
         it { is_expected.to contain_letsencrypt__hook('foo.example.com-post') }
         it { is_expected.to contain_letsencrypt__hook('foo.example.com-deploy') }
+        it { is_expected.to contain_ini_setting('foo.example.com-pre') }
+        it { is_expected.to contain_ini_setting('foo.example.com-post') }
+        it { is_expected.to contain_ini_setting('foo.example.com-deploy') }
         it { is_expected.to have_letsencrypt__hook_resource_count(3) }
       end
     end

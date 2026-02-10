@@ -257,6 +257,10 @@ define letsencrypt::certonly (
     }
   }
 
+  # certbot uses --cert-name to generate the file path
+  $live_path_certname = regsubst($cert_name, '^\*\.', '')
+  $live_path = "${config_dir}/live/${live_path_certname}/cert.pem"
+
   $hook_args = ['pre', 'post', 'deploy'].map | String $type | {
     $commands = getvar("${type}_hook_commands")
     if (!empty($commands)) {
@@ -267,16 +271,26 @@ define letsencrypt::certonly (
         commands  => $commands,
         before    => Exec["letsencrypt certonly ${title}"],
       }
+      # if ensure is set to present, ensure that the hooks exist in the config file for the domain
+      # this has to happen after the exec, because `certbot certonly` creates the initial config file
+      # certbot won't update the config. But an update is required if new hooks are added afterwards
+      #
+      # we cannot add it to letsencrypt::hook because the defined resource runs before the Exec, not afterwards
+      ini_setting { "${title}-${type}":
+        ensure  => $ensure,
+        path    => "${config_dir}/renewal/${live_path_certname}.conf",
+        section => 'renewalparams',
+        setting => "${type}_hook",
+        value   => $hook_file,
+        require => Exec["letsencrypt certonly ${title}"],
+      }
+
       "--${type}-hook \"${hook_file}\""
     }
     else {
       undef
     }
   }
-
-  # certbot uses --cert-name to generate the file path
-  $live_path_certname = regsubst($cert_name, '^\*\.', '')
-  $live_path = "${config_dir}/live/${live_path_certname}/cert.pem"
 
   $_command = flatten(
     [
