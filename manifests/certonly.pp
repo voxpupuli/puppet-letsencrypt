@@ -322,15 +322,15 @@ define letsencrypt::certonly (
       default    => $maincommand
     }
 
-    if $cron_before_command {
-      $renewcommand = "(${cron_before_command}) && ${croncommand}"
+    $renewcommand = if $cron_before_command {
+      "(${cron_before_command}) && ${croncommand}"
     } else {
-      $renewcommand = $croncommand
+      $croncommand
     }
-    if $cron_success_command {
-      $cron_cmd = "${renewcommand} && (${cron_success_command})"
+    $cron_cmd = if $cron_success_command {
+      "${renewcommand} && (${cron_success_command})"
     } else {
-      $cron_cmd = $renewcommand
+      $renewcommand
     }
 
     file { "${letsencrypt::cron_scripts_path}/renew-${title}.sh":
