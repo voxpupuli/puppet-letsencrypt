@@ -157,16 +157,16 @@ define letsencrypt::certonly (
   $title_nowc = regsubst($title, '^\*\.', '')
 
   if $ensure == 'present' {
-    if $key_type == 'rsa' {
-      $key_args = "--rsa-key-size ${key_size}"
+    $key_args = if $key_type == 'rsa' {
+      "--rsa-key-size ${key_size}"
     } else {
-      $key_args = "--elliptic-curve ${elliptic_curve}"
+      "--elliptic-curve ${elliptic_curve}"
     }
 
-    if ($custom_plugin) {
-      $default_args = "--text --agree-tos --non-interactive certonly --key-type ${key_type} ${key_args}"
+    $default_args = if ($custom_plugin) {
+      "--text --agree-tos --non-interactive certonly --key-type ${key_type} ${key_args}"
     } else {
-      $default_args = "--text --agree-tos --non-interactive certonly --key-type ${key_type} ${key_args} -a ${plugin}"
+      "--text --agree-tos --non-interactive certonly --key-type ${key_type} ${key_args} -a ${plugin}"
     }
   } else {
     $default_args = '--text --agree-tos --non-interactive delete'
