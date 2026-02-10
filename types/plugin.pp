@@ -11,4 +11,5 @@ type Letsencrypt::Plugin = Enum[
   'dns-linode',
   'dns-rfc2136',
   'manual',
+  'dns-ovh',
 ]
