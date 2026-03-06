@@ -12,7 +12,7 @@ describe 'letsencrypt::certonly' do
       let(:pre_condition) { "class { letsencrypt: email => 'foo@example.com', package_command => 'letsencrypt' }" }
 
       # FreeBSD uses a different filesystem path
-      pathprefix = facts['kernel'] == 'FreeBSD' ? '/usr/local' : ''
+      pathprefix = (facts['kernel'] == 'FreeBSD') ? '/usr/local' : ''
 
       context 'with a single domain' do
         let(:title) { 'foo.example.com' }
@@ -24,12 +24,12 @@ describe 'letsencrypt::certonly' do
 
         # letsencrypt::scripts is a private class and is therefore tested in this define
         it 'contains the domain validation script' do
-          is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation').
-            with_ensure('file').
-            with_owner('root').
-            with_group('0').
-            with_mode('0500').
-            with_content(%r{#!/bin/sh})
+          is_expected.to contain_file('/usr/local/sbin/letsencrypt-domain-validation')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('0')
+            .with_mode('0500')
+            .with_content(%r{#!/bin/sh})
         end
 
         if facts['os']['family'] == 'FreeBSD'
@@ -91,7 +91,7 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
         let(:params) do
           { plugin: 'webroot',
-            webroot_paths: ['/var/www/foo'] }
+            webroot_paths: ['/var/www/foo'], }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -103,7 +103,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           { domains: ['foo.example.com', 'bar.example.com'],
             plugin: 'webroot',
-            webroot_paths: ['/var/www/foo', '/var/www/bar'] }
+            webroot_paths: ['/var/www/foo', '/var/www/bar'], }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -115,7 +115,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           { domains: ['foo.example.com', 'bar.example.com'],
             plugin: 'webroot',
-            webroot_paths: ['/var/www/foo'] }
+            webroot_paths: ['/var/www/foo'], }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -268,7 +268,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             plugin: 'apache',
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -328,7 +328,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_hour: 13,
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -342,7 +342,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_hour: 24,
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -355,7 +355,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_hour: '00',
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -369,7 +369,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_hour: [1, 13],
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -383,7 +383,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_minute: 15,
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -397,7 +397,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_minute: '15',
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -411,7 +411,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             cron_minute: [0, 30],
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -425,7 +425,7 @@ describe 'letsencrypt::certonly' do
         let(:params) do
           {
             ensure: 'absent',
-            manage_cron: true
+            manage_cron: true,
           }
         end
 
@@ -441,7 +441,7 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
         let(:params) do
           { plugin: 'apache',
-            manage_cron: true }
+            manage_cron: true, }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -457,7 +457,7 @@ describe 'letsencrypt::certonly' do
             plugin: 'apache',
             manage_cron: true,
             cron_before_command: 'echo before',
-            cron_success_command: 'echo success'
+            cron_success_command: 'echo success',
           }
         end
 
@@ -505,11 +505,11 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_content "#!/bin/sh\nexport FOO=bar\nexport FIZZ=buzz\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --key-type rsa --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com'\n" }
       end
 
-      context 'with manage cron and cron_output=suppress' do \
+      context 'with manage cron and cron_output=suppress' do
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
-            cron_output: 'suppress' }
+            cron_output: 'suppress', }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -517,11 +517,11 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\nletsencrypt --keep-until-expiring --text --agree-tos --non-interactive certonly --key-type rsa --rsa-key-size 4096 -a standalone --cert-name 'foo.example.com' -d 'foo.example.com' > /dev/null 2>&1\n") }
       end
 
-      context 'with manage cron and cron_output=log' do \
+      context 'with manage cron and cron_output=log' do
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
-            cron_output: 'log' }
+            cron_output: 'log', }
         end
 
         it { is_expected.to compile.with_all_deps }
@@ -533,7 +533,7 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
         let(:params) do
           { manage_cron: true,
-            cron_monthday: [1, 15] }
+            cron_monthday: [1, 15], }
         end
 
         it { is_expected.to compile.with_all_deps }
