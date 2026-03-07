@@ -34,12 +34,12 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
           super().merge(
             server: '192.0.2.1',
             key_name: 'certbot',
-            key_secret: 'secret'
+            key_secret: 'secret',
           )
         end
 
         # FreeBSD uses a different filesystem path
-        let(:pathprefix) { facts['kernel'] == 'FreeBSD' ? '/usr/local' : '' }
+        let(:pathprefix) { (facts['kernel'] == 'FreeBSD') ? '/usr/local' : '' }
 
         it do
           if package_name.empty?
@@ -47,12 +47,12 @@ describe 'letsencrypt::plugin::dns_rfc2136' do
           else
             is_expected.to compile.with_all_deps
 
-            is_expected.to contain_file("#{pathprefix}/etc/letsencrypt/dns-rfc2136.ini").
-              with_ensure('file').
-              with_owner('root').
-              with_group('0').
-              with_mode('0400').
-              with_content(%r{^.*dns_rfc2136_server.*$})
+            is_expected.to contain_file("#{pathprefix}/etc/letsencrypt/dns-rfc2136.ini")
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('0')
+              .with_mode('0400')
+              .with_content(%r{^.*dns_rfc2136_server.*$})
           end
         end
 
