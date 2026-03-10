@@ -9,5 +9,6 @@ configure_beaker do |host|
     host.install_package('cron')
   when 'RedHat'
     host.install_package('crontabs')
+    host.install_package('gnupg2') if fact('os.release.major').to_i >= 10
   end
 end
