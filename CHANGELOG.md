@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v13.3.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.3.0) (2026-03-10)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.2.0...v13.3.0)
+
+**Implemented enhancements:**
+
+- Allow puppet/epel 6.x [\#410](https://github.com/voxpupuli/puppet-letsencrypt/pull/410) ([evgeni](https://github.com/evgeni))
+- Add EL10 support [\#406](https://github.com/voxpupuli/puppet-letsencrypt/pull/406) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v13.2.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.2.0) (2026-02-10)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.1.0...v13.2.0)
