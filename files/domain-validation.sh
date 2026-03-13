@@ -14,10 +14,10 @@ if ! test -f "${certpath}"; then
 fi
 
 # Get all subject alternative names from the certificate
-certdomains=$(openssl x509 -in "${certpath}" -text -noout | grep -oP 'DNS:[^\s,]*' | sed 's/^DNS://g;')
+certdomains=$(openssl x509 -in "${certpath}" -text -noout | grep -oE 'DNS:[^[:space:],]*' | sed 's/^DNS://g;')
 
 # Sort and uniq all domains. Drop all Domains which occure twice
-result=$(printf '%s\n%s' "${certdomains}" "${domains}" | sort | uniq -c | grep -Pcv '^[ \t]*2[ \t]')
+result=$(printf '%s\n%s' "${certdomains}" "${domains}" | sort | uniq -c | grep -Ecv '^[[:blank:]]*2[[:blank:]]')
 
 # If all requested domains are already in the certificate, the $result will be 0 otherwise > 0
 if [ "${result}" -eq 0 ]; then
