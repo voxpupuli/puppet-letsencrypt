@@ -2,7 +2,7 @@
   Variant[String[1], Array[String[1], 1]] $commands,
   Boolean $validate_env = false,
 | -%>
-#!/bin/bash
+#!/bin/sh
 # THIS FILE IS MANAGED BY PUPPET
 #
 # This script is intended to be used by certbot's hooks. The same simple Puppet
@@ -30,17 +30,17 @@ echo_err() {
 
 ### Begin script
 
-if [[ "$validate_env" -gt 0 ]]; then
+if [ "$validate_env" -gt 0 ]; then
   bork=0
-  if [[ -z "$RENEWED_DOMAINS" ]]; then
+  if [ -z "$RENEWED_DOMAINS" ]; then
     bork=1
     echo_err "Environment variable RENEWED_DOMAINS is empty"
   fi
-  if [[ -z "$RENEWED_LINEAGE" ]]; then
+  if [ -z "$RENEWED_LINEAGE" ]; then
     bork=1
     echo_err "Environment variable RENEWED_LINEAGE is empty"
   fi
-  [[ "$bork" -gt 0 ]] && exit 1
+  [ "$bork" -gt 0 ] && exit 1
 fi
 
 <% flatten([$commands]).each | $command | { -%>
