@@ -195,6 +195,17 @@ define letsencrypt::certonly (
       ]
     }
 
+    'dns-azure': {
+      require letsencrypt::plugin::dns_azure
+      $_domains = join($domains, '\' -d \'' )
+      $plugin_args  = [
+        "--cert-name '${cert_name}' -d '${_domains}'",
+        '--dns-azure',
+        "--dns-azure-config ${letsencrypt::plugin::dns_azure::config_path}",
+        "--dns-azure-propagation-seconds ${letsencrypt::plugin::dns_azure::propagation_seconds}",
+      ]
+    }
+
     'dns-rfc2136': {
       require letsencrypt::plugin::dns_rfc2136
       $_domains = join($domains, '\' -d \'')
