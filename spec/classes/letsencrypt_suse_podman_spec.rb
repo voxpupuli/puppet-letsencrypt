@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'letsencrypt::suse::podman' do
@@ -44,6 +46,7 @@ describe 'letsencrypt::suse::podman' do
         end
 
         it { is_expected.to compile }
+
         it { is_expected.not_to contain_package('podman') }
         it { is_expected.not_to contain_service('podman') }
       end
@@ -74,6 +77,7 @@ describe 'letsencrypt::suse::podman' do
         end
 
         it { is_expected.to compile }
+
         # Verify the wrapper script contains the custom image
         it do
           is_expected.to contain_file('/usr/local/lib/letsencrypt/certbot-podman.sh').with(
