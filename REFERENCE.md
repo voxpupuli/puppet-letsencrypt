@@ -47,7 +47,7 @@ Install and configure Certbot, the LetsEncrypt client
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 class { 'letsencrypt' :
@@ -1236,4 +1236,3 @@ Variant[Integer[0,31], String[1], Array[
 List of accepted plugins
 
 Alias of `Enum['apache', 'standalone', 'webroot', 'nginx', 'dns-azure', 'dns-route53', 'dns-google', 'dns-cloudflare', 'dns-linode', 'dns-rfc2136', 'manual', 'dns-ovh']`
-
