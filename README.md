@@ -11,9 +11,12 @@ This module installs the Let's Encrypt client (certbot) and allows you to reques
 
 ## Support
 
-This module is currently only written to work on Debian and RedHat based
-operating systems, although it may work on others. The supported Puppet
-versions are defined in the [metadata.json](metadata.json).
+This module supports Debian, RedHat-based systems, and a SUSE workflow. The
+full supported operating system and Puppet version matrix is
+defined in [metadata.json](metadata.json).
+
+SUSE support is currently scoped to the SUSE wrappers and
+dns-azure plugin certificate flow described below (with manual hook fallback only when required).
 
 The [python3-certbot-dns-linode](https://tracker.debian.org/pkg/python-certbot-dns-linode) package does not exist for Debian 13, so `letsencrypt::plugin::dns_linode` will not work on Debian 13 unless you provide your own package.
 
@@ -98,6 +101,134 @@ class { 'letsencrypt':
   }
 }
 ```
+
+### SUSE-focused usage
+
+The SUSE classes are intentionally scoped for SUSE-family hosts.
+
+Current support matrix:
+
+* SUSE target range (SLES): 15.4 through 15.7 (SP-level confirmation pending)
+* Package source expectation: SUSEConnect-managed channels
+* Azure DNS note: this implementation uses certbot dns-azure plugin flow for ACME DNS-01
+
+CI/test strategy:
+
+* Keep SUSE fact coverage in rspec for module-level compile and resource validation
+* Treat control-repo validation as the change gate for integration and promotion
+* Treat SUSE SP updates as data-first changes under `data/os/Suse/15.yaml` and confirm compile behavior before rollout
+
+```puppet
+class { 'letsencrypt::suse':
+  email                     => 'foo@example.com',
+  manage_suseconnect        => true,
+  suseconnect_products      => ['sle-module-python3/15.5/x86_64'],
+  renew_cron_ensure         => 'present',
+  renew_disable_distro_cron => true,
+}
+```
+
+Hiera example:
+
+```yaml
+---
+letsencrypt::suse::email: 'foo@example.com'
+letsencrypt::suse::manage_suseconnect: true
+letsencrypt::suse::suseconnect_products:
+  - 'sle-module-python3/15.5/x86_64'
+letsencrypt::suse::renew_cron_ensure: 'present'
+letsencrypt::suse::renew_disable_distro_cron: true
+```
+
+Azure DNS certificate request example:
+
+```puppet
+letsencrypt::suse::certificate { 'example.com':
+  domains => ['example.com', '*.example.com'],
+}
+```
+
+The SLES certificate wrapper defaults to `plugin => 'dns-01'`, which uses the
+dns-azure plugin and preserves the DNS-01 flow above. Set
+`plugin => 'http-01'` to use Certbot's webroot authenticator. For HTTP-01,
+declare a path for each domain through `webroot_paths`. Puppet validates this
+during catalog compilation and never prompts interactively during an agent run.
+
+```puppet
+letsencrypt::suse::certificate { 'www.example.com':
+  domains       => ['www.example.com'],
+  plugin        => 'http-01',
+  webroot_paths => ['/var/www/example.com'],
+}
+```
+
+Credential handling pattern for dns-azure plugin:
+
+```puppet
+file { '/etc/letsencrypt/azure.ini':
+  ensure  => file,
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0400',
+  content => "dns_azure_tenant_id = REDACTED\ndns_azure_client_id = REDACTED\ndns_azure_client_secret = REDACTED\ndns_azure_subscription_id = REDACTED\ndns_azure_resource_group = REDACTED\ndns_azure_zone1 = example.com\n",
+}
+```
+
+Keep secrets out of certbot command arguments and out of world-readable files.
+In production, store credentials with your normal secret backend (for example Hiera eyaml).
+
+### SUSE with Podman (containerized certbot)
+
+As an alternative to native `letsencrypt::suse` with zypper-managed certbot,
+use `letsencrypt::suse::podman` to run certbot inside a container. This approach
+is useful when native certbot packages are unavailable or container isolation
+is preferred.
+
+Basic Podman setup:
+
+```puppet
+class { 'letsencrypt::suse::podman':
+  email => 'foo@example.com',
+}
+```
+
+The class automatically:
+* Installs and enables `podman`
+* Creates `/etc/letsencrypt` with correct permissions
+* Generates `/usr/local/lib/letsencrypt/certbot-podman.sh` wrapper
+* Sets up renewal cron job
+
+Custom container image (default: `certbot/certbot`):
+
+```puppet
+class { 'letsencrypt::suse::podman':
+  email           => 'foo@example.com',
+  container_image => 'my-registry/custom-certbot',
+  container_tag   => 'v2.0.0',
+}
+```
+
+With Azure DNS plugin and config management:
+
+```puppet
+class { 'letsencrypt::suse::podman':
+  email                   => 'foo@example.com',
+  manage_azure_config     => true,
+  azure_config_content    => "dns_azure_client_id = REDACTED\n...",
+}
+```
+
+Use the wrapper script to request certificates manually or in hooks:
+
+```bash
+/usr/local/lib/letsencrypt/certbot-podman.sh certonly \
+  --dns-azure \
+  --dns-azure-config /etc/letsencrypt/azure.ini \
+  -d example.com
+```
+
+Renewal runs automatically via cron. Container isolation keeps certbot dependencies
+and volumes confined; `/etc/letsencrypt` persists on the host.
 
 ### Issuing certificates
 

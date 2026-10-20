@@ -18,9 +18,9 @@ describe 'letsencrypt::certonly' do
         let(:title) { 'foo.example.com' }
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_class('Letsencrypt::Install') }
-        it { is_expected.to contain_class('Letsencrypt::Config') }
-        it { is_expected.to contain_class('Letsencrypt::Scripts') }
+        it { is_expected.to contain_class('letsencrypt::install') }
+        it { is_expected.to contain_class('letsencrypt::config') }
+        it { is_expected.to contain_class('letsencrypt::scripts') }
 
         # letsencrypt::scripts is a private class and is therefore tested in this define
         it 'contains the domain validation script' do
