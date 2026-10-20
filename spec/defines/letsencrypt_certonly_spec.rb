@@ -575,6 +575,26 @@ describe 'letsencrypt::certonly' do
         it { is_expected.to contain_ini_setting('foo.example.com-deploy') }
         it { is_expected.to have_letsencrypt__hook_resource_count(3) }
       end
+
+      context 'with custom profile' do
+        let(:pre_condition) do
+          <<-PUPPET
+          class { 'letsencrypt':
+            manage_config => false,
+            profiles => {
+              'custom' => { 'config' => { 'email' => 'foo@example.com' } }
+            },
+          }
+          PUPPET
+        end
+        let(:title) { 'foo.example.com' }
+        let(:params) { { manage_cron: true, profile: 'custom' } }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_exec('letsencrypt certonly foo.example.com').with_command "certbot --text --agree-tos --non-interactive certonly --key-type rsa --rsa-key-size 4096 -a standalone --config #{pathprefix}/etc/letsencrypt/custom.ini --cert-name 'foo.example.com' -d 'foo.example.com'" }
+        it { is_expected.to contain_cron('letsencrypt renew cron foo.example.com').with_command('"/var/lib/puppet/letsencrypt/renew-foo.example.com.sh"').with_ensure('present') }
+        it { is_expected.to contain_file('/var/lib/puppet/letsencrypt/renew-foo.example.com.sh').with_ensure('file').with_content("#!/bin/sh\ncertbot --keep-until-expiring --text --agree-tos --non-interactive certonly --key-type rsa --rsa-key-size 4096 -a standalone --config #{pathprefix}/etc/letsencrypt/custom.ini --cert-name 'foo.example.com' -d 'foo.example.com'\n") }
+      end
     end
   end
 end

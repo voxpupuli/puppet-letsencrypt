@@ -107,6 +107,17 @@ describe 'letsencrypt' do
           end
         end
 
+        describe 'with custom profile' do
+          let(:additional_params) { { profiles: { 'foo' => { 'config' => { 'email' => 'foo@example.com' } } } } }
+
+          case facts['os']['name']
+          when 'FreeBSD'
+            it { is_expected.to contain_ini_setting('/usr/local/etc/letsencrypt/foo.ini email foo@example.com') }
+          else
+            it { is_expected.to contain_ini_setting('/etc/letsencrypt/foo.ini email foo@example.com') }
+          end
+        end
+
         describe 'with manage_config set to false' do
           let(:additional_params) { { manage_config: false } }
 
