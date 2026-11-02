@@ -1,0 +1,7 @@
+---
+letsencrypt::plugin::dns_rfc2136::package_name: 'python3-certbot-dns-rfc2136'
+letsencrypt::plugin::dns_route53::package_name: 'python3-certbot-dns-route53'
+letsencrypt::plugin::dns_cloudflare::package_name: 'python3-certbot-dns-cloudflare'
+letsencrypt::plugin::dns_linode::package_name: 'python3-certbot-dns-linode'
+letsencrypt::renew::distro_renew_cron_file: /etc/cron.d/certbot
+letsencrypt::renew::distro_renew_timer: certbot.timer
