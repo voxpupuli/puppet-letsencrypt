@@ -276,11 +276,17 @@ define letsencrypt::certonly (
       # certbot won't update the config. But an update is required if new hooks are added afterwards
       #
       # we cannot add it to letsencrypt::hook because the defined resource runs before the Exec, not afterwards
+      #
+      # certbot stores --deploy-hook as renew_hook and drops deploy_hook when it rewrites the file on renewal
+      $setting = $type ? {
+        'deploy' => 'renew_hook',
+        default  => "${type}_hook",
+      }
       ini_setting { "${title}-${type}":
         ensure  => $ensure,
         path    => "${config_dir}/renewal/${live_path_certname}.conf",
         section => 'renewalparams',
-        setting => "${type}_hook",
+        setting => $setting,
         value   => $hook_file,
         require => Exec["letsencrypt certonly ${title}"],
       }
