@@ -285,7 +285,7 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('foo.example.com-pre').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-pre.sh')
-            is_expected.to contain_ini_setting('foo.example.com-pre')
+            is_expected.to contain_ini_setting('foo.example.com-pre').with_setting('pre_hook')
           end
         end
 
@@ -307,7 +307,7 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('foo.example.com-post').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-post.sh')
-            is_expected.to contain_ini_setting('foo.example.com-post')
+            is_expected.to contain_ini_setting('foo.example.com-post').with_setting('post_hook')
           end
         end
 
@@ -318,7 +318,11 @@ describe 'letsencrypt::certonly' do
           it do
             is_expected.to compile.with_all_deps
             is_expected.to contain_letsencrypt__hook('foo.example.com-deploy').with_hook_file('/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-deploy.sh')
-            is_expected.to contain_ini_setting('foo.example.com-deploy')
+            is_expected.to contain_ini_setting('foo.example.com-deploy').with(
+              section: 'renewalparams',
+              setting: 'renew_hook',
+              value: '/etc/letsencrypt/renewal-hooks-puppet/foo.example.com-deploy.sh',
+            )
           end
         end
       end
