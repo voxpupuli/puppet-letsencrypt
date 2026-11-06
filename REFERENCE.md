@@ -10,6 +10,7 @@
 
 * [`letsencrypt`](#letsencrypt): Install and configure Certbot, the LetsEncrypt client
 * [`letsencrypt::plugin::apache`](#letsencrypt--plugin--apache): install and configure the Let's Encrypt apache plugin
+* [`letsencrypt::plugin::dns_azure`](#letsencrypt--plugin--dns_azure): Installs and configures the dns-azure plugin
 * [`letsencrypt::plugin::dns_cloudflare`](#letsencrypt--plugin--dns_cloudflare): Installs and configures the dns-cloudflare plugin
 * [`letsencrypt::plugin::dns_linode`](#letsencrypt--plugin--dns_linode): Installs and configures the dns-linode plugin
 * [`letsencrypt::plugin::dns_rfc2136`](#letsencrypt--plugin--dns_rfc2136): Installs and configures the dns-rfc2136 plugin
@@ -393,6 +394,52 @@ Data type: `String[1]`
 The name of the package to install when $manage_package is true.
 
 Default value: `'python3-certbot-apache'`
+
+### <a name="letsencrypt--plugin--dns_azure"></a>`letsencrypt::plugin::dns_azure`
+
+This class installs the Let's Encrypt dns-azure plugin package and exposes
+the plugin config path used by letsencrypt::certonly.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::plugin::dns_azure` class:
+
+* [`package_name`](#-letsencrypt--plugin--dns_azure--package_name)
+* [`config_path`](#-letsencrypt--plugin--dns_azure--config_path)
+* [`manage_package`](#-letsencrypt--plugin--dns_azure--manage_package)
+* [`propagation_seconds`](#-letsencrypt--plugin--dns_azure--propagation_seconds)
+
+##### <a name="-letsencrypt--plugin--dns_azure--package_name"></a>`package_name`
+
+Data type: `Optional[String[1]]`
+
+The name of the package to install when $manage_package is true.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--plugin--dns_azure--config_path"></a>`config_path`
+
+Data type: `Stdlib::Absolutepath`
+
+The path to the plugin credentials/config file.
+
+Default value: `"${letsencrypt::config_dir}/azure.ini"`
+
+##### <a name="-letsencrypt--plugin--dns_azure--manage_package"></a>`manage_package`
+
+Data type: `Boolean`
+
+Manage the plugin package.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--plugin--dns_azure--propagation_seconds"></a>`propagation_seconds`
+
+Data type: `Integer`
+
+Number of seconds to wait for DNS propagation.
+
+Default value: `10`
 
 ### <a name="letsencrypt--plugin--dns_cloudflare"></a>`letsencrypt::plugin::dns_cloudflare`
 
