@@ -61,6 +61,15 @@
       ]
     },
     {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "15.4",
+        "15.5",
+        "15.6",
+        "15.7"
+      ]
+    },
+    {
       "operatingsystem": "OpenBSD",
       "operatingsystemrelease": [
         "6.2"
