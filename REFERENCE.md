@@ -16,6 +16,9 @@
 * [`letsencrypt::plugin::dns_route53`](#letsencrypt--plugin--dns_route53): Installs and configures the dns-route53 plugin
 * [`letsencrypt::plugin::nginx`](#letsencrypt--plugin--nginx): install and configure the Let's Encrypt nginx plugin
 * [`letsencrypt::renew`](#letsencrypt--renew): Configures renewal of Let's Encrypt certificates using Certbot
+* [`letsencrypt::suse`](#letsencrypt--suse): SUSE-focused Certbot orchestration using the core letsencrypt module.
+* [`letsencrypt::suse::podman`](#letsencrypt--suse--podman): Manage certbot in a Podman container on SUSE.
+* [`letsencrypt::suseconnect`](#letsencrypt--suseconnect): Manage SUSE channel access for certbot package sources.
 
 #### Private Classes
 
@@ -27,6 +30,8 @@
 
 * [`letsencrypt::certonly`](#letsencrypt--certonly): Request a certificate using the `certonly` installer
 * [`letsencrypt::hook`](#letsencrypt--hook): Creates hook scripts.
+* [`letsencrypt::suse::certificate`](#letsencrypt--suse--certificate): Request certificates on SUSE with Puppet-managed certbot behavior.
+* [`letsencrypt::suse::podman::certificate`](#letsencrypt--suse--podman--certificate): Request a certificate using the SUSE Podman certbot wrapper.
 
 ### Functions
 
@@ -804,6 +809,422 @@ E.g. PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 Default value: `$letsencrypt::renew_cron_environment`
 
+### <a name="letsencrypt--suse"></a>`letsencrypt::suse`
+
+This class keeps certificate lifecycle management in the module's native
+resources (install, config, renew, and hooks) and optionally prepares SUSE
+package sources via SUSEConnect/Packman.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::suse` class:
+
+* [`email`](#-letsencrypt--suse--email)
+* [`manage_suseconnect`](#-letsencrypt--suse--manage_suseconnect)
+* [`suseconnect_products`](#-letsencrypt--suse--suseconnect_products)
+* [`packman_repo`](#-letsencrypt--suse--packman_repo)
+* [`manage_install`](#-letsencrypt--suse--manage_install)
+* [`manage_config`](#-letsencrypt--suse--manage_config)
+* [`package_ensure`](#-letsencrypt--suse--package_ensure)
+* [`renew_cron_ensure`](#-letsencrypt--suse--renew_cron_ensure)
+* [`renew_disable_distro_cron`](#-letsencrypt--suse--renew_disable_distro_cron)
+* [`renew_cron_hour`](#-letsencrypt--suse--renew_cron_hour)
+* [`renew_cron_minute`](#-letsencrypt--suse--renew_cron_minute)
+* [`renew_cron_monthday`](#-letsencrypt--suse--renew_cron_monthday)
+* [`renew_cron_environment`](#-letsencrypt--suse--renew_cron_environment)
+* [`renew_pre_hook_commands`](#-letsencrypt--suse--renew_pre_hook_commands)
+* [`renew_post_hook_commands`](#-letsencrypt--suse--renew_post_hook_commands)
+* [`renew_deploy_hook_commands`](#-letsencrypt--suse--renew_deploy_hook_commands)
+* [`enforce_sles_range`](#-letsencrypt--suse--enforce_sles_range)
+
+##### <a name="-letsencrypt--suse--email"></a>`email`
+
+Data type: `String[1]`
+
+Email used for ACME account registration.
+
+##### <a name="-letsencrypt--suse--manage_suseconnect"></a>`manage_suseconnect`
+
+Data type: `Boolean`
+
+Whether SUSEConnect/Packman setup is managed.
+
+Default value: `false`
+
+##### <a name="-letsencrypt--suse--suseconnect_products"></a>`suseconnect_products`
+
+Data type: `Array[String[1]]`
+
+SUSEConnect products/modules to enable.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--packman_repo"></a>`packman_repo`
+
+Data type: `Optional[String[1]]`
+
+Optional Packman repo URL.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--manage_install"></a>`manage_install`
+
+Data type: `Boolean`
+
+Whether certbot installation is managed.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--suse--manage_config"></a>`manage_config`
+
+Data type: `Boolean`
+
+Whether certbot cli config is managed.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--suse--package_ensure"></a>`package_ensure`
+
+Data type: `String[1]`
+
+Desired package state for certbot.
+
+Default value: `'installed'`
+
+##### <a name="-letsencrypt--suse--renew_cron_ensure"></a>`renew_cron_ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Intended state of renewal cron.
+
+Default value: `'present'`
+
+##### <a name="-letsencrypt--suse--renew_disable_distro_cron"></a>`renew_disable_distro_cron`
+
+Data type: `Boolean`
+
+Whether distro timer/cron should be disabled.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--suse--renew_cron_hour"></a>`renew_cron_hour`
+
+Data type: `Letsencrypt::Cron::Hour`
+
+Renewal cron hour.
+
+Default value: `fqdn_rand(24)`
+
+##### <a name="-letsencrypt--suse--renew_cron_minute"></a>`renew_cron_minute`
+
+Data type: `Letsencrypt::Cron::Minute`
+
+Renewal cron minute.
+
+Default value: `fqdn_rand(60)`
+
+##### <a name="-letsencrypt--suse--renew_cron_monthday"></a>`renew_cron_monthday`
+
+Data type: `Letsencrypt::Cron::Monthday`
+
+Renewal cron monthday.
+
+Default value: `'*'`
+
+##### <a name="-letsencrypt--suse--renew_cron_environment"></a>`renew_cron_environment`
+
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
+
+Optional renewal cron environment variables.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--renew_pre_hook_commands"></a>`renew_pre_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Commands run before renewal attempts.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--renew_post_hook_commands"></a>`renew_post_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Commands run after renewal attempts.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--renew_deploy_hook_commands"></a>`renew_deploy_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Commands run after successful renewal.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--enforce_sles_range"></a>`enforce_sles_range`
+
+Data type: `Boolean`
+
+Whether to enforce supported SLES 15.4-15.7 range.
+
+Default value: `true`
+
+### <a name="letsencrypt--suse--podman"></a>`letsencrypt::suse::podman`
+
+This class provides containerized certbot execution via Podman, keeping
+the container runtime separate from native host packages. It is designed
+as an alternative to letsencrypt::suse for scenarios where container
+isolation is preferred or native certbot packages are unavailable.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::suse::podman` class:
+
+* [`email`](#-letsencrypt--suse--podman--email)
+* [`container_image`](#-letsencrypt--suse--podman--container_image)
+* [`container_tag`](#-letsencrypt--suse--podman--container_tag)
+* [`manage_podman`](#-letsencrypt--suse--podman--manage_podman)
+* [`manage_config`](#-letsencrypt--suse--podman--manage_config)
+* [`renew_cron_ensure`](#-letsencrypt--suse--podman--renew_cron_ensure)
+* [`renew_cron_hour`](#-letsencrypt--suse--podman--renew_cron_hour)
+* [`renew_cron_minute`](#-letsencrypt--suse--podman--renew_cron_minute)
+* [`renew_cron_monthday`](#-letsencrypt--suse--podman--renew_cron_monthday)
+* [`renew_cron_environment`](#-letsencrypt--suse--podman--renew_cron_environment)
+* [`renew_pre_hook_commands`](#-letsencrypt--suse--podman--renew_pre_hook_commands)
+* [`renew_post_hook_commands`](#-letsencrypt--suse--podman--renew_post_hook_commands)
+* [`renew_deploy_hook_commands`](#-letsencrypt--suse--podman--renew_deploy_hook_commands)
+* [`azure_config_file`](#-letsencrypt--suse--podman--azure_config_file)
+* [`manage_azure_config`](#-letsencrypt--suse--podman--manage_azure_config)
+* [`azure_config_content`](#-letsencrypt--suse--podman--azure_config_content)
+* [`letsencrypt_dir`](#-letsencrypt--suse--podman--letsencrypt_dir)
+* [`certbot_wrapper_dir`](#-letsencrypt--suse--podman--certbot_wrapper_dir)
+* [`enforce_sles_range`](#-letsencrypt--suse--podman--enforce_sles_range)
+
+##### <a name="-letsencrypt--suse--podman--email"></a>`email`
+
+Data type: `String[1]`
+
+Email used for ACME account registration.
+
+##### <a name="-letsencrypt--suse--podman--container_image"></a>`container_image`
+
+Data type: `String[1]`
+
+Container image URI for certbot (default: certbot/certbot).
+
+Default value: `'certbot/certbot'`
+
+##### <a name="-letsencrypt--suse--podman--container_tag"></a>`container_tag`
+
+Data type: `String[1]`
+
+Container image tag (default: latest).
+
+Default value: `'latest'`
+
+##### <a name="-letsencrypt--suse--podman--manage_podman"></a>`manage_podman`
+
+Data type: `Boolean`
+
+Whether to install and enable podman.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--suse--podman--manage_config"></a>`manage_config`
+
+Data type: `Boolean`
+
+Whether to manage certbot cli config inside the container.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--suse--podman--renew_cron_ensure"></a>`renew_cron_ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Intended state of renewal cron.
+
+Default value: `'present'`
+
+##### <a name="-letsencrypt--suse--podman--renew_cron_hour"></a>`renew_cron_hour`
+
+Data type: `Letsencrypt::Cron::Hour`
+
+Renewal cron hour.
+
+Default value: `fqdn_rand(24)`
+
+##### <a name="-letsencrypt--suse--podman--renew_cron_minute"></a>`renew_cron_minute`
+
+Data type: `Letsencrypt::Cron::Minute`
+
+Renewal cron minute.
+
+Default value: `fqdn_rand(60)`
+
+##### <a name="-letsencrypt--suse--podman--renew_cron_monthday"></a>`renew_cron_monthday`
+
+Data type: `Letsencrypt::Cron::Monthday`
+
+Renewal cron monthday.
+
+Default value: `'*'`
+
+##### <a name="-letsencrypt--suse--podman--renew_cron_environment"></a>`renew_cron_environment`
+
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
+
+Optional renewal cron environment variables.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--podman--renew_pre_hook_commands"></a>`renew_pre_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Commands run before renewal attempts.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--podman--renew_post_hook_commands"></a>`renew_post_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Commands run after renewal attempts.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--podman--renew_deploy_hook_commands"></a>`renew_deploy_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Commands run after successful renewal.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--podman--azure_config_file"></a>`azure_config_file`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to Azure plugin config file on host.
+
+Default value: `'/etc/letsencrypt/azure.ini'`
+
+##### <a name="-letsencrypt--suse--podman--manage_azure_config"></a>`manage_azure_config`
+
+Data type: `Boolean`
+
+Whether to manage the Azure plugin config file.
+
+Default value: `false`
+
+##### <a name="-letsencrypt--suse--podman--azure_config_content"></a>`azure_config_content`
+
+Data type: `Optional[String[1]]`
+
+Azure plugin config file content (INI format).
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--podman--letsencrypt_dir"></a>`letsencrypt_dir`
+
+Data type: `Stdlib::Absolutepath`
+
+Host path for /etc/letsencrypt persistence.
+
+Default value: `'/etc/letsencrypt'`
+
+##### <a name="-letsencrypt--suse--podman--certbot_wrapper_dir"></a>`certbot_wrapper_dir`
+
+Data type: `Stdlib::Absolutepath`
+
+Directory for certbot wrapper scripts.
+
+Default value: `'/usr/local/lib/letsencrypt'`
+
+##### <a name="-letsencrypt--suse--podman--enforce_sles_range"></a>`enforce_sles_range`
+
+Data type: `Boolean`
+
+Whether to enforce supported SLES 15.4-15.7 range.
+
+Default value: `true`
+
+### <a name="letsencrypt--suseconnect"></a>`letsencrypt::suseconnect`
+
+This class is intentionally SUSE-only. It can be used to
+enable required SUSE channels via SUSEConnect and to add a Packman repo.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::suseconnect` class:
+
+* [`manage`](#-letsencrypt--suseconnect--manage)
+* [`products`](#-letsencrypt--suseconnect--products)
+* [`packman_repo`](#-letsencrypt--suseconnect--packman_repo)
+* [`suseconnect_command`](#-letsencrypt--suseconnect--suseconnect_command)
+* [`zypper_command`](#-letsencrypt--suseconnect--zypper_command)
+* [`state_dir`](#-letsencrypt--suseconnect--state_dir)
+* [`enforce_sles_range`](#-letsencrypt--suseconnect--enforce_sles_range)
+
+##### <a name="-letsencrypt--suseconnect--manage"></a>`manage`
+
+Data type: `Boolean`
+
+Whether channel/repo commands should be enforced.
+
+Default value: `false`
+
+##### <a name="-letsencrypt--suseconnect--products"></a>`products`
+
+Data type: `Array[String[1]]`
+
+Array of SUSEConnect product/module identifiers to enable.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suseconnect--packman_repo"></a>`packman_repo`
+
+Data type: `Optional[String[1]]`
+
+Optional Packman repository URL.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suseconnect--suseconnect_command"></a>`suseconnect_command`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to SUSEConnect executable.
+
+Default value: `'/usr/sbin/SUSEConnect'`
+
+##### <a name="-letsencrypt--suseconnect--zypper_command"></a>`zypper_command`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to zypper executable.
+
+Default value: `'/usr/bin/zypper'`
+
+##### <a name="-letsencrypt--suseconnect--state_dir"></a>`state_dir`
+
+Data type: `Stdlib::Absolutepath`
+
+Path used for local SUSEConnect state markers.
+
+Default value: `'/var/lib/letsencrypt/suseconnect'`
+
+##### <a name="-letsencrypt--suseconnect--enforce_sles_range"></a>`enforce_sles_range`
+
+Data type: `Boolean`
+
+Whether to enforce supported SLES 15.4-15.7 range.
+
+Default value: `true`
+
 ## Defined types
 
 ### <a name="letsencrypt--certonly"></a>`letsencrypt::certonly`
@@ -1163,6 +1584,233 @@ Path to deploy hook script.
 Data type: `Variant[String[1],Array[String[1]]]`
 
 Bash commands to execute when the hook is run by certbot.
+
+### <a name="letsencrypt--suse--certificate"></a>`letsencrypt::suse::certificate`
+
+This define keeps certificate issuance in letsencrypt::certonly while
+configuring the selected ACME challenge type.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::suse::certificate` defined type:
+
+* [`domains`](#-letsencrypt--suse--certificate--domains)
+* [`cert_name`](#-letsencrypt--suse--certificate--cert_name)
+* [`plugin`](#-letsencrypt--suse--certificate--plugin)
+* [`azure_config_file`](#-letsencrypt--suse--certificate--azure_config_file)
+* [`webroot_paths`](#-letsencrypt--suse--certificate--webroot_paths)
+* [`additional_args`](#-letsencrypt--suse--certificate--additional_args)
+* [`environment`](#-letsencrypt--suse--certificate--environment)
+* [`manage_cron`](#-letsencrypt--suse--certificate--manage_cron)
+* [`cron_output`](#-letsencrypt--suse--certificate--cron_output)
+* [`cron_before_command`](#-letsencrypt--suse--certificate--cron_before_command)
+* [`cron_success_command`](#-letsencrypt--suse--certificate--cron_success_command)
+* [`cron_monthday`](#-letsencrypt--suse--certificate--cron_monthday)
+* [`cron_hour`](#-letsencrypt--suse--certificate--cron_hour)
+* [`cron_minute`](#-letsencrypt--suse--certificate--cron_minute)
+* [`pre_hook_commands`](#-letsencrypt--suse--certificate--pre_hook_commands)
+* [`post_hook_commands`](#-letsencrypt--suse--certificate--post_hook_commands)
+* [`deploy_hook_commands`](#-letsencrypt--suse--certificate--deploy_hook_commands)
+* [`validate_azure_config`](#-letsencrypt--suse--certificate--validate_azure_config)
+* [`enforce_sles_range`](#-letsencrypt--suse--certificate--enforce_sles_range)
+
+##### <a name="-letsencrypt--suse--certificate--domains"></a>`domains`
+
+Data type: `Array[String[1]]`
+
+Domains for the certificate request.
+
+Default value: `[$title]`
+
+##### <a name="-letsencrypt--suse--certificate--cert_name"></a>`cert_name`
+
+Data type: `String[1]`
+
+Certificate common name used by certbot.
+
+Default value: `$domains[0]`
+
+##### <a name="-letsencrypt--suse--certificate--plugin"></a>`plugin`
+
+Data type: `Enum['dns-01', 'http-01']`
+
+ACME challenge type to use for the certificate request.
+
+Default value: `'dns-01'`
+
+##### <a name="-letsencrypt--suse--certificate--azure_config_file"></a>`azure_config_file`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to certbot dns-azure plugin config file.
+
+Default value: `'/etc/letsencrypt/azure.ini'`
+
+##### <a name="-letsencrypt--suse--certificate--webroot_paths"></a>`webroot_paths`
+
+Data type: `Array[Stdlib::Unixpath]`
+
+Webroot paths for domains when using HTTP-01.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--certificate--additional_args"></a>`additional_args`
+
+Data type: `Array[String[1]]`
+
+Additional certbot arguments appended to plugin args.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--certificate--environment"></a>`environment`
+
+Data type: `Array[String[1]]`
+
+Optional environment variables for certonly.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--certificate--manage_cron"></a>`manage_cron`
+
+Data type: `Boolean`
+
+Whether to create a per-certificate renewal cron.
+
+Default value: `false`
+
+##### <a name="-letsencrypt--suse--certificate--cron_output"></a>`cron_output`
+
+Data type: `Optional[Enum['suppress', 'log']]`
+
+Per-certificate cron output mode.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--certificate--cron_before_command"></a>`cron_before_command`
+
+Data type: `Optional[String[1]]`
+
+Command to run before per-cert renewal command.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--certificate--cron_success_command"></a>`cron_success_command`
+
+Data type: `Optional[String[1]]`
+
+Command to run after successful renewal command.
+
+Default value: `undef`
+
+##### <a name="-letsencrypt--suse--certificate--cron_monthday"></a>`cron_monthday`
+
+Data type: `Array[Variant[Integer[1, 31], String[1]]]`
+
+Per-certificate cron monthday.
+
+Default value: `['*']`
+
+##### <a name="-letsencrypt--suse--certificate--cron_hour"></a>`cron_hour`
+
+Data type: `Variant[Integer[0, 23], String, Array]`
+
+Per-certificate cron hour.
+
+Default value: `[fqdn_rand(12, $title), fqdn_rand(12, $title) + 12]`
+
+##### <a name="-letsencrypt--suse--certificate--cron_minute"></a>`cron_minute`
+
+Data type: `Variant[Integer[0, 59], String, Array]`
+
+Per-certificate cron minute.
+
+Default value: `fqdn_rand(60, $title)`
+
+##### <a name="-letsencrypt--suse--certificate--pre_hook_commands"></a>`pre_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Certonly pre-hook commands.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--certificate--post_hook_commands"></a>`post_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Certonly post-hook commands.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--certificate--deploy_hook_commands"></a>`deploy_hook_commands`
+
+Data type: `Variant[String[1], Array[String[1]]]`
+
+Certonly deploy-hook commands.
+
+Default value: `[]`
+
+##### <a name="-letsencrypt--suse--certificate--validate_azure_config"></a>`validate_azure_config`
+
+Data type: `Boolean`
+
+Whether to pre-validate azure config readability.
+
+Default value: `true`
+
+##### <a name="-letsencrypt--suse--certificate--enforce_sles_range"></a>`enforce_sles_range`
+
+Data type: `Boolean`
+
+Whether to enforce supported SLES 15.4-15.7 range.
+
+Default value: `true`
+
+### <a name="letsencrypt--suse--podman--certificate"></a>`letsencrypt::suse::podman::certificate`
+
+This define keeps certificate issuance idempotent while leaving certbot
+execution inside the wrapper managed by letsencrypt::suse::podman.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::suse::podman::certificate` defined type:
+
+* [`ensure`](#-letsencrypt--suse--podman--certificate--ensure)
+* [`domains`](#-letsencrypt--suse--podman--certificate--domains)
+* [`cert_name`](#-letsencrypt--suse--podman--certificate--cert_name)
+* [`additional_args`](#-letsencrypt--suse--podman--certificate--additional_args)
+
+##### <a name="-letsencrypt--suse--podman--certificate--ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Desired certificate state.
+
+Default value: `'present'`
+
+##### <a name="-letsencrypt--suse--podman--certificate--domains"></a>`domains`
+
+Data type: `Array[String[1]]`
+
+Domains included in the certificate request.
+
+Default value: `[$title]`
+
+##### <a name="-letsencrypt--suse--podman--certificate--cert_name"></a>`cert_name`
+
+Data type: `String[1]`
+
+Certbot certificate name.
+
+Default value: `$domains[0]`
+
+##### <a name="-letsencrypt--suse--podman--certificate--additional_args"></a>`additional_args`
+
+Data type: `Array[String[1]]`
+
+Additional arguments passed to the wrapper.
+
+Default value: `[]`
 
 ## Functions
 

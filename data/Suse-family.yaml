@@ -1,0 +1,17 @@
+---
+# SLES package names are expected to be available from SUSEConnect-managed channels.
+letsencrypt::plugin::dns_rfc2136::package_name: 'python3-certbot-dns-rfc2136'
+letsencrypt::plugin::dns_route53::package_name: 'python3-certbot-dns-route53'
+letsencrypt::plugin::dns_cloudflare::package_name: 'python3-certbot-dns-cloudflare'
+letsencrypt::plugin::dns_linode::package_name: 'python3-certbot-dns-linode'
+letsencrypt::plugin::dns_azure::package_name: 'python3-certbot-dns-azure'
+letsencrypt::renew::distro_renew_timer: certbot.timer
+
+# Packman repository mirrors (optional, per SLES version).
+# These are non-openSUSE mirrors intended for approved environments.
+# Validate the exact SUSE repo layout for the target SLES release before rollout.
+letsencrypt::suse::packman_mirrors:
+  '15.4': 'https://packman.iu.edu/suse/15.4/x86_64/'
+  '15.5': 'https://packman.iu.edu/suse/15.5/x86_64/'
+  '15.6': 'https://packman.iu.edu/suse/15.6/x86_64/'
+  '15.7': 'https://packman.iu.edu/suse/15.7/x86_64/'

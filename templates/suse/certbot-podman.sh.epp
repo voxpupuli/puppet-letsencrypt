@@ -1,0 +1,34 @@
+#!/bin/bash
+# Generated wrapper for certbot execution in Podman container
+# Container image: <%= $container_image %>:<%= $container_tag %>
+# Host letsencrypt directory: <%= $letsencrypt_dir %>
+
+set -e
+
+CONTAINER_IMAGE="<%= $container_image %>"
+CONTAINER_TAG="<%= $container_tag %>"
+CONTAINER_NAME="${CONTAINER_IMAGE##*/}-${CONTAINER_TAG}"
+LE_DIR="<%= $letsencrypt_dir %>"
+AZURE_CONFIG="<%= $azure_config_file %>"
+
+# Ensure image is available
+if ! podman image exists "${CONTAINER_IMAGE}:${CONTAINER_TAG}"; then
+  echo "Pulling ${CONTAINER_IMAGE}:${CONTAINER_TAG}..." >&2
+  podman pull "${CONTAINER_IMAGE}:${CONTAINER_TAG}"
+fi
+
+# Build volume mount arguments
+VOLUME_ARGS="-v ${LE_DIR}:/etc/letsencrypt:Z"
+
+<% if $manage_azure_config { -%>
+# Include Azure config if available
+if [ -r "${AZURE_CONFIG}" ]; then
+  VOLUME_ARGS="${VOLUME_ARGS} -v ${AZURE_CONFIG}:/etc/letsencrypt/azure.ini:ro,Z"
+fi
+<% } -%>
+
+# Run certbot in container
+podman run --rm --cap-drop=all \
+  ${VOLUME_ARGS} \
+  "${CONTAINER_IMAGE}:${CONTAINER_TAG}" \
+  "$@"
