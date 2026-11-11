@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v13.5.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.5.0) (2026-11-11)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.4.0...v13.5.0)
+
+**Implemented enhancements:**
+
+- Update requirements to allow OpenVox 9 [\#421](https://github.com/voxpupuli/puppet-letsencrypt/pull/421) ([sebastianrakel](https://github.com/sebastianrakel))
+
+**Fixed bugs:**
+
+- renew\_hook / deploy\_hook INI setting wrong? [\#408](https://github.com/voxpupuli/puppet-letsencrypt/issues/408)
+- certonly: manage renew\_hook instead of deploy\_hook in renewal config [\#425](https://github.com/voxpupuli/puppet-letsencrypt/pull/425) ([vchepkov](https://github.com/vchepkov))
+
 ## [v13.4.0](https://github.com/voxpupuli/puppet-letsencrypt/tree/v13.4.0) (2026-10-20)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-letsencrypt/compare/v13.3.0...v13.4.0)
