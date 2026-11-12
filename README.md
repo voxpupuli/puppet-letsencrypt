@@ -103,6 +103,46 @@ class { 'letsencrypt':
 
 Create `letsencrypt::certonly` defines. See the `letsencrypt::certonly` examples in the REFERENCE.md for more details.
 
+### Using multiple ACME profiles
+
+You can define multiple Certbot configuration profiles with the `profiles` parameter and then choose which profile a certificate should use via the `profile` parameter on `letsencrypt::certonly`.
+
+This is useful when you need one profile for public certificates and another for internal/private CA certificates. The following example uses sectigo SCM
+
+```puppet
+class { 'letsencrypt':
+  email => 'pki-admin@example.com',
+  profiles => {
+    'public' => {
+      config => {
+        'email'        => 'pki-admin@example.com',
+        'server'       => 'https://acme.sectigo.com/v2/OV',
+        'eab-kid'      => '1',
+        'eab-hmac-key' => 'secret1',
+      },
+    },
+    'internal' => {
+      config => {
+        'email'        => 'pki-admin@example.com',
+        'server'       => 'https://acme.enterprise.sectigo.com',
+        'eab-kid'      => '2',
+        'eab-hmac-key' => 'secret2',
+      },
+    },
+  },
+}
+
+letsencrypt::certonly { 'www.example.com':
+  domains => ['www.example.com'],
+  profile => 'public',
+}
+
+letsencrypt::certonly { 'api.internal.example.com':
+  domains => ['api.internal.example.com'],
+  profile => 'internal',
+}
+```
+
 
 ### Renewing certificates
 

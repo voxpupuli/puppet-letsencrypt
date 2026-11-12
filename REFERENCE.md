@@ -27,6 +27,7 @@
 
 * [`letsencrypt::certonly`](#letsencrypt--certonly): Request a certificate using the `certonly` installer
 * [`letsencrypt::hook`](#letsencrypt--hook): Creates hook scripts.
+* [`letsencrypt::profile`](#letsencrypt--profile): Defines a Let's Encrypt profile.
 
 ### Functions
 
@@ -69,6 +70,7 @@ The following parameters are available in the `letsencrypt` class:
 * [`package_command`](#-letsencrypt--package_command)
 * [`config_file`](#-letsencrypt--config_file)
 * [`config`](#-letsencrypt--config)
+* [`profiles`](#-letsencrypt--profiles)
 * [`cron_scripts_path`](#-letsencrypt--cron_scripts_path)
 * [`cron_owner_group`](#-letsencrypt--cron_owner_group)
 * [`manage_config`](#-letsencrypt--manage_config)
@@ -151,6 +153,14 @@ Data type: `Hash`
 A hash representation of the letsencrypt configuration file.
 
 Default value: `{ 'server' => 'https://acme-v02.api.letsencrypt.org/directory' }`
+
+##### <a name="-letsencrypt--profiles"></a>`profiles`
+
+Data type: `Hash`
+
+A hash of profiles. Each key is the title and each value is a hash, both passed to letsencrypt::profile.
+
+Default value: `{}`
 
 ##### <a name="-letsencrypt--cron_scripts_path"></a>`cron_scripts_path`
 
@@ -932,6 +942,7 @@ The following parameters are available in the `letsencrypt::certonly` defined ty
 * [`post_hook_commands`](#-letsencrypt--certonly--post_hook_commands)
 * [`deploy_hook_commands`](#-letsencrypt--certonly--deploy_hook_commands)
 * [`cert_name`](#-letsencrypt--certonly--cert_name)
+* [`profile`](#-letsencrypt--certonly--profile)
 
 ##### <a name="-letsencrypt--certonly--ensure"></a>`ensure`
 
@@ -1134,6 +1145,14 @@ the common name used for the certificate
 
 Default value: `$domains[0]`
 
+##### <a name="-letsencrypt--certonly--profile"></a>`profile`
+
+Data type: `String[1]`
+
+an optional profile to use for this certificate. If not specified, the default CLI profile will be used.
+
+Default value: `'cli'`
+
 ### <a name="letsencrypt--hook"></a>`letsencrypt::hook`
 
 This type is used by letsencrypt::renew and letsencrypt::certonly to create hook scripts.
@@ -1163,6 +1182,33 @@ Path to deploy hook script.
 Data type: `Variant[String[1],Array[String[1]]]`
 
 Bash commands to execute when the hook is run by certbot.
+
+### <a name="letsencrypt--profile"></a>`letsencrypt::profile`
+
+Defines a Let's Encrypt profile.
+
+#### Parameters
+
+The following parameters are available in the `letsencrypt::profile` defined type:
+
+* [`config`](#-letsencrypt--profile--config)
+* [`config_file`](#-letsencrypt--profile--config_file)
+
+##### <a name="-letsencrypt--profile--config"></a>`config`
+
+Data type: `Hash`
+
+A hash of configuration options for the profile.
+
+Default value: `{}`
+
+##### <a name="-letsencrypt--profile--config_file"></a>`config_file`
+
+Data type: `Stdlib::Absolutepath`
+
+Optional explicit path to the ini file. Defaults to `${config_dir}/${name}.ini`.
+
+Default value: `"${letsencrypt::config_dir}/${name}.ini"`
 
 ## Functions
 

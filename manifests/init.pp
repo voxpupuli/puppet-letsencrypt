@@ -19,6 +19,7 @@
 # @param package_command Path or name for letsencrypt executable.
 # @param config_file The path to the configuration file for the letsencrypt cli.
 # @param config A hash representation of the letsencrypt configuration file.
+# @param profiles A hash of profiles. Each key is the title and each value is a hash, both passed to letsencrypt::profile.
 # @param cron_scripts_path The path for renewal scripts called by cron
 # @param cron_owner_group Group owner of cron renew scripts.
 # @param manage_config A feature flag to toggle the management of the letsencrypt configuration file.
@@ -76,6 +77,7 @@ class letsencrypt (
   Stdlib::Unixpath $config_dir       = '/etc/letsencrypt',
   String $config_file                = "${config_dir}/cli.ini",
   Hash $config                       = { 'server' => 'https://acme-v02.api.letsencrypt.org/directory' },
+  Hash $profiles                     = {},
   String $cron_scripts_path          = "${facts['puppet_vardir']}/letsencrypt",
   String $cron_owner_group           = 'root',
   Boolean $manage_config             = true,
@@ -110,7 +112,13 @@ class letsencrypt (
   $command = $package_command
 
   if $manage_config {
+    if 'cli' in $profiles.keys {
+      fail("The profile title 'cli' is reserved and managed by letsencrypt::config. Please use the class parameters 'config' and 'email' instead of defining profiles['cli'].")
+    }
     contain letsencrypt::config # lint:ignore:relative_classname_inclusion
+  }
+  $profiles.each |$profile, $properties| {
+    letsencrypt::profile { $profile: * => $properties }
   }
 
   contain letsencrypt::renew
